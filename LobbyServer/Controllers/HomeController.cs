@@ -9,7 +9,7 @@ using System.Web.Mvc;
 
 namespace LobbyServer.Controllers
 {
-    public class HomeController : BaseController
+    public class HomeController : PassAuthenticatedController
     {
         public ActionResult Index()
         {
@@ -27,13 +27,18 @@ namespace LobbyServer.Controllers
             var pass = GamePass.FromBase64EncodedJson(gamePassString);
             Debug.WriteLine(pass);
             Debug.WriteLine(pass.IsValid(publicKey, urlMaybeRequested));
+            if (pass.IsValid(publicKey, urlMaybeRequested))
+            {
+                Debug.WriteLine("GamePass is valid. Storing to Cookie...");
+                StoreGamePassToCookie(pass);
+            }
             return View();
         }
 
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
-
+            Debug.WriteLine(ValidPass);
             return View();
         }
     }
