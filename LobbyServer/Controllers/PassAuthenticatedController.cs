@@ -29,19 +29,41 @@ namespace LobbyServer.Controllers
         void GetPass()
         {
             GamePass pass = null;
-            // Tries to retrieve Pass from Cookie.
-            var passCookie = Request.Cookies[PassCookieName];
             string passString = null;
-            if (passCookie != null)
+
+            // Tries to retrieve Pass from QueryString.
+            passString = Request["gamePassString"];
+            if (passString != null)
             {
-                passString = passCookie.Value;
+                Debug.WriteLine("gamePassString exists. Trying to retrieve...");
                 try
                 {
                     pass = GamePass.FromBase64EncodedJson(passString);
+                    Debug.WriteLine("Got GamePass from QueryString. Storing it to Cookie...");
+                    Response.Cookies.Set(new HttpCookie(PassCookieName, pass.ToBase64EncodedJson()));
                 }
                 catch
                 {
                     pass = null;
+                    Debug.WriteLine("Failed to get GamePass from QueryString.");
+                }
+            }
+
+            if (pass == null)
+            {
+                // Tries to retrieve Pass from Cookie.
+                var passCookie = Request.Cookies[PassCookieName];
+                if (passCookie != null)
+                {
+                    passString = passCookie.Value;
+                    try
+                    {
+                        pass = GamePass.FromBase64EncodedJson(passString);
+                    }
+                    catch
+                    {
+                        pass = null;
+                    }
                 }
             }
 
@@ -49,26 +71,19 @@ namespace LobbyServer.Controllers
                 // Not Authenticated
                 return;
 
-            /*if (!pass.IsValid)
-            {
-                // Invalid Pass. (Modified by Hacker?) Clears Cookie and return.
-                //Debug.WriteLine("Invalid Pass. Discarding Cookie...");
-                Response.Cookies.Remove(PassCookieName);
-                return;
-            }*/
             var publicKey = ConfigurationManager.AppSettings["PublicKeyXmlString"];
             if (pass.IsValid(publicKey, Request.Url.Authority))
             {
                 // Pass is valid. Sets it to Controller.
                 ValidPass = pass;
                 ValidPassString = passString;
+                ViewBag.UserId = pass.data.userId;
             }
         }
 
         protected override void OnAuthentication(System.Web.Mvc.Filters.AuthenticationContext filterContext)
         {
             GetPass();
-            //Debug.WriteLine("Pass: " + ValidPass);
             base.OnAuthentication(filterContext);
         }
 
@@ -91,40 +106,12 @@ namespace LobbyServer.Controllers
             base.OnException(filterContext);
         }
 
-        protected void StoreGamePassToCookie(GamePass gamePass)
+        protected void RedirectIfNoPass()
         {
-            Response.Cookies.Set(new HttpCookie(PassCookieName, gamePass.ToBase64EncodedJson()));
-            GetPass();
-        }
-
-        /// <summary>
-        /// User gives Code (provided by Google+ OAuth2) to Server.
-        /// Server gives Pass (signed User info, Cookie) to User.
-        /// 
-        /// ----- Pass -----
-        /// Data:{
-        ///     UserId: []  // Local User ID
-        ///     Plus: {
-        ///         // Google+ OAuth2, Authentication Object
-        ///     }
-        /// },
-        /// Sign: []    // SHA512 Hash
-        /// </summary>
-        /// <param name="code"></param>
-        /// <returns></returns>
-        protected void PlusLogin(string code)
-        {
-            // Manually perform the OAuth2 flow.
-            string clientId = ConfigurationManager.AppSettings["GoogleApiClientId"];
-            string clientSecret = ConfigurationManager.AppSettings["GoogleApiClientSecret"];
-            var authObject = ManualCodeExchanger.ExchangeCode(clientId, clientSecret, code);
-
-            // Generates Pass from AuthObject and stores it to Cookie.
-            // (It describes User is who.)
-            string hashSecret = ConfigurationManager.AppSettings["SecuritySalt"];
-            var pass = Pass.GenerateFromAuthObject(hashSecret, authObject);
-            var json = JsonConvert.SerializeObject(pass);
-            Response.Cookies.Set(new HttpCookie(PassCookieName, AuthHelper.Encrypt(json)));
+            if (ValidPass != null)
+                return;
+            var uri = new Uri(ConfigurationManager.AppSettings["PortalServerAuthUrl"]);
+            Response.Redirect(uri.AbsoluteUri + "?redirectUrl=" + Request.Url.AbsoluteUri, true);
         }
     }
 }

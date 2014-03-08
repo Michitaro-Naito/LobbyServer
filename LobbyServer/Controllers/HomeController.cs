@@ -24,7 +24,7 @@ namespace LobbyServer.Controllers
         public ActionResult About(string gamePassString = null)
         {
             ViewBag.Message = "Your application description page.";
-            var publicKey = ConfigurationManager.AppSettings["PublicKeyXmlString"];
+            /*var publicKey = ConfigurationManager.AppSettings["PublicKeyXmlString"];
             Debug.WriteLine(gamePassString);
             var pass = GamePass.FromBase64EncodedJson(gamePassString);
             Debug.WriteLine(pass);
@@ -36,7 +36,7 @@ namespace LobbyServer.Controllers
             else
             {
                 Debug.WriteLine("GamePass is not valid.");
-            }
+            }*/
             return View();
         }
 
@@ -46,5 +46,22 @@ namespace LobbyServer.Controllers
             Debug.WriteLine(ValidPass);
             return View();
         }
+
+        /*public ActionResult ExternalLogin(string gamePassString = null)
+        {
+            if (gamePassString == null)
+                throw new Exception("gamePassString must not be null.");
+
+            var pass = GamePass.FromBase64EncodedJson(gamePassString);
+            if (pass.IsValid(ConfigurationManager.AppSettings["PublicKeyXmlString"], Request.Url.Authority))
+            {
+                Debug.WriteLine("GamePass is valid. Storing to Cookie...");
+                StoreGamePassToCookie(pass);
+            }
+            else
+                Debug.WriteLine("GamePass is not valid.");
+
+            return RedirectToAction("Index", "Home", null);
+        }*/
     }
 }
