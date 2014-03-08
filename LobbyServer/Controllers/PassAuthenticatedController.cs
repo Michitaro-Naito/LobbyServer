@@ -57,7 +57,7 @@ namespace LobbyServer.Controllers
                 return;
             }*/
             var publicKey = ConfigurationManager.AppSettings["PublicKeyXmlString"];
-            if (pass.IsValid(publicKey, Url.Action("About", "Home", null, Request.Url.Scheme)))
+            if (pass.IsValid(publicKey, Request.Url.Authority))
             {
                 // Pass is valid. Sets it to Controller.
                 ValidPass = pass;
