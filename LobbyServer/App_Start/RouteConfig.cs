@@ -15,8 +15,8 @@ namespace LobbyServer
 
             routes.MapRoute(
                 name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                url: "{culture}/{controller}/{action}/{id}",
+                defaults: new { culture = UrlParameter.Optional, controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

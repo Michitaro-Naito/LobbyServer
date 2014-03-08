@@ -9,13 +9,13 @@ using System.Web.Mvc;
 
 namespace LobbyServer.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         public ActionResult Index()
         {
-            var url = ConfigurationManager.AppSettings["PortalServerAuthUrl"];
-            return Redirect(url + "?redirectUrl=" + Url.Action("About", "Home", null, Request.Url.Scheme));
-            //return View();
+            //var url = ConfigurationManager.AppSettings["PortalServerAuthUrl"];
+            //return Redirect(url + "?redirectUrl=" + Url.Action("About", "Home", null, Request.Url.Scheme));
+            return View();
         }
 
         public ActionResult About(string gamePassString = null)
