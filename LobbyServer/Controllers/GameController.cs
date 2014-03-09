@@ -12,7 +12,7 @@ namespace LobbyServer.Controllers
         // GET: /Game/
         public ActionResult Index()
         {
-            RedirectIfNoPass();
+            RequirePass();
             return View();
         }
 	}

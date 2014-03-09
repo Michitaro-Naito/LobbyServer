@@ -11,7 +11,11 @@ namespace LobbyServer.Models
     {
         public class GamePassData
         {
+            // Auth (Server trusts it.)
             public string userId;
+
+            // Cache (Server doesn't trust it.)
+            //public string displayName;
         }
 
         public GamePassData data = new GamePassData();

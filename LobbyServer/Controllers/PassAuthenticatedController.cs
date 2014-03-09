@@ -77,7 +77,6 @@ namespace LobbyServer.Controllers
                 Debug.WriteLine("Valid. Storing...");
                 var gamePass = GamePass.FromValidEntryPass(entryPass);
                 Response.Cookies.Set(new HttpCookie(PassCookieName, gamePass.ToCipher(ConfigurationManager.AppSettings["AesKey"], ConfigurationManager.AppSettings["AesIv"])));
-                //Response.Cookies.Set(new HttpCookie(PassCookieName, entryPass.ToBase64EncodedJson()));
             }
         }
 
@@ -93,7 +92,6 @@ namespace LobbyServer.Controllers
                 passString = passCookie.Value;
                 try
                 {
-                    //pass = EntryPass.FromBase64EncodedJson(passString);
                     pass = GamePass.FromCipher(passString, ConfigurationManager.AppSettings["AesKey"], ConfigurationManager.AppSettings["AesIv"]);
                 }
                 catch
@@ -106,21 +104,13 @@ namespace LobbyServer.Controllers
                 // Not Authenticated
                 return;
 
-            /*var publicKey = ConfigurationManager.AppSettings["PublicKeyXmlString"];
-            if (pass.IsValid(publicKey, Request.Url.Authority))
-            {
-                // Pass is valid. Sets it to Controller.
-                ValidPass = pass;
-                ValidPassString = passString;
-                ViewBag.UserId = pass.data.userId;
-            }*/
             // GamePass is valid. Sets it to Controller.
             ValidPass = pass;
             ValidPassString = passString;
             ViewBag.UserId = pass.data.userId;
         }
 
-        protected void RedirectIfNoPass()
+        protected void RequirePass()
         {
             if (ValidPass != null)
                 return;
