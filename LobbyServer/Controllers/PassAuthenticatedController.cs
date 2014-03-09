@@ -1,4 +1,5 @@
 ﻿using AuthUtility;
+using LobbyServer.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -18,12 +19,12 @@ namespace LobbyServer.Controllers
         /// <summary>
         /// Cookie name of Pass object. User's browser remembers serialized Pass object for this name.
         /// </summary>
-        protected const string PassCookieName = "EntryPass";
+        protected const string PassCookieName = "GamePass";
 
         /// <summary>
         /// Pass of User. If null, User is not authenticated.
         /// </summary>
-        protected EntryPass ValidPass { get; private set; }
+        protected GamePass ValidPass { get; private set; }
         protected string ValidPassString { get; private set; }
 
 
@@ -56,67 +57,34 @@ namespace LobbyServer.Controllers
         public void TryLogin(string entryPassString)
         {
             // Tries to login using a token.
-            EntryPass pass;
+            EntryPass entryPass;
             try
             {
-                pass = EntryPass.FromBase64EncodedJson(entryPassString);
+                entryPass = EntryPass.FromBase64EncodedJson(entryPassString);
             }
             catch
             {
-                pass = null;
+                entryPass = null;
             }
 
-            if (pass == null)
+            if (entryPass == null)
                 return;
 
-            if (pass.IsValid(ConfigurationManager.AppSettings["PublicKeyXmlString"], Request.Url.Authority))
+            if (entryPass.IsValid(ConfigurationManager.AppSettings["PublicKeyXmlString"], Request.Url.Authority))
             {
-                // Valid. Stores it to Cookie.
+                // EntryPass is valid.
+                // Generates a GamePass and stores it to Cookie...
                 Debug.WriteLine("Valid. Storing...");
-                Response.Cookies.Set(new HttpCookie(PassCookieName, pass.ToBase64EncodedJson()));
+                var gamePass = GamePass.FromValidEntryPass(entryPass);
+                Response.Cookies.Set(new HttpCookie(PassCookieName, gamePass.ToCipher(ConfigurationManager.AppSettings["AesKey"], ConfigurationManager.AppSettings["AesIv"])));
+                //Response.Cookies.Set(new HttpCookie(PassCookieName, entryPass.ToBase64EncodedJson()));
             }
         }
 
         void GetPass()
         {
-            EntryPass pass = null;
+            GamePass pass = null;
             string passString = null;
-
-            /*// Tries to retrieve Pass from QueryString.
-            passString = Request["entryPassString"];
-            if (passString != null)
-            {
-                Debug.WriteLine("gamePassString exists. Trying to retrieve...");
-                try
-                {
-                    pass = EntryPass.FromBase64EncodedJson(passString);
-                    Debug.WriteLine("Got GamePass from QueryString. Storing it to Cookie...");
-                    Response.Cookies.Set(new HttpCookie(PassCookieName, pass.ToBase64EncodedJson()));
-                }
-                catch
-                {
-                    pass = null;
-                    Debug.WriteLine("Failed to get GamePass from QueryString.");
-                }
-            }
-
-            if (pass == null)
-            {
-                // Tries to retrieve Pass from Cookie.
-                var passCookie = Request.Cookies[PassCookieName];
-                if (passCookie != null)
-                {
-                    passString = passCookie.Value;
-                    try
-                    {
-                        pass = EntryPass.FromBase64EncodedJson(passString);
-                    }
-                    catch
-                    {
-                        pass = null;
-                    }
-                }
-            }*/
 
             // Tries to retrieve Pass from Cookie.
             var passCookie = Request.Cookies[PassCookieName];
@@ -125,7 +93,8 @@ namespace LobbyServer.Controllers
                 passString = passCookie.Value;
                 try
                 {
-                    pass = EntryPass.FromBase64EncodedJson(passString);
+                    //pass = EntryPass.FromBase64EncodedJson(passString);
+                    pass = GamePass.FromCipher(passString, ConfigurationManager.AppSettings["AesKey"], ConfigurationManager.AppSettings["AesIv"]);
                 }
                 catch
                 {
@@ -137,14 +106,18 @@ namespace LobbyServer.Controllers
                 // Not Authenticated
                 return;
 
-            var publicKey = ConfigurationManager.AppSettings["PublicKeyXmlString"];
+            /*var publicKey = ConfigurationManager.AppSettings["PublicKeyXmlString"];
             if (pass.IsValid(publicKey, Request.Url.Authority))
             {
                 // Pass is valid. Sets it to Controller.
                 ValidPass = pass;
                 ValidPassString = passString;
                 ViewBag.UserId = pass.data.userId;
-            }
+            }*/
+            // GamePass is valid. Sets it to Controller.
+            ValidPass = pass;
+            ValidPassString = passString;
+            ViewBag.UserId = pass.data.userId;
         }
 
         protected void RedirectIfNoPass()
