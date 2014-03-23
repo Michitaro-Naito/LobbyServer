@@ -11,6 +11,13 @@ namespace LobbyServer.Controllers
 {
     public class HomeController : PassAuthenticatedController
     {
+        public ActionResult TestLogin(string id)
+        {
+            var gamePass = new GamePass() { data = new GamePass.GamePassData() { userId = id } };
+            Response.Cookies.Set(new HttpCookie(PassCookieName, gamePass.ToCipher(ConfigurationManager.AppSettings["AesKey"], ConfigurationManager.AppSettings["AesIv"])));
+            return RedirectToAction("Index", "Home");
+        }
+
         public ActionResult Index()
         {
             Debug.WriteLine(Request.Url.Authority);

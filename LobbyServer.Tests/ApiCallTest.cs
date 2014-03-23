@@ -15,7 +15,7 @@ namespace LobbyServer.Tests
     [TestClass]
     public class ApiCallTest
     {
-        [TestMethod]
+        /*[TestMethod]
         public void GetFoos()
         {
             var foo = Api.Get<TestGet3FoosResponse>(new TestGet3FoosRequest());
@@ -43,6 +43,6 @@ namespace LobbyServer.Tests
             var res = Api.Get<TestPlusResponse>(new TestPlusRequest() { a = 100, b = 125, echo = str });
             Assert.AreEqual(225, res.c);
             Assert.AreEqual(str, res.echo);
-        }
+        }*/
     }
 }

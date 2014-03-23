@@ -108,6 +108,7 @@ namespace LobbyServer.Controllers
             ValidPass = pass;
             ValidPassString = passString;
             ViewBag.UserId = pass.data.userId;
+            ViewBag.ValidPassString = ValidPassString;
         }
 
         protected void RequirePass()

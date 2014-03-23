@@ -7,7 +7,7 @@ using System.Web;
 
 namespace LobbyServer.Models
 {
-    public class GamePass
+    /*public class GamePass
     {
         public class GamePassData
         {
@@ -38,5 +38,5 @@ namespace LobbyServer.Models
             var json = AuthHelper.Decrypt(cipher, key, iv);
             return JsonConvert.DeserializeObject<GamePass>(json);
         }
-    }
+    }*/
 }

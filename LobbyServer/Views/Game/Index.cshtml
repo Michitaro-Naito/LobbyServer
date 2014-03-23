@@ -1,8 +1,335 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Index";
 }
 
-<h2>Game Index</h2>
-<p>You are @ViewBag.UserId</p>
 
+
+<ul data-bind="foreach: actors" class="actors clearfix">
+    <li>
+        <div class="name">判事 エイルマー</div>
+        <div>
+            <table>
+                <tr>
+                    <td>★女性</td>
+                    <td>村人?</td>
+                    <td><div class="icon" style="background-position: -168px -240px;"></div></td>
+                </tr>
+            </table>
+            <div>
+                <span class="user">Mich</span>
+                <span class="glyphicon glyphicon-user"></span>
+            </div>
+        </div>
+    </li>
+</ul>
+
+
+<div id="Game">
+
+    <div data-bind="visible: state() == State.Disconnected">
+        <h3>Disconnected</h3>
+    </div>
+
+    <div data-bind="visible: state() == State.Characters">
+        <h3>Characters</h3>
+        <ul data-bind="foreach: characters">
+            <li>
+                <strong data-bind="text: name"></strong>
+                <button type="button" data-bind="click: function(){ $root.Send('/SelectCharacter ' + name); }">Select</button>
+            </li>
+        </ul>
+    </div>
+
+    <div data-bind="visible: state() == State.CreateCharacter">
+        <h3>Create Character</h3>
+    </div>
+
+    <div data-bind="visible: state() == State.Rooms">
+        <h3>Rooms</h3>
+        <ul data-bind="foreach: rooms">
+            <li>
+                <strong data-bind="text: roomId"></strong>
+                <span data-bind="text: guid"></span>
+                <span data-bind="text: name"></span>
+                <span data-bind="text: max"></span>
+                <span data-bind="text: interval"></span>
+                <button type="button" data-bind="click: function(){ $root.Send('/JoinRoom ' + roomId); }">Join</button>
+            </li>
+        </ul>
+        <button type="button" data-bind="click: CreateRoom">Create</button>
+    </div>
+
+
+
+    <div data-bind="visible: state() == State.Playing">
+        <h3>Playing</h3>
+        <button type="button" data-bind="click: QuitRoom">QuitRoom</button>
+
+        <div data-bind="visible: roomState() == RoomState.Configuring">
+            <h4>Configuring</h4>
+            <button type="button" data-bind="click: RoomConfigure">Configure</button>
+        </div>
+
+        <div data-bind="visible: roomState() != RoomState.Configuring">
+            <ul data-bind="foreach: actors" class="actors clearfix">
+                <li data-bind="visible: !isDead">
+                    <div class="name" data-bind="text: fmTitleAndName">判事 エイルマー</div>
+                    <div>
+                        <table>
+                            <tr>
+                                <td data-bind="text: fmGender">★女性</td>
+                                <td data-bind="text: fmRole">村人?</td>
+                                <td><div class="icon" style="background-position: -168px -240px;"></div></td>
+                            </tr>
+                        </table>
+                        <div class="user" data-bind="text: fmUser"></div>
+                    </div>
+                </li>
+            </ul>
+            <ul data-bind="foreach: actors" class="actors clearfix">
+                <li data-bind="visible: isDead">
+                    <div class="name" data-bind="text: fmTitleAndName">判事 エイルマー</div>
+                    <div>
+                        <table>
+                            <tr>
+                                <td data-bind="text: fmGender">★女性</td>
+                                <td data-bind="text: fmRole">村人?</td>
+                                <td><div class="icon" style="background-position: -168px -240px;"></div></td>
+                            </tr>
+                        </table>
+                        <div class="user" data-bind="text: fmUser"></div>
+                    </div>
+                </li>
+            </ul>
+            <input type="text" id="RoomChat" />
+
+            <div data-bind="visible: roomState() == RoomState.Matchmaking">
+                <h4>Matchmaking</h4>
+                <button type="button" data-bind="click: RoomStart">Start</button>
+            </div>
+
+            <div data-bind="visible: roomState() == RoomState.Playing">
+                <h4>Playing</h4>
+            </div>
+
+            <div data-bind="visible: roomState() == RoomState.Ending">
+                <h4>Ending</h4>
+            </div>
+
+            <div data-bind="visible: roomState() == RoomState.Ended">
+                <h4>Ended</h4>
+            </div>
+        </div>
+    </div>
+
+
+
+    <h4>Debug</h4>
+    <input type="text" id="message" />
+    <ul data-bind="foreach: messages">
+        <li>
+            <strong data-bind="text: name"></strong>
+            <span data-bind="text: body"></span>
+        </li>
+    </ul>
+</div>
+
+
+
+@section scripts{
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js"></script>
+    @Scripts.Render("~/bundles/signalr")
+    <script src="http://localhost:8080/signalr/hubs"></script>
+    <script type="text/javascript">
+        $(function () {
+            
+            // Gets Pass from Server.
+            var culture = '@Culture';
+            var pass = '@ViewBag.ValidPassString';
+
+            // SignalR
+            $.connection.hub.url = "http://localhost:8080/signalr";
+
+            // Knockout
+            function Message(name, body) {
+                this.name = name;
+                this.body = body;
+            }
+            function Character(data) {
+                this.name = data.name;
+            }
+            function Room(data) {
+                this.roomId = data.roomId;
+                this.guid = data.guid;
+                this.name = data.name;
+                this.max = data.max;
+                this.interval = data.interval;
+            }
+            function Actor(data) {
+                this.id = data.id;
+                this.title = data.title;
+                this.name = data.name;
+                this.gender = data.gender;
+                this.character = data.character;
+                this.role = data.role;
+                this.isDead = data.isDead;
+
+                this.fmTitleAndName = ko.computed(function () {
+                    return this.title + ' ' + this.name;
+                }, this);
+                this.fmGender = ko.computed(function () {
+                    return this.gender;
+                }, this);
+                this.fmRole = ko.computed(function () {
+                    return this.role;
+                }, this);
+                this.fmUser = ko.computed(function () {
+                    return this.character;
+                }, this);
+            }
+            function AppModel(hub) {
+                var s = this;
+
+                // ----- Variable -----
+
+                s.hub = hub;
+
+                s.State = {
+                    Disconnected:       0000,
+                    Characters:         1000,
+                    CreateCharacter:    1001,
+                    Rooms:              2000,
+                    Playing:            3000
+                };
+                s.RoomState = {
+                    Configuring:        0000,
+                    Matchmaking:        0001,
+                    Playing:            0002,
+                    Ending:             0003,
+                    Ended:              0004
+                };
+                s.state = ko.observable(s.State.Disconnected);
+                s.roomState = ko.observable(s.RoomState.Configuring);
+
+                // Characters who Player owns.
+                s.characters = ko.observableArray([]);
+                s.rooms = ko.observableArray([]);
+
+                s.actors = ko.observableArray([]);
+
+                s.messages = ko.observableArray([]);
+
+
+
+                // ----- Subscription -----
+
+                s.state.subscribe(function (newValue) {
+                    switch (newValue) {
+                        case s.State.Characters:
+                            s.Send('/GetCharacters');
+                            break;
+                        case s.State.CreateCharacter:
+                            break;
+                        case s.State.Rooms:
+                            s.Send('/GetRooms');
+                            break;
+                        case s.State.Playing:
+                            break;
+                    }
+                });
+
+
+                // ----- Callback -----
+
+                s.hub.client.addMessage = function (name, body) {
+                    s.messages.unshift(new Message(name, body));
+                    while (s.messages().length > 100) {
+                        s.messages.pop();
+                    }
+                }
+
+                s.hub.client.broughtTo = function (state) {
+                    console.info('brought to ' + state);
+                    s.state(state);
+                }
+
+                s.hub.client.gotCharacters = function (characters) {
+                    s.characters([]);
+                    for (var n = 0; n < characters.length; n++) {
+                        var c = characters[n];
+                        s.characters.push(new Character(c));
+                    }
+                }
+
+                s.hub.client.gotRooms = function (rooms) {
+                    s.rooms([]);
+                    for (var n = 0; n < rooms.length; n++) {
+                        var r = rooms[n];
+                        s.rooms.push(new Room(r));
+                    }
+                }
+
+                // ----- Callback (in Room) -----
+
+                s.hub.client.gotRoomState = function (newRoomState) {
+                    s.roomState(newRoomState);
+                }
+
+                s.hub.client.gotActors = function (actors) {
+                    s.actors([]);
+                    for (var n = 0; n < actors.length; n++) {
+                        s.actors.push(new Actor(actors[n]));
+                    }
+                }
+
+
+
+                // ----- Method -----
+
+                s.Send = function (body) {
+                    s.hub.server.send(body);
+                }
+
+                s.Connect = function () {
+                    s.hub.connection.start().done(function () {
+                        s.hub.server.authenticate(culture, pass);
+                    });
+                    $('#message').keydown(function (e) {
+                        if (event.which == 13) {
+                            event.preventDefault();
+                            s.hub.server.send($('#message').val());
+                            $('#message').val('').focus();
+                        }
+                    });
+                    $('#RoomChat').keydown(function (e) {
+                        if (event.which == 13) {
+                            event.preventDefault();
+                            s.hub.server.send('/Room ' + $('#RoomChat').val());
+                            $('#RoomChat').val('').focus();
+                        }
+                    });
+                }
+
+                s.CreateRoom = function () {
+                    s.Send('/CreateRoom');
+                }
+
+                s.RoomConfigure = function () {
+                    s.Send('/Room Configure Foo 12 5');
+                }
+
+                s.RoomStart = function () {
+                    s.Send('/Room Start');
+                }
+
+                s.QuitRoom = function () {
+                    s.Send('/QuitRoom');
+                }
+            }
+
+            var model = new AppModel($.connection.myHub);
+            ko.applyBindings(model, document.getElementById('Game'));
+            model.Connect();
+        });
+    </script>
+}
