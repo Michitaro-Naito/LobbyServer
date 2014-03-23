@@ -101,7 +101,10 @@
                     </div>
                 </li>
             </ul>
-            <input type="text" id="RoomChat" />
+            <select data-bind="options:roomSendModes, optionsText: 'name', value: roomSendMode"></select>
+            <select data-bind="options:actors, optionsText: 'fmTitleAndName', value: roomSendTo"></select>
+            <div data-bind="text: roomSendMode().name"></div>
+            <input type="text" id="RoomChat" data-bind="value: roomSendText"/>
 
             <div data-bind="visible: roomState() == RoomState.Matchmaking">
                 <h4>Matchmaking</h4>
@@ -208,6 +211,12 @@
                     Ending:             0003,
                     Ended:              0004
                 };
+                s.roomSendModes = [
+                    { id: 0, name: 'Normal' },
+                    { id: 1, name: 'Wolf' },
+                    { id: 2, name: 'Ghost' },
+                    { id: 3, name: 'Private' }
+                ];
                 s.state = ko.observable(s.State.Disconnected);
                 s.roomState = ko.observable(s.RoomState.Configuring);
 
@@ -216,6 +225,9 @@
                 s.rooms = ko.observableArray([]);
 
                 s.actors = ko.observableArray([]);
+                s.roomSendMode = ko.observable(s.roomSendModes[0]);
+                s.roomSendTo = ko.observable();
+                s.roomSendText = ko.observable('');
 
                 s.messages = ko.observableArray([]);
 
@@ -304,8 +316,10 @@
                     $('#RoomChat').keydown(function (e) {
                         if (event.which == 13) {
                             event.preventDefault();
-                            s.hub.server.send('/Room ' + $('#RoomChat').val());
-                            $('#RoomChat').val('').focus();
+                            //s.hub.server.roomSend('/Room ' + $('#RoomChat').val());
+                            //$('#RoomChat').val('').focus();
+                            s.hub.server.roomSend(s.roomSendMode().id, s.roomSendTo().id, s.roomSendText());
+                            s.roomSendText('');
                         }
                     });
                 }
@@ -315,11 +329,12 @@
                 }
 
                 s.RoomConfigure = function () {
-                    s.Send('/Room Configure Foo 12 5');
+                    s.hub.server.roomConfigure('Foo', 12, 5);
                 }
 
                 s.RoomStart = function () {
-                    s.Send('/Room Start');
+                    //s.Send('/Room Start');
+                    s.hub.server.roomStart();
                 }
 
                 s.QuitRoom = function () {
