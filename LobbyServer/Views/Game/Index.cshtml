@@ -2,8 +2,6 @@
     ViewBag.Title = "Index";
 }
 
-
-
 <ul data-bind="foreach: actors" class="actors clearfix">
     <li>
         <div class="name">判事 エイルマー</div>
@@ -101,10 +99,6 @@
                     </div>
                 </li>
             </ul>
-            <select data-bind="options:roomSendModes, optionsText: 'name', value: roomSendMode"></select>
-            <select data-bind="options:actors, optionsText: 'fmTitleAndName', value: roomSendTo"></select>
-            <div data-bind="text: roomSendMode().name"></div>
-            <input type="text" id="RoomChat" data-bind="value: roomSendText"/>
 
             <div data-bind="visible: roomState() == RoomState.Matchmaking">
                 <h4>Matchmaking</h4>
@@ -113,6 +107,31 @@
 
             <div data-bind="visible: roomState() == RoomState.Playing">
                 <h4>Playing</h4>
+                
+                <!-- Button trigger modal -->
+                <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+                    Launch demo modal
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title" id="myModalLabel">Vote</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p>Select a character to execute.</p>
+                                <select data-bind="options:actors, optionsText: 'fmTitleAndName', value: roomSendTo"></select>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div data-bind="visible: roomState() == RoomState.Ending">
@@ -122,14 +141,24 @@
             <div data-bind="visible: roomState() == RoomState.Ended">
                 <h4>Ended</h4>
             </div>
+
+            <select data-bind="options:roomSendModes, optionsText: 'name', value: roomSendMode"></select>
+            <select data-bind="options:actors, optionsText: 'fmTitleAndName', value: roomSendTo"></select>
+            <div data-bind="text: roomSendMode().name"></div>
+            <input type="text" id="RoomChat" />
+            <ul data-bind="foreach: roomMessages">
+                <li>
+                    <span data-bind="text: body"></span>
+                </li>
+            </ul>
         </div>
     </div>
 
 
 
     <h4>Debug</h4>
-    <input type="text" id="message" />
-    <ul data-bind="foreach: messages">
+    <input type="text" id="logs" />
+    <ul data-bind="foreach: logs">
         <li>
             <strong data-bind="text: name"></strong>
             <span data-bind="text: body"></span>
@@ -143,206 +172,15 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js"></script>
     @Scripts.Render("~/bundles/signalr")
     <script src="http://localhost:8080/signalr/hubs"></script>
+    @Scripts.Render("~/bundles/game")
     <script type="text/javascript">
         $(function () {
-            
             // Gets Pass from Server.
             var culture = '@Culture';
             var pass = '@ViewBag.ValidPassString';
 
-            // SignalR
-            $.connection.hub.url = "http://localhost:8080/signalr";
-
-            // Knockout
-            function Message(name, body) {
-                this.name = name;
-                this.body = body;
-            }
-            function Character(data) {
-                this.name = data.name;
-            }
-            function Room(data) {
-                this.roomId = data.roomId;
-                this.guid = data.guid;
-                this.name = data.name;
-                this.max = data.max;
-                this.interval = data.interval;
-            }
-            function Actor(data) {
-                this.id = data.id;
-                this.title = data.title;
-                this.name = data.name;
-                this.gender = data.gender;
-                this.character = data.character;
-                this.role = data.role;
-                this.isDead = data.isDead;
-
-                this.fmTitleAndName = ko.computed(function () {
-                    return this.title + ' ' + this.name;
-                }, this);
-                this.fmGender = ko.computed(function () {
-                    return this.gender;
-                }, this);
-                this.fmRole = ko.computed(function () {
-                    return this.role;
-                }, this);
-                this.fmUser = ko.computed(function () {
-                    return this.character;
-                }, this);
-            }
-            function AppModel(hub) {
-                var s = this;
-
-                // ----- Variable -----
-
-                s.hub = hub;
-
-                s.State = {
-                    Disconnected:       0000,
-                    Characters:         1000,
-                    CreateCharacter:    1001,
-                    Rooms:              2000,
-                    Playing:            3000
-                };
-                s.RoomState = {
-                    Configuring:        0000,
-                    Matchmaking:        0001,
-                    Playing:            0002,
-                    Ending:             0003,
-                    Ended:              0004
-                };
-                s.roomSendModes = [
-                    { id: 0, name: 'Normal' },
-                    { id: 1, name: 'Wolf' },
-                    { id: 2, name: 'Ghost' },
-                    { id: 3, name: 'Private' }
-                ];
-                s.state = ko.observable(s.State.Disconnected);
-                s.roomState = ko.observable(s.RoomState.Configuring);
-
-                // Characters who Player owns.
-                s.characters = ko.observableArray([]);
-                s.rooms = ko.observableArray([]);
-
-                s.actors = ko.observableArray([]);
-                s.roomSendMode = ko.observable(s.roomSendModes[0]);
-                s.roomSendTo = ko.observable();
-                s.roomSendText = ko.observable('');
-
-                s.messages = ko.observableArray([]);
-
-
-
-                // ----- Subscription -----
-
-                s.state.subscribe(function (newValue) {
-                    switch (newValue) {
-                        case s.State.Characters:
-                            s.Send('/GetCharacters');
-                            break;
-                        case s.State.CreateCharacter:
-                            break;
-                        case s.State.Rooms:
-                            s.Send('/GetRooms');
-                            break;
-                        case s.State.Playing:
-                            break;
-                    }
-                });
-
-
-                // ----- Callback -----
-
-                s.hub.client.addMessage = function (name, body) {
-                    s.messages.unshift(new Message(name, body));
-                    while (s.messages().length > 100) {
-                        s.messages.pop();
-                    }
-                }
-
-                s.hub.client.broughtTo = function (state) {
-                    console.info('brought to ' + state);
-                    s.state(state);
-                }
-
-                s.hub.client.gotCharacters = function (characters) {
-                    s.characters([]);
-                    for (var n = 0; n < characters.length; n++) {
-                        var c = characters[n];
-                        s.characters.push(new Character(c));
-                    }
-                }
-
-                s.hub.client.gotRooms = function (rooms) {
-                    s.rooms([]);
-                    for (var n = 0; n < rooms.length; n++) {
-                        var r = rooms[n];
-                        s.rooms.push(new Room(r));
-                    }
-                }
-
-                // ----- Callback (in Room) -----
-
-                s.hub.client.gotRoomState = function (newRoomState) {
-                    s.roomState(newRoomState);
-                }
-
-                s.hub.client.gotActors = function (actors) {
-                    s.actors([]);
-                    for (var n = 0; n < actors.length; n++) {
-                        s.actors.push(new Actor(actors[n]));
-                    }
-                }
-
-
-
-                // ----- Method -----
-
-                s.Send = function (body) {
-                    s.hub.server.send(body);
-                }
-
-                s.Connect = function () {
-                    s.hub.connection.start().done(function () {
-                        s.hub.server.authenticate(culture, pass);
-                    });
-                    $('#message').keydown(function (e) {
-                        if (event.which == 13) {
-                            event.preventDefault();
-                            s.hub.server.send($('#message').val());
-                            $('#message').val('').focus();
-                        }
-                    });
-                    $('#RoomChat').keydown(function (e) {
-                        if (event.which == 13) {
-                            event.preventDefault();
-                            //s.hub.server.roomSend('/Room ' + $('#RoomChat').val());
-                            //$('#RoomChat').val('').focus();
-                            s.hub.server.roomSend(s.roomSendMode().id, s.roomSendTo().id, s.roomSendText());
-                            s.roomSendText('');
-                        }
-                    });
-                }
-
-                s.CreateRoom = function () {
-                    s.Send('/CreateRoom');
-                }
-
-                s.RoomConfigure = function () {
-                    s.hub.server.roomConfigure('Foo', 12, 5);
-                }
-
-                s.RoomStart = function () {
-                    //s.Send('/Room Start');
-                    s.hub.server.roomStart();
-                }
-
-                s.QuitRoom = function () {
-                    s.Send('/QuitRoom');
-                }
-            }
-
-            var model = new AppModel($.connection.myHub);
+            // Initializes Game
+            var model = new window.Apwei.Game.AppModel(culture, pass, $.connection.myHub);
             ko.applyBindings(model, document.getElementById('Game'));
             model.Connect();
         });
