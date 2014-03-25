@@ -2,6 +2,52 @@
     ViewBag.Title = "Index";
 }
 
+<ul data-bind="foreach: roomMessages" class="messages">
+    <li>
+        <div class="from">
+            <span data-bind="text: cpFrom" class="name">SYSTEM</span>
+            <span data-bind="text: cpTo" class="to">To 全体</span>
+            <span data-bind="text: fmCreated" class="time">8:02</span>
+        </div>
+        <div class="body">
+            Game has ended.
+        </div>
+    </li>
+
+    <li class="mode1">
+        <div class="from">
+            <span data-bind="text: cpFrom" class="name">SYSTEM</span>
+            <span data-bind="text: cpTo" class="to">To 全体</span>
+            <span data-bind="text: fmCreated" class="time">8:02</span>
+        </div>
+        <div class="body">
+            Game has ended.
+        </div>
+    </li>
+
+    <li class="mode2">
+        <div class="from">
+            <span data-bind="text: cpFrom" class="name">SYSTEM</span>
+            <span data-bind="text: cpTo" class="to">To 全体</span>
+            <span data-bind="text: fmCreated" class="time">8:02</span>
+        </div>
+        <div class="body">
+            Game has ended.
+        </div>
+    </li>
+
+    <li class="mode3">
+        <div class="from">
+            <span data-bind="text: cpFrom" class="name">SYSTEM</span>
+            <span data-bind="text: cpTo" class="to">To 全体</span>
+            <span data-bind="text: fmCreated" class="time">8:02</span>
+        </div>
+        <div class="body">
+            Game has ended.
+        </div>
+    </li>
+</ul>
+
 <ul data-bind="foreach: actors" class="actors clearfix">
     <li>
         <div class="name">判事 エイルマー</div>
@@ -110,7 +156,7 @@
                 
                 <!-- Button trigger modal -->
                 <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-                    Launch demo modal
+                    Vote
                 </button>
 
                 <!-- Modal -->
@@ -122,12 +168,14 @@
                                 <h4 class="modal-title" id="myModalLabel">Vote</h4>
                             </div>
                             <div class="modal-body">
-                                <p>Select a character to execute.</p>
-                                <select data-bind="options:actors, optionsText: 'fmTitleAndName', value: roomSendTo"></select>
+                                <p>Select a character to execute. Changes will be saved automatically.</p>
+                                <select data-bind="options:cpActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToExecute, optionsCaption: 'select me'"></select>
+                                <select data-bind="options:cpActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToAttack, optionsCaption: 'select me'"></select>
+                                <select data-bind="options:cpActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToFortuneTell, optionsCaption: 'select me'"></select>
+                                <select data-bind="options:cpActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToGuard, optionsCaption: 'select me'"></select>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary">Save changes</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
                             </div>
                         </div>
                     </div>
@@ -146,9 +194,16 @@
             <select data-bind="options:actors, optionsText: 'fmTitleAndName', value: roomSendTo"></select>
             <div data-bind="text: roomSendMode().name"></div>
             <input type="text" id="RoomChat" />
-            <ul data-bind="foreach: roomMessages">
-                <li>
-                    <span data-bind="text: body"></span>
+
+            <!-- RoomMessages -->
+            <ul data-bind="foreach: roomMessages" class="messages">
+                <li data-bind="attr: { class: fmClass }">
+                    <div class="from">
+                        <span data-bind="text: cpFrom" class="name"></span>
+                        <span data-bind="text: cpTo" class="to"></span>
+                        <span data-bind="text: fmCreated" class="time"></span>
+                    </div>
+                    <div data-bind="text: body" class="body"></div>
                 </li>
             </ul>
         </div>

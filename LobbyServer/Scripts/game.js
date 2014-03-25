@@ -20,8 +20,54 @@
             this.interval = data.interval;
         },
 
-        RoomMessage: function (data) {
+        RoomMessage: function (root, data) {
+            console.info(data);
+            this.id = data.id;
+            this.Created = new Date(data.Created);
+            this.callerUserId = data.callerUserId;
+            this.mode = data.mode;
+            this.fromId = data.fromId;
+            this.toId = data.toId;
             this.body = data.body;
+
+            this.fmClass = ko.computed(function () {
+                return 'mode' + this.mode;
+            }, this);
+            this.fmCreated = ko.computed(function () {
+                var minutes = this.Created.getMinutes();
+                if(minutes < 10)
+                    minutes = '0' + minutes;
+                return this.Created.getHours() + ':' + minutes;
+            }, this);
+
+            this.cpFrom = ko.computed(function () {
+                if (this.fromId === null)
+                    return '';
+                for (var n = 0; n < root.actors().length; n++) {
+                    var a = root.actors()[n];
+                    if (a.id === this.fromId)
+                        return a.fmTitleAndName();
+                }
+                return this.callerUserId;
+            }, this);
+
+            this.cpTo = ko.computed(function () {
+                if (this.fromId === null)
+                    return '';
+                var target = '?';
+                if (this.mode !== 3) {
+                    target = 'All';
+                } else {
+                    for (var n = 0; n < root.actors().length; n++) {
+                        var a = root.actors()[n];
+                        if (a.id === this.toId) {
+                            target = a.fmTitleAndName();
+                            break;
+                        }
+                    }
+                }
+                return 'To ' + target;
+            }, this);
         },
 
         Actor: function (data) {
@@ -93,7 +139,25 @@
             s.roomSendTo = ko.observable();
             s.roomMessages = ko.observableArray([]);
 
+            s.actorToExecute = ko.observable();
+            s.actorToAttack = ko.observable();
+            s.actorToFortuneTell = ko.observable();
+            s.actorToGuard = ko.observable();
+            s.myActorId = ko.observable();
+            s.ignoreVoteSubscription = ko.observable(false);
+
             s.logs = ko.observableArray([]);
+
+            // ----- Computed -----
+            s.cpActorsExceptMe = ko.computed(function () {
+                var actors = [];
+                for (var n = 0; n < s.actors().length; n++) {
+                    var a = s.actors()[n];
+                    if (a.id != s.myActorId())
+                        actors.push(a);
+                }
+                return actors;
+            }, this);
 
 
 
@@ -112,6 +176,19 @@
                     case s.State.Playing:
                         break;
                 }
+            });
+
+            s.actorToExecute.subscribe(function (newValue) {
+                s.Vote();
+            });
+            s.actorToAttack.subscribe(function (newValue) {
+                s.Vote();
+            });
+            s.actorToFortuneTell.subscribe(function (newValue) {
+                s.Vote();
+            });
+            s.actorToGuard.subscribe(function (newValue) {
+                s.Vote();
             });
 
 
@@ -148,20 +225,68 @@
             // ----- Callback (in Room) -----
 
             s.hub.client.gotRoomState = function (newRoomState) {
-                $('#myModal').modal('hide');
+                $('.modal').modal('hide');
                 s.roomState(newRoomState);
             }
 
             s.hub.client.gotActors = function (actors) {
-                s.actors([]);
+                s.ignoreVoteSubscription(true);
+
+                // Refresh array
+                var newActors = [];
                 for (var n = 0; n < actors.length; n++) {
-                    s.actors.push(new Apwei.Game.Actor(actors[n]));
+                    newActors.push(new Apwei.Game.Actor(actors[n]));
                 }
+                s.actors(newActors);
+
+                s.ignoreVoteSubscription(false);
+            }
+
+            s.hub.client.gotYourActorId = function (id) {
+                s.myActorId(id);
+            }
+
+            s.hub.client.gotYourSelections = function (data) {
+                s.ignoreVoteSubscription(true);
+
+                //console.info('Your selections:');
+                //console.info(data);
+                // Restore selections (if avairable)
+                for (var n = 0; n < s.cpActorsExceptMe().length; n++) {
+                    var a = s.cpActorsExceptMe()[n];
+                    if (a.id === data.executeId) {
+                        s.actorToExecute(a);
+                        break;
+                    }
+                }
+                for (var n = 0; n < s.cpActorsExceptMe().length; n++) {
+                    var a = s.cpActorsExceptMe()[n];
+                    if (a.id === data.attackId) {
+                        s.actorToAttack(a);
+                        break;
+                    }
+                }
+                for (var n = 0; n < s.cpActorsExceptMe().length; n++) {
+                    var a = s.cpActorsExceptMe()[n];
+                    if (a.id === data.fortuneTellId) {
+                        s.actorToFortuneTell(a);
+                        break;
+                    }
+                }
+                for (var n = 0; n < s.cpActorsExceptMe().length; n++) {
+                    var a = s.cpActorsExceptMe()[n];
+                    if (a.id === data.guardId) {
+                        s.actorToGuard(a);
+                        break;
+                    }
+                }
+
+                s.ignoreVoteSubscription(false);
             }
 
             s.hub.client.gotRoomMessages = function (messages) {
                 for (var n = 0; n < messages.length; n++) {
-                    s.roomMessages.unshift(new Apwei.Game.RoomMessage(messages[n]));
+                    s.roomMessages.unshift(new Apwei.Game.RoomMessage(s, messages[n]));
                 }
             }
 
@@ -208,12 +333,21 @@
             s.QuitRoom = function () {
                 s.Send('/QuitRoom');
             }
+
+            s.Vote = function () {
+                if (s.ignoreVoteSubscription())
+                    return;
+
+                s.hub.server.roomVote(
+                    s.actorToExecute() ? s.actorToExecute().id : -1,
+                    s.actorToAttack() ? s.actorToAttack().id : -1,
+                    s.actorToFortuneTell() ? s.actorToFortuneTell().id : -1,
+                    s.actorToGuard() ? s.actorToGuard().id : -1);
+                console.info('voting...');
+            }
         }
     };
 
-    /*var model = new AppModel('culture', 'pass', $.connection.myHub);
-    ko.applyBindings(model, document.getElementById('Game'));
-    model.Connect();*/
     window.Apwei = window.Apwei || {};
     window.Apwei.Game = game;
 });
