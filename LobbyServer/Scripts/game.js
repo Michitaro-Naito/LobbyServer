@@ -69,7 +69,8 @@
             }, this);
         },
 
-        Actor: function (data) {
+        Actor: function (root, data) {
+            this.root = root;
             this.id = data.id;
             this.title = data.title;
             this.name = data.name;
@@ -91,10 +92,13 @@
                 return str;
             }, this);
             this.fmRole = ko.computed(function () {
-                var str = this.role;
+                console.info(this.root);
+                var role = this.root.FindRole(this.role);
+                return role.name;
+                /*var str = this.role;
                 if (!this.isRoleSure)
                     str += '?';
-                return str;
+                return str;*/
             }, this);
             this.fmUser = ko.computed(function () {
                 return this.character;
@@ -153,6 +157,7 @@
             s.logs = ko.observableArray([]);
             s.lastUpdate = new Date();
             s.lastError = ko.observable('');
+            s.roles = ko.observableArray([]);
 
             // ----- Computed -----
             s.cpMyActor = ko.computed(function () {
@@ -257,6 +262,11 @@
                 $('#ErrorModal').modal('show');
             }
 
+            s.hub.client.gotRoles = function (roles) {
+                s.roles(roles);
+                //console.info(s.roles());
+            }
+
             // ----- Callback (in Room) -----
 
             s.hub.client.gotRoomState = function (newRoomState) {
@@ -270,7 +280,7 @@
                 // Refresh array
                 var newActors = [];
                 for (var n = 0; n < actors.length; n++) {
-                    newActors.push(new Apwei.Game.Actor(actors[n]));
+                    newActors.push(new Apwei.Game.Actor(s, actors[n]));
                 }
                 s.actors(newActors);
 
@@ -385,6 +395,19 @@
                     s.actorToFortuneTell() ? s.actorToFortuneTell().id : -1,
                     s.actorToGuard() ? s.actorToGuard().id : -1);
             }
+
+            // ----- Method (Data Search) -----
+
+            s.FindRole = function (roleId) {
+                for (var n = 0; n < s.roles().length; n++) {
+                    var role = s.roles()[n];
+                    if (role.id === roleId)
+                        return role;
+                }
+                return null;
+            }
+
+
 
             s.Update = function () {
                 var now = new Date();
