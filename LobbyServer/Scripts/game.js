@@ -76,6 +76,7 @@
             this.gender = data.gender;
             this.character = data.character;
             this.role = data.role;
+            this.isRoleSure = data.isRoleSure;
             this.isDead = data.isDead;
             this.isRoomMaster = data.isRoomMaster;
 
@@ -90,7 +91,10 @@
                 return str;
             }, this);
             this.fmRole = ko.computed(function () {
-                return this.role;
+                var str = this.role;
+                if (!this.isRoleSure)
+                    str += '?';
+                return str;
             }, this);
             this.fmUser = ko.computed(function () {
                 return this.character;
@@ -144,8 +148,10 @@
             s.actorToGuard = ko.observable();
             s.myActorId = ko.observable();
             s.ignoreVoteSubscription = ko.observable(false);
+            s.duration = ko.observable(0.0);
 
             s.logs = ko.observableArray([]);
+            s.lastUpdate = new Date();
 
             // ----- Computed -----
             s.cpMyActor = ko.computed(function () {
@@ -165,6 +171,23 @@
                 }
                 return actors;
             }, this);
+            s.fmDuration = ko.computed(function () {
+                var totalSeconds = Math.ceil(s.duration());
+                var hours = Math.floor(totalSeconds / 3600);
+                var minutes = Math.floor(totalSeconds % 3600 / 60);
+                if (minutes < 10)
+                    minutes = '0' + minutes;
+                var seconds = Math.floor(totalSeconds % 60);
+                if (seconds < 10)
+                    seconds = '0' + seconds;
+                var str = '';
+                if (hours > 0)
+                    str += hours + ':';
+                if (hours > 0 || minutes > 0)
+                    str += minutes + ':';
+                str += seconds;
+                return str;
+            });
 
 
 
@@ -298,6 +321,10 @@
                 s.roomSendModes(modes);
             }
 
+            s.hub.client.gotTimer = function (duration) {
+                s.duration(duration);
+            }
+
 
 
             // ----- Method -----
@@ -352,6 +379,23 @@
                     s.actorToFortuneTell() ? s.actorToFortuneTell().id : -1,
                     s.actorToGuard() ? s.actorToGuard().id : -1);
             }
+
+            s.Update = function () {
+                var now = new Date();
+                var elapsed = (now - s.lastUpdate) / 1000.0;
+                s.lastUpdate = now;
+
+                var duration = s.duration() - elapsed;
+                if (duration < 0.0)
+                    duration = 0.0;
+                s.duration(duration);
+            }
+
+            s.Initialize = function () {
+                setInterval(s.Update, 100);
+            }
+
+            s.Initialize();
         }
     };
 

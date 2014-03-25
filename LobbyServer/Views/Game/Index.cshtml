@@ -75,8 +75,8 @@
                     <div>
                         <table>
                             <tr>
-                                <td data-bind="text: fmGender">★女性</td>
-                                <td data-bind="text: fmRole">村人?</td>
+                                <td data-bind="text: fmGender"></td>
+                                <td data-bind="text: fmRole"></td>
                                 <td><div class="icon" style="background-position: -168px -240px;"></div></td>
                             </tr>
                         </table>
@@ -91,7 +91,7 @@
                         <table>
                             <tr>
                                 <td data-bind="text: fmGender">★女性</td>
-                                <td data-bind="text: fmRole">村人?</td>
+                                <td data-bind="text: fmRole"></td>
                                 <td><div class="icon" style="background-position: -168px -240px;"></div></td>
                             </tr>
                         </table>
@@ -107,6 +107,8 @@
 
             <div data-bind="visible: roomState() == RoomState.Playing">
                 <h4>Playing</h4>
+
+                <div data-bind="text: fmDuration"></div>
                 
                 <!-- Button trigger modal -->
                 <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
@@ -138,6 +140,8 @@
 
             <div data-bind="visible: roomState() == RoomState.Ending">
                 <h4>Ending</h4>
+
+                <div data-bind="text: fmDuration"></div>
             </div>
 
             <div data-bind="visible: roomState() == RoomState.Ended">

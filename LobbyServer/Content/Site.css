@@ -44,6 +44,11 @@ input[type="checkbox"].input-validation-error {
 
 
 
+/* Override */
+body{
+    line-height: 1.2em;
+}
+
 
 div.icon{
     width: 24px;
