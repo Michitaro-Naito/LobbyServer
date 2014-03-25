@@ -152,6 +152,7 @@
 
             s.logs = ko.observableArray([]);
             s.lastUpdate = new Date();
+            s.lastError = ko.observable('');
 
             // ----- Computed -----
             s.cpMyActor = ko.computed(function () {
@@ -249,6 +250,11 @@
                     var r = rooms[n];
                     s.rooms.push(new Apwei.Game.Room(r));
                 }
+            }
+
+            s.hub.client.gotError = function (data) {
+                s.lastError(data);
+                $('#ErrorModal').modal('show');
             }
 
             // ----- Callback (in Room) -----
