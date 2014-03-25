@@ -2,52 +2,6 @@
     ViewBag.Title = "Index";
 }
 
-<ul data-bind="foreach: roomMessages" class="messages">
-    <li>
-        <div class="from">
-            <span data-bind="text: cpFrom" class="name">SYSTEM</span>
-            <span data-bind="text: cpTo" class="to">To 全体</span>
-            <span data-bind="text: fmCreated" class="time">8:02</span>
-        </div>
-        <div class="body">
-            Game has ended.
-        </div>
-    </li>
-
-    <li class="mode1">
-        <div class="from">
-            <span data-bind="text: cpFrom" class="name">SYSTEM</span>
-            <span data-bind="text: cpTo" class="to">To 全体</span>
-            <span data-bind="text: fmCreated" class="time">8:02</span>
-        </div>
-        <div class="body">
-            Game has ended.
-        </div>
-    </li>
-
-    <li class="mode2">
-        <div class="from">
-            <span data-bind="text: cpFrom" class="name">SYSTEM</span>
-            <span data-bind="text: cpTo" class="to">To 全体</span>
-            <span data-bind="text: fmCreated" class="time">8:02</span>
-        </div>
-        <div class="body">
-            Game has ended.
-        </div>
-    </li>
-
-    <li class="mode3">
-        <div class="from">
-            <span data-bind="text: cpFrom" class="name">SYSTEM</span>
-            <span data-bind="text: cpTo" class="to">To 全体</span>
-            <span data-bind="text: fmCreated" class="time">8:02</span>
-        </div>
-        <div class="body">
-            Game has ended.
-        </div>
-    </li>
-</ul>
-
 <ul data-bind="foreach: actors" class="actors clearfix">
     <li>
         <div class="name">判事 エイルマー</div>
@@ -191,7 +145,7 @@
             </div>
 
             <select data-bind="options:roomSendModes, optionsText: 'name', value: roomSendMode"></select>
-            <select data-bind="options:actors, optionsText: 'fmTitleAndName', value: roomSendTo"></select>
+            <select data-bind="visible: roomSendMode().id == 3, options:actors, optionsText: 'fmTitleAndName', value: roomSendTo"></select>
             <div data-bind="text: roomSendMode().name"></div>
             <input type="text" id="RoomChat" />
 
