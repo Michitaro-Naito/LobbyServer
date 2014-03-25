@@ -27,7 +27,7 @@
             this.mode = data.mode;
             this.fromId = data.fromId;
             this.toId = data.toId;
-            this.body = data.body;
+            this.bodyRows = data.bodyRows;
 
             this.fmClass = ko.computed(function () {
                 return 'mode' + this.mode;
