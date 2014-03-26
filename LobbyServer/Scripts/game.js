@@ -1,6 +1,9 @@
 ﻿$(function () {
+
     // SignalR
     $.connection.hub.url = "http://localhost:8080/signalr";
+
+
 
     var game = {
         Log: function (name, body) {
@@ -205,6 +208,18 @@
                 return str;
             });
 
+            //s.Text = function (key) { return 'foo'+key;}
+            s.Text = function (key) {
+                return ko.computed({
+                    read: function () {
+                        var entry = Enumerable.From(s.strings())
+                            .FirstOrDefault(null, function (e) { return e.Key === key; });
+                        if (entry === null)
+                            return key;
+                        return entry.Value;
+                    }
+                });
+            }
 
 
             // ----- Subscription -----

@@ -29,11 +29,11 @@
     </div>
 
     <div data-bind="visible: state() == State.Characters">
-        <h3>Characters</h3>
+        <h3 data-bind="text: Text('CharactersList')"></h3>
         <ul data-bind="foreach: characters">
             <li>
                 <strong data-bind="text: name"></strong>
-                <button type="button" data-bind="click: function(){ $root.Send('/SelectCharacter ' + name); }">Select</button>
+                <button type="button" data-bind="text: $root.Text('Select'), click: function(){ $root.Send('/SelectCharacter ' + name); }"></button>
             </li>
         </ul>
     </div>
@@ -43,7 +43,7 @@
     </div>
 
     <div data-bind="visible: state() == State.Rooms">
-        <h3>Rooms</h3>
+        <h3 data-bind="text: $root.Text('VillagesList')">Rooms</h3>
         <ul data-bind="foreach: rooms">
             <li>
                 <strong data-bind="text: roomId"></strong>
@@ -51,21 +51,21 @@
                 <span data-bind="text: name"></span>
                 <span data-bind="text: max"></span>
                 <span data-bind="text: interval"></span>
-                <button type="button" data-bind="click: function(){ $root.Send('/JoinRoom ' + roomId); }">Join</button>
+                <button type="button" data-bind="text: $root.Text('Join'), click: function(){ $root.Send('/JoinRoom ' + roomId); }"></button>
             </li>
         </ul>
-        <button type="button" data-bind="click: CreateRoom">Create</button>
+        <button type="button" data-bind="text: $root.Text('Create'), click: CreateRoom"></button>
     </div>
 
 
 
     <div data-bind="visible: state() == State.Playing">
         <h3>Playing</h3>
-        <button type="button" data-bind="click: QuitRoom">QuitRoom</button>
+        <button type="button" data-bind="text: $root.Text('QuitRoom'), click: QuitRoom"></button>
 
         <div data-bind="visible: roomState() == RoomState.Configuring">
             <h4>Configuring</h4>
-            <button type="button" data-bind="click: RoomConfigure">Configure</button>
+            <button type="button" data-bind="text: $root.Text('Configure'), click: RoomConfigure"></button>
         </div>
 
         <div data-bind="visible: roomState() != RoomState.Configuring">
@@ -104,7 +104,7 @@
                 <h4>Matchmaking</h4>
 
                 <div data-bind="text: fmDuration"></div>
-                <button type="button" data-bind="click: RoomStart">Start</button>
+                <button type="button" data-bind="text: $root.Text('Start'), click: RoomStart">Start</button>
             </div>
 
             <div data-bind="visible: roomState() == RoomState.Playing">
