@@ -24,6 +24,8 @@
         },
 
         RoomMessage: function (root, data) {
+            var s = this;
+            s.root = root;
             this.id = data.id;
             this.Created = new Date(data.Created);
             this.callerUserId = data.callerUserId;
@@ -52,6 +54,13 @@
                 }
                 return this.callerUserId;
             }, this);
+            s.stName = ko.computed(function () {
+                var sender = Enumerable.From(s.root.actors())
+                    .FirstOrDefault(null, function (a) { return a.id === s.fromId });
+                if (sender == null)
+                    return '';
+                return 'color:' + sender.ColorIdentity.text + '; background:' + sender.ColorIdentity.background + ';';
+            });
 
             this.cpTo = ko.computed(function () {
                 if (this.fromId === null)
@@ -84,6 +93,7 @@
             this.isRoleSure = data.isRoleSure;
             this.isDead = data.isDead;
             this.isRoomMaster = data.isRoomMaster;
+            s.ColorIdentity = data.ColorIdentity;
 
             this.fmTitleAndName = ko.computed(function () {
                 return this.title + ' ' + this.name;
@@ -113,6 +123,9 @@
                 var role = this.root.FindRole(this.role);
                 return 'background-position: ' + (-24 * role.x) + 'px ' + (-24 * role.y) + 'px;';
             }, this);
+            s.stName = ko.computed(function () {
+                return 'color:' + s.ColorIdentity.text + '; background:' + s.ColorIdentity.background + ';';
+            });
         },
 
         AppModel: function (culture, pass, hub) {

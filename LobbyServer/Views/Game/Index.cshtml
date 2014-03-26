@@ -69,9 +69,10 @@
         </div>
 
         <div data-bind="visible: roomState() != RoomState.Configuring">
+            <!-- Actors Pane -->
             <ul data-bind="foreach: actors" class="actors clearfix">
                 <li data-bind="visible: !isDead">
-                    <div class="name" data-bind="text: fmTitleAndName"></div>
+                    <div class="name" data-bind="text: fmTitleAndName, attr: {style: stName}"></div>
                     <div>
                         <table>
                             <tr>
@@ -86,7 +87,7 @@
             </ul>
             <ul data-bind="foreach: actors" class="actors clearfix">
                 <li data-bind="visible: isDead">
-                    <div class="name" data-bind="text: fmTitleAndName"></div>
+                    <div class="name" data-bind="text: fmTitleAndName, attr: {style: stName}"></div>
                     <div>
                         <table>
                             <tr>
@@ -159,7 +160,7 @@
             <ul data-bind="foreach: roomMessages" class="messages">
                 <li data-bind="attr: { class: fmClass }">
                     <div class="from">
-                        <span data-bind="text: cpFrom" class="name"></span>
+                        <span data-bind="text: cpFrom, attr:{style:stName}" class="name"></span>
                         <span data-bind="text: cpTo" class="to"></span>
                         <span data-bind="text: fmCreated" class="time"></span>
                     </div>
