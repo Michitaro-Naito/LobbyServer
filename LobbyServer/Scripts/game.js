@@ -92,16 +92,20 @@
                 return str;
             }, this);
             this.fmRole = ko.computed(function () {
-                console.info(this.root);
                 var role = this.root.FindRole(this.role);
-                return role.name;
-                /*var str = this.role;
+                var str = role.name;
                 if (!this.isRoleSure)
                     str += '?';
-                return str;*/
+                return str;
             }, this);
             this.fmUser = ko.computed(function () {
                 return this.character;
+            }, this);
+            this.cpStyle = ko.computed(function () {
+                //if (!this.root)
+                //    return;
+                var role = this.root.FindRole(this.role);
+                return 'background-position: ' + (-24 * role.x) + 'px ' + (-24 * role.y) + 'px;';
             }, this);
         },
 
