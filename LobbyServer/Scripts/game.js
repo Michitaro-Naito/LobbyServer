@@ -167,6 +167,7 @@
 
             s.roles = ko.observableArray([]);
             s.genders = ko.observableArray([]);
+            s.strings = ko.observableArray([]);
 
             // ----- Computed -----
             s.cpMyActor = ko.computed(function () {
@@ -273,12 +274,15 @@
 
             s.hub.client.gotRoles = function (roles) {
                 s.roles(roles);
-                //console.info(s.roles());
             }
 
             s.hub.client.gotGenders = function (genders) {
                 s.genders(genders);
-                console.info(s.genders());
+            }
+
+            s.hub.client.gotStrings = function (strings) {
+                s.strings(strings);
+                console.info(s.strings());
             }
 
             // ----- Callback (in Room) -----
