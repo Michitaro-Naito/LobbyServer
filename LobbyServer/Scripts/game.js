@@ -70,11 +70,12 @@
         },
 
         Actor: function (root, data) {
-            this.root = root;
-            this.id = data.id;
-            this.title = data.title;
-            this.name = data.name;
-            this.gender = data.gender;
+            var s = this;
+            s.root = root;
+            s.id = data.id;
+            s.title = data.title;
+            s.name = data.name;
+            s.gender = data.gender;
             this.character = data.character;
             this.role = data.role;
             this.isRoleSure = data.isRoleSure;
@@ -86,11 +87,13 @@
             }, this);
             this.fmGender = ko.computed(function () {
                 var str = '';
-                if (this.isRoomMaster)
+                if (s.isRoomMaster)
                     str += '★';
-                str += this.gender;
+                var gender = Enumerable.From(s.root.genders())
+                    .FirstOrDefault(null, function (g) { return g.id === s.gender; });
+                str += gender.name;
                 return str;
-            }, this);
+            });
             this.fmRole = ko.computed(function () {
                 var role = this.root.FindRole(this.role);
                 var str = role.name;
@@ -161,7 +164,9 @@
             s.logs = ko.observableArray([]);
             s.lastUpdate = new Date();
             s.lastError = ko.observable('');
+
             s.roles = ko.observableArray([]);
+            s.genders = ko.observableArray([]);
 
             // ----- Computed -----
             s.cpMyActor = ko.computed(function () {
@@ -269,6 +274,11 @@
             s.hub.client.gotRoles = function (roles) {
                 s.roles(roles);
                 //console.info(s.roles());
+            }
+
+            s.hub.client.gotGenders = function (genders) {
+                s.genders(genders);
+                console.info(s.genders());
             }
 
             // ----- Callback (in Room) -----
