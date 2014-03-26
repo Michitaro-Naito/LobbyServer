@@ -4,7 +4,7 @@
 
 
 
-<div id="Game">
+<div id="Game" style="display: none;">
 
     <!-- Modal -->
     <div class="modal fade" id="ErrorModal" tabindex="-1" role="dialog" aria-labelledby="ErrorModalLabel" aria-hidden="true">
@@ -26,6 +26,7 @@
 
     <div data-bind="visible: state() == State.Disconnected">
         <h3>Disconnected</h3>
+        <button type="button" data-bind="click: Connect">Connect</button>
     </div>
 
     <div data-bind="visible: state() == State.Characters">
@@ -197,8 +198,14 @@
             // Gets Pass from Server.
             var culture = '@Culture';
             var pass = '@ViewBag.ValidPassString';
+            var topPageUrl = '@Url.Action("Index", "Home")';
 
             // Initializes Game
+            if ($.connection.myHub === undefined) {
+                // GameServer is gone. Redirects to Home.
+                location.href = topPageUrl;
+                return;
+            }
             var model = new window.Apwei.Game.AppModel(culture, pass, $.connection.myHub);
             ko.applyBindings(model, document.getElementById('Game'));
             model.Connect();

@@ -266,6 +266,24 @@
             });
 
 
+
+            // ----- Callback (Lifetime) -----
+            s.hub.connection.stateChanged(function (data) {
+                console.info(data);
+                switch (data.newState) {
+                    case 1:
+                        // Connected. Authenticates first.
+                        s.hub.server.authenticate(s.culture, s.pass);
+                        break;
+
+                    case 4:
+                        // Disconnected. Goes to DisconnectedScene.
+                        s.state(s.State.Disconnected);
+                        break;
+                }
+            });
+
+
             // ----- Callback -----
 
             s.hub.client.addMessage = function (name, body) {
@@ -396,9 +414,10 @@
             }
 
             s.Connect = function () {
-                s.hub.connection.start().done(function () {
+                /*s.hub.connection.start().done(function () {
                     s.hub.server.authenticate(s.culture, s.pass);
-                });
+                });*/
+                s.hub.connection.start();
                 $('#logs').keydown(function (e) {
                     if (event.which == 13) {
                         event.preventDefault();
@@ -468,6 +487,7 @@
 
             s.Initialize = function () {
                 setInterval(s.Update, 100);
+                $('#Game').show();
             }
 
             s.Initialize();
