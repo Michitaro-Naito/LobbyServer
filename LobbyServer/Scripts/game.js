@@ -196,6 +196,8 @@
             s.strings = ko.observableArray([]);
 
             // ----- Room, Configure -----
+            s.roomIdGoingToJoin = ko.observable();
+            s.roomPasswordGoingToJoin = ko.observable();
             s.roomConfiguration = ko.observable(new Apwei.Game.RoomConfiguration());
             s.validationErrors = {
                 RoomConfiguration: ko.observableArray([])
@@ -456,11 +458,13 @@
             }
 
             s.OpenRoomModal = function (roomId) {
+                s.roomIdGoingToJoin(roomId);
                 $('#RoomModal').modal('show');
             }
 
-            s.JoinRoom = function (roomId, password) {
-                s.Send('/JoinRoom ' + roomId);
+            s.JoinRoom = function () {
+                //s.Send('/JoinRoom ' + s.roomIdGoingToJoin());
+                s.hub.server.joinRoom(s.roomIdGoingToJoin(), s.roomPasswordGoingToJoin());
             }
 
             s.RoomConfigure = function () {
