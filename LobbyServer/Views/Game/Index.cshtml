@@ -6,7 +6,7 @@
 
 <div id="Game" style="display: none;">
 
-    <!-- Modal -->
+    <!-- ErrorModal -->
     <div class="modal fade" id="ErrorModal" tabindex="-1" role="dialog" aria-labelledby="ErrorModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -16,6 +16,24 @@
                 </div>
                 <div class="modal-body">
                     <p data-bind="text: lastError().body"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RoomModal -->
+    <div class="modal fade" id="RoomModal" tabindex="-1" role="dialog" aria-labelledby="RoomModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 data-bind="" class="modal-title" id="RoomModalLabel">RoomModal</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Room...</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
@@ -43,6 +61,7 @@
         <h3>Create Character</h3>
     </div>
 
+    <!-- Rooms -->
     <div data-bind="visible: state() == State.Rooms">
         <h3 data-bind="text: $root.Text('VillagesList')">Rooms</h3>
         <ul data-bind="foreach: rooms">
@@ -52,7 +71,8 @@
                 <span data-bind="text: name"></span>
                 <span data-bind="text: max"></span>
                 <span data-bind="text: interval"></span>
-                <button type="button" data-bind="text: $root.Text('Join'), click: function(){ $root.Send('/JoinRoom ' + roomId); }"></button>
+                <span data-bind="text: requiresPassword"></span>
+                <button type="button" data-bind="text: $root.Text('Join'), click: function(){ $root.OpenRoomModal(roomId); }"></button>
             </li>
         </ul>
         <button type="button" data-bind="text: $root.Text('Create'), click: CreateRoom"></button>
@@ -64,8 +84,18 @@
         <h3>Playing</h3>
         <button type="button" data-bind="text: $root.Text('QuitRoom'), click: QuitRoom"></button>
 
+        <!-- Configuring -->
         <div data-bind="visible: roomState() == RoomState.Configuring">
             <h4>Configuring</h4>
+            <ul data-bind="foreach: validationErrors.RoomConfiguration">
+                <li data-bind="text: $data"></li>
+            </ul>
+            <div data-bind="with: roomConfiguration">
+                <input type="text" data-bind="value: name" />
+                <input type="text" data-bind="value: password" />
+                <input type="number" data-bind="value: max" />
+                <input type="number" data-bind="value: interval" />
+            </div>
             <button type="button" data-bind="text: $root.Text('Configure'), click: RoomConfigure"></button>
         </div>
 

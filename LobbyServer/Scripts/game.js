@@ -15,12 +15,22 @@
             this.name = data.name;
         },
 
+        RoomConfiguration: function () {
+            var s = this;
+            s.ModelName = 'RoomConfiguration';
+            s.name = ko.observable("Let's play.");
+            s.password = ko.observable('');
+            s.max = ko.observable(12);
+            s.interval = ko.observable(300);
+        },
+
         Room: function (data) {
             this.roomId = data.roomId;
             this.guid = data.guid;
             this.name = data.name;
             this.max = data.max;
             this.interval = data.interval;
+            this.requiresPassword = data.requiresPassword;
         },
 
         RoomMessage: function (root, data) {
@@ -185,6 +195,14 @@
             s.genders = ko.observableArray([]);
             s.strings = ko.observableArray([]);
 
+            // ----- Room, Configure -----
+            s.roomConfiguration = ko.observable(new Apwei.Game.RoomConfiguration());
+            s.validationErrors = {
+                RoomConfiguration: ko.observableArray([])
+            };
+
+
+
             // ----- Computed -----
             s.cpMyActor = ko.computed(function () {
                 for (var n = 0; n < s.actors().length; n++) {
@@ -283,6 +301,10 @@
                 }
             });
 
+            s.hub.client.gotDisconnectionRequest = function () {
+                s.Disconnect();
+            }
+
 
             // ----- Callback -----
 
@@ -329,6 +351,12 @@
             s.hub.client.gotStrings = function (strings) {
                 s.strings(strings);
                 console.info(s.strings());
+            }
+
+            s.hub.client.gotValidationErrors = function (model, errors) {
+                console.info(model);
+                console.info(errors);
+                s.validationErrors[model](errors);
             }
 
             // ----- Callback (in Room) -----
@@ -391,7 +419,9 @@
                 s.ignoreVoteSubscription(false);
             }
 
-            s.hub.client.gotRoomMessages = function (messages) {
+            s.hub.client.gotRoomMessages = function (messages, clear) {
+                if (clear)
+                    s.roomMessages([]);
                 for (var n = 0; n < messages.length; n++) {
                     s.roomMessages.unshift(new Apwei.Game.RoomMessage(s, messages[n]));
                 }
@@ -414,32 +444,38 @@
             }
 
             s.Connect = function () {
-                /*s.hub.connection.start().done(function () {
-                    s.hub.server.authenticate(s.culture, s.pass);
-                });*/
                 s.hub.connection.start();
-                $('#logs').keydown(function (e) {
-                    if (event.which == 13) {
-                        event.preventDefault();
-                        s.hub.server.send($('#logs').val());
-                        $('#logs').val('').focus();
-                    }
-                });
-                $('#RoomChat').keydown(function (e) {
-                    if (event.which == 13) {
-                        event.preventDefault();
-                        s.hub.server.roomSend(s.roomSendMode().id, s.roomSendTo().id, $('#RoomChat').val());
-                        $('#RoomChat').val('');
-                    }
-                });
+            }
+
+            s.Disconnect = function () {
+                s.hub.connection.stop();
             }
 
             s.CreateRoom = function () {
                 s.Send('/CreateRoom');
             }
 
+            s.OpenRoomModal = function (roomId) {
+                $('#RoomModal').modal('show');
+            }
+
+            s.JoinRoom = function (roomId, password) {
+                s.Send('/JoinRoom ' + roomId);
+            }
+
             s.RoomConfigure = function () {
-                s.hub.server.roomConfigure('Foo', 12, 5);
+                //s.hub.server.roomConfigure('Foo', 12, 5);
+                /*s.hub.server.roomConfigure(
+                    s.roomConfiguration().name(),
+                    s.roomConfiguration().max(),
+                    s.roomConfiguration().interval());*/
+                s.hub.server.roomConfigure({
+                    name: s.roomConfiguration().name(),
+                    password: s.roomConfiguration().password(),
+                    max: s.roomConfiguration().max(),
+                    interval: s.roomConfiguration().interval(),
+                    ModelName: s.roomConfiguration().ModelName
+                });
             }
 
             s.RoomStart = function () {
@@ -488,6 +524,20 @@
             s.Initialize = function () {
                 setInterval(s.Update, 100);
                 $('#Game').show();
+                $('#logs').keydown(function (event) {
+                    if (event.which == 13) {
+                        event.preventDefault();
+                        s.hub.server.send($('#logs').val());
+                        $('#logs').val('').focus();
+                    }
+                });
+                $('#RoomChat').keydown(function (event) {
+                    if (event.which == 13) {
+                        event.preventDefault();
+                        s.hub.server.roomSend(s.roomSendMode().id, s.roomSendTo().id, $('#RoomChat').val());
+                        $('#RoomChat').val('');
+                    }
+                });
             }
 
             s.Initialize();
