@@ -43,11 +43,13 @@
         </div>
     </div>
 
+    <!-- Disconnected Scene -->
     <div data-bind="visible: state() == State.Disconnected">
         <h3>Disconnected</h3>
         <button type="button" data-bind="click: Connect">Connect</button>
     </div>
 
+    <!-- Characters Scene -->
     <div data-bind="visible: state() == State.Characters">
         <h3 data-bind="text: Text('CharactersList')"></h3>
         <ul data-bind="foreach: characters">
@@ -56,13 +58,22 @@
                 <button type="button" data-bind="text: $root.Text('Select'), click: function(){ $root.Send('/SelectCharacter ' + name); }"></button>
             </li>
         </ul>
+        <button type="button" data-bind="click: function(){state(State.CreateCharacter)}">Create</button>
     </div>
 
+    <!-- Character Creation Scene -->
     <div data-bind="visible: state() == State.CreateCharacter">
         <h3>Create Character</h3>
+        <ul data-bind="foreach: validationErrors.CharacterCreation">
+            <li data-bind="text: $data"></li>
+        </ul>
+        <div data-bind="with: createCharacterData">
+            <input type="text" data-bind="value: name"/>
+        </div>
+        <button type="button" data-bind="click: CreateCharacter">Create</button>
     </div>
 
-    <!-- Rooms -->
+    <!-- Rooms Scene -->
     <div data-bind="visible: state() == State.Rooms">
         <h3 data-bind="text: $root.Text('VillagesList')">Rooms</h3>
         <ul data-bind="foreach: rooms">

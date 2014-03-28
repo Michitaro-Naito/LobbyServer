@@ -24,6 +24,12 @@
             s.interval = ko.observable(300);
         },
 
+        CreateCharacterData: function(){
+            var s = this;
+            s.ModelName = 'CreateCharacterData';
+            s.name = ko.observable('');
+        },
+
         Room: function (data) {
             this.roomId = data.roomId;
             this.guid = data.guid;
@@ -200,8 +206,15 @@
             s.roomPasswordGoingToJoin = ko.observable();
             s.roomConfiguration = ko.observable(new Apwei.Game.RoomConfiguration());
             s.validationErrors = {
-                RoomConfiguration: ko.observableArray([])
+                RoomConfiguration: ko.observableArray([]),
+                CharacterCreation: ko.observableArray([])
             };
+
+            // ----- Character Creation Scene -----
+            s.createCharacterData = ko.observable(new Apwei.Game.CreateCharacterData());
+            s.CreateCharacter = function () {
+                s.hub.server.createCharacter('CharacterCreation', s.createCharacterData().name());
+            }
 
 
 
