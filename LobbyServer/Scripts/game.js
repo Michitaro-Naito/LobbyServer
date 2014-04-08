@@ -216,6 +216,11 @@
                 s.hub.server.createCharacter('CharacterCreation', s.createCharacterData().name());
             }
 
+            // ----- Rooms Scene -----
+            s.GetRooms = function () {
+                s.Send('/GetRooms');
+            }
+
 
 
             // ----- Computed -----
@@ -278,7 +283,8 @@
                     case s.State.CreateCharacter:
                         break;
                     case s.State.Rooms:
-                        s.Send('/GetRooms');
+                        //s.Send('/GetRooms');
+                        s.GetRooms();
                         break;
                     case s.State.Playing:
                         break;

@@ -13,6 +13,14 @@ namespace LobbyServer
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            // PlayLog
+            routes.MapRoute(
+                name: "PlayLogIndex",
+                url: "{culture}/PlayLog/{page}",
+                defaults: new { culture = "Auto", controller = "PlayLog", action = "Index", page = UrlParameter.Optional }
+            );
+
+            // Default
             routes.MapRoute(
                 name: "Default",
                 url: "{culture}/{controller}/{action}/{id}",

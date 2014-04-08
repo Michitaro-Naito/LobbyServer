@@ -39,6 +39,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ApiScheme">
+      <HintPath>..\..\ApiScheme\ApiScheme\bin\Debug\ApiScheme.dll</HintPath>
+    </Reference>
     <Reference Include="AuthUtility">
       <HintPath>..\..\AuthUtility\AuthUtility\bin\Debug\AuthUtility.dll</HintPath>
     </Reference>
@@ -165,6 +168,7 @@
     <Compile Include="Controllers\GameController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PassAuthenticatedController.cs" />
+    <Compile Include="Controllers\PlayLogController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -218,6 +222,7 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Game\Index.cshtml" />
+    <Content Include="Views\PlayLog\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

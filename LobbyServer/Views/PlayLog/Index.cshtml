@@ -1,0 +1,13 @@
+﻿@model List<ApiScheme.Scheme.PlayLogInfo>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>PlayLog Index</h2>
+
+<ul>
+    @foreach (var log in Model)
+    {
+        <li>@log.fileName</li>
+    }
+</ul>
