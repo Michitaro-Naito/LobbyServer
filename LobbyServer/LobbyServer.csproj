@@ -223,6 +223,7 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Game\Index.cshtml" />
     <Content Include="Views\PlayLog\Index.cshtml" />
+    <Content Include="Views\PlayLog\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
