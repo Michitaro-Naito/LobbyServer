@@ -17,7 +17,7 @@ namespace LobbyServer.Controllers
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            Debug.WriteLine("OnActionExecuting");
+            /*Debug.WriteLine("OnActionExecuting");
 
             // Select culture from routing data.
             var culturePassed = (string)RouteData.Values["culture"];
@@ -44,7 +44,30 @@ namespace LobbyServer.Controllers
                 return;
             }
 
-            Debug.WriteLine("Culture: {0}", Thread.CurrentThread.CurrentCulture);
+            Debug.WriteLine("Culture: {0}", Thread.CurrentThread.CurrentCulture);*/
+
+            // Select culture from routing data.
+            var culturePassed = (string)RouteData.Values["culture"];
+            var controllerPassed = (string)RouteData.Values["controller"];
+            var actionPassed = (string)RouteData.Values["action"];
+            var postUrlPassed = (string)RouteData.Values["postUrl"];
+
+            var culturesAcceptable = new[] { "ja-JP", "en-US" };
+            var cultureSelected = culturesAcceptable.FirstOrDefault(c => c.Equals(culturePassed, System.StringComparison.OrdinalIgnoreCase))
+                ?? culturesAcceptable.FirstOrDefault();
+
+            // Set thread and controller culture.
+            var cultureInfo = new CultureInfo(cultureSelected);
+            Thread.CurrentThread.CurrentCulture = cultureInfo;
+            Thread.CurrentThread.CurrentUICulture = cultureInfo;
+            Culture = cultureInfo;
+
+            // Redirect User if culture is not specified.
+            if (cultureSelected != culturePassed)
+            {
+                filterContext.Result = RedirectToRoute("Default", new { culture = cultureSelected, controller = controllerPassed, action = actionPassed });
+                return;
+            }
 
             base.OnActionExecuting(filterContext);
         }
