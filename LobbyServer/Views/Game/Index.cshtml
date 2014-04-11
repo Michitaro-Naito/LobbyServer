@@ -42,6 +42,24 @@
             </div>
         </div>
     </div>
+    
+    <!-- ReportModal -->
+    <div class="modal fade" id="ReportModal" tabindex="-1" role="dialog" aria-labelledby="ReportModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 data-bind="" class="modal-title" id="ReportModalLabel">ReportModal</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="text" data-bind="value: roomReportNote" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-bind="click: roomReport">Join</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Disconnected Scene -->
     <div data-bind="visible: state() == State.Disconnected">
@@ -135,7 +153,7 @@
                                 <td><div data-bind="attr: {style: cpStyle}" class="icon"></div></td>
                             </tr>
                         </table>
-                        <div class="user" data-bind="text: fmUser"></div>
+                        <div class="user" data-bind="text: fmUser, attr: {style: stUser}"></div>
                     </div>
                 </li>
             </ul>
@@ -150,7 +168,7 @@
                                 <td><div data-bind="attr: {style: cpStyle}" class="icon"></div></td>
                             </tr>
                         </table>
-                        <div class="user" data-bind="text: fmUser"></div>
+                        <div class="user" data-bind="text: fmUser, attr: {style: stUser}"></div>
                     </div>
                 </li>
             </ul>

@@ -121,10 +121,13 @@
             });
 
             s.report = function () {
-                alert('reporting:' + s.id + ',' + s.callerUserId);
+                /*alert('reporting:' + s.id + ',' + s.callerUserId);
                 if (confirm('Report?')) {
                     root.hub.server.roomReportMessage(s.id, 'This message is suck!');
-                }
+                }*/
+                root.roomReportMessageId(s.id);
+                root.roomReportNote('');
+                $('#ReportModal').modal('show');
             }
         },
 
@@ -140,6 +143,7 @@
             this.isRoleSure = data.isRoleSure;
             this.isDead = data.isDead;
             this.isRoomMaster = data.isRoomMaster;
+            s.isPresent = data.isPresent;
             s.ColorIdentity = data.ColorIdentity;
 
             this.fmTitleAndName = ko.computed(function () {
@@ -162,8 +166,17 @@
                 return str;
             }, this);
             this.fmUser = ko.computed(function () {
+                if (s.character === null)
+                    return 'NPC';
                 return this.character;
             }, this);
+            s.stUser = ko.computed(function () {
+                if (s.character === null)
+                    return 'color:green;'
+                if (s.isPresent)
+                    return 'color:#333;';
+                return 'color:#CCC;';
+            });
             this.cpStyle = ko.computed(function () {
                 //if (!this.root)
                 //    return;
@@ -281,6 +294,11 @@
 
             // ----- Room Scene -----
 
+            s.roomReportMessageId = ko.observable();
+            s.roomReportNote = ko.observable('');
+            s.roomReport = function () {
+                s.hub.server.roomReportMessage(s.roomReportMessageId(), s.roomReportNote());
+            }
 
 
 
