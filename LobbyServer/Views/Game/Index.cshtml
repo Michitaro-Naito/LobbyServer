@@ -73,7 +73,7 @@
         <button type="button" data-bind="click: CreateCharacter">Create</button>
     </div>
 
-    <!-- Rooms Scene -->
+    <!-- Rooms(Lobby) Scene -->
     <div data-bind="visible: state() == State.Rooms">
         <h3 data-bind="text: $root.Text('VillagesList')">Rooms</h3>
         <ul data-bind="foreach: rooms">
@@ -89,6 +89,16 @@
         </ul>
         <button type="button" data-bind="text: $root.Text('Create'), click: CreateRoom"></button>
         <button type="button" data-bind="click: GetRooms">GetRooms</button>
+        <input type="text" id="LobbyChat" />
+        <ul data-bind="foreach: lobbyMessages" class="messages">
+            <li data-bind="attr: { class: fmClass }">
+                <div class="from">
+                    <span data-bind="text: name" class="name"></span>
+                    <span data-bind="text: fmCreated" class="time"></span>
+                </div>
+                <div data-bind="text: body" class="body"></div>
+            </li>
+        </ul>
     </div>
 
 

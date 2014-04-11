@@ -39,6 +39,25 @@
             this.requiresPassword = data.requiresPassword;
         },
 
+        LobbyMessage: function(root, data){
+            var s = this;
+            s.root = root;
+            s.Created = new Date(data.Created);
+            s.name = data.name;
+            s.body = data.body;
+            s.fmClass = ko.computed(function () {
+                if (s.name === 'test')
+                    return 'mode1';
+                return 'mode0';
+            });
+            this.fmCreated = ko.computed(function () {
+                var minutes = s.Created.getMinutes();
+                if (minutes < 10)
+                    minutes = '0' + minutes;
+                return s.Created.getHours() + ':' + minutes;
+            });
+        },
+
         RoomMessage: function (root, data) {
             var s = this;
             s.root = root;
@@ -216,10 +235,27 @@
                 s.hub.server.createCharacter('CharacterCreation', s.createCharacterData().name());
             }
 
-            // ----- Rooms Scene -----
+            // ----- Lobby Scene -----
+            s.lobbyMessages = ko.observableArray([]);
+            s.hub.client.gotLobbyMessages = function (messages, clear) {
+                if (clear)
+                    s.lobbyMessages([]);
+                for (var n = 0; n < messages.length; n++) {
+                    s.lobbyMessages.unshift(new Apwei.Game.LobbyMessage(s, messages[n]));
+                }
+                while (s.lobbyMessages().length > 50)
+                    s.lobbyMessages.pop();
+            }
             s.GetRooms = function () {
                 s.Send('/GetRooms');
             }
+            $('#LobbyChat').keydown(function (event) {
+                if (event.which == 13) {
+                    event.preventDefault();
+                    s.hub.server.lobbySend($('#LobbyChat').val());
+                    $('#LobbyChat').val('');
+                }
+            });
 
 
 
