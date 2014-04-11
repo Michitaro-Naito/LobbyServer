@@ -114,6 +114,18 @@
                 }
                 return 'To ' + target;
             }, this);
+            s.canReport = ko.computed(function () {
+                if (s.fromId === null)
+                    return false;
+                return true;
+            });
+
+            s.report = function () {
+                alert('reporting:' + s.id + ',' + s.callerUserId);
+                if (confirm('Report?')) {
+                    root.hub.server.roomReportMessage(s.id, 'This message is suck!');
+                }
+            }
         },
 
         Actor: function (root, data) {
@@ -266,6 +278,9 @@
                     $('#LobbyChat').val('');
                 }
             });
+
+            // ----- Room Scene -----
+
 
 
 

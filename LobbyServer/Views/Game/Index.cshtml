@@ -215,6 +215,7 @@
                 <li data-bind="attr: { class: fmClass }">
                     <div class="from">
                         <span data-bind="text: cpFrom, attr:{style:stName}" class="name"></span>
+                        <span data-bind="visible: canReport, click: report" class="glyphicon glyphicon-thumbs-down"></span>
                         <span data-bind="text: cpTo" class="to"></span>
                         <span data-bind="text: fmCreated" class="time"></span>
                     </div>
