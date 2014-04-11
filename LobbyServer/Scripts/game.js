@@ -194,6 +194,7 @@
             ]);
             s.state = ko.observable(s.State.Disconnected);
             s.roomState = ko.observable(s.RoomState.Configuring);
+            s.bootTime = ko.observable(null);
 
             // Characters who Player owns.
             s.characters = ko.observableArray([]);
@@ -219,6 +220,15 @@
             s.roles = ko.observableArray([]);
             s.genders = ko.observableArray([]);
             s.strings = ko.observableArray([]);
+
+            // ----- OnConnected -----
+            s.hub.client.gotBootTime = function (time) {
+                if (s.bootTime() !== null && s.bootTime() !== time) {
+                    alert('サーバが再起動されたようです。ページを再読み込みします...');
+                    location.reload();
+                }
+                s.bootTime(time);
+            }
 
             // ----- Room, Configure -----
             s.roomIdGoingToJoin = ko.observable();
