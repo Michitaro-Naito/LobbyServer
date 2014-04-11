@@ -6,10 +6,10 @@
 
 
     var game = {
-        Log: function (name, body) {
+        /*Log: function (name, body) {
             this.name = name;
             this.body = body;
-        },
+        },*/
 
         Character: function (data) {
             this.name = data.name;
@@ -212,7 +212,7 @@
             s.ignoreVoteSubscription = ko.observable(false);
             s.duration = ko.observable(0.0);
 
-            s.logs = ko.observableArray([]);
+            //s.logs = ko.observableArray([]);
             s.lastUpdate = new Date();
             s.lastError = ko.observable('');
 
@@ -366,10 +366,11 @@
             // ----- Callback -----
 
             s.hub.client.addMessage = function (name, body) {
-                s.logs.unshift(new Apwei.Game.Log(name, body));
+                /*s.logs.unshift(new Apwei.Game.Log(name, body));
                 while (s.logs().length > 100) {
                     s.logs.pop();
-                }
+                }*/
+                console.info(name + ',' + body);
             }
 
             s.hub.client.broughtTo = function (state) {
