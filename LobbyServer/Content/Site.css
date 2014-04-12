@@ -3,6 +3,7 @@
     background-color: #e8f0f6;
     padding-top: 50px;
     padding-bottom: 20px;
+    font-family: 'Meiryo UI', 'MS PGothic', "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -138,4 +139,18 @@ ul.messages li div.body{
     font-weight: normal;
     font-size: 14px;
     color: #333;
+}
+
+#RoomSendBox{
+    padding: 5px;
+    background: white;
+}
+#RoomSendBox.mode1{
+    background: #DFD;
+}
+#RoomSendBox.mode2{
+    background: #DDD;
+}
+#RoomSendBox.mode3{
+    background: #FCF;
 }

@@ -296,6 +296,9 @@
 
             s.roomReportMessageId = ko.observable();
             s.roomReportNote = ko.observable('');
+            s.clSendMessage = ko.computed(function () {
+                return 'mode' + s.roomSendMode().id;
+            });
             s.roomReport = function () {
                 s.hub.server.roomReportMessage(s.roomReportMessageId(), s.roomReportNote());
             }
