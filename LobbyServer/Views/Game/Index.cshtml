@@ -70,13 +70,24 @@
     <!-- Characters Scene -->
     <div data-bind="visible: state() == State.Characters">
         <h3 data-bind="text: Text('CharactersList')"></h3>
-        <ul data-bind="foreach: characters">
-            <li>
-                <strong data-bind="text: name"></strong>
-                <button type="button" data-bind="text: $root.Text('Select'), click: function(){ $root.Send('/SelectCharacter ' + name); }"></button>
-            </li>
-        </ul>
-        <button type="button" data-bind="click: function(){state(State.CreateCharacter)}">Create</button>
+        <button type="button" data-bind="click: function(){state(State.CreateCharacter)}" class="btn btn-default">Create</button>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>キャラクター名</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: characters">
+                <tr>
+                    <td data-bind="text: name"></td>
+                    <td><button type="button"
+                                data-bind="text: $root.Text('Select'), click: function(){ $root.Send('/SelectCharacter ' + name); }"
+                                class="btn btn-primary btn-xs"></button></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="alert alert-warning">ユーザー情報保護のためキャラクターの削除はできません。</div>
     </div>
 
     <!-- Character Creation Scene -->
@@ -93,30 +104,56 @@
 
     <!-- Rooms(Lobby) Scene -->
     <div data-bind="visible: state() == State.Rooms">
-        <h3 data-bind="text: $root.Text('VillagesList')">Rooms</h3>
-        <ul data-bind="foreach: rooms">
-            <li>
-                <strong data-bind="text: roomId"></strong>
-                <span data-bind="text: guid"></span>
-                <span data-bind="text: name"></span>
-                <span data-bind="text: max"></span>
-                <span data-bind="text: interval"></span>
-                <span data-bind="text: requiresPassword"></span>
-                <button type="button" data-bind="text: $root.Text('Join'), click: function(){ $root.OpenRoomModal(roomId); }"></button>
-            </li>
-        </ul>
-        <button type="button" data-bind="text: $root.Text('Create'), click: CreateRoom"></button>
-        <button type="button" data-bind="click: GetRooms">GetRooms</button>
-        <input type="text" id="LobbyChat" />
-        <ul data-bind="foreach: lobbyMessages" class="messages">
-            <li data-bind="attr: { class: fmClass }">
-                <div class="from">
-                    <span data-bind="text: name" class="name"></span>
-                    <span data-bind="text: fmCreated" class="time"></span>
+        <div class="row">
+            <div class="col-sm-6">
+                <h3 data-bind="text: $root.Text('VillagesList')">Rooms</h3>
+                <button type="button" data-bind="text: $root.Text('Create'), click: CreateRoom" class="btn btn-default"></button>
+                <button type="button" data-bind="click: GetRooms" class="btn btn-default">更新</button>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>村の名前</th>
+                            <th>人数</th>
+                            <th>1日の長さ</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: rooms">
+                        <tr>
+                            <td data-bind="text: roomId"></td>
+                            <td data-bind="text: name"></td>
+                            <td data-bind="text: max"></td>
+                            <td data-bind="text: interval"></td>
+                            <td>
+                                <span data-bind="text: requiresPassword"></span>
+                                <button type="button"
+                                        data-bind="text: $root.Text('Join'), click: function(){ $root.OpenRoomModal(roomId); }"
+                                        class="btn btn-primary btn-xs"></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-6">
+                <h3>雑談・募集用チャット</h3>
+                <div class="input-group">
+                    <input type="text" id="LobbyChat" class="form-control" placeholder="ここからメッセージを送信できます"/>
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button">送信</button>
+                    </span>
                 </div>
-                <div data-bind="text: body" class="body"></div>
-            </li>
-        </ul>
+                <ul data-bind="foreach: lobbyMessages" class="messages">
+                    <li data-bind="attr: { class: fmClass }">
+                        <div class="from">
+                            <span data-bind="text: name" class="name"></span>
+                            <span data-bind="text: fmCreated" class="time"></span>
+                        </div>
+                        <div data-bind="text: body" class="body"></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 
 

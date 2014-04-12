@@ -417,6 +417,8 @@
             }
 
             s.hub.client.broughtTo = function (state) {
+                console.info('broughtTo');
+                console.info(state);
                 s.state(state);
             }
 
