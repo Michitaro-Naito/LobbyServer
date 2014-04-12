@@ -61,6 +61,15 @@ namespace MyResources {
         }
         
         /// <summary>
+        ///   Werewolf Game Online 2 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ApplicationName {
+            get {
+                return ResourceManager.GetString("ApplicationName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   TEXT_HELLO に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Greetings {

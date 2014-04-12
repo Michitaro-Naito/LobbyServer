@@ -1,4 +1,6 @@
 ﻿body {
+    line-height: 1.2em;
+    background-color: #e8f0f6;
     padding-top: 50px;
     padding-bottom: 20px;
 }
@@ -7,14 +9,31 @@
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+    background-color: white;
+    max-width: 960px;
+    border-radius: 5px;
+}
+
+a {
+    color: #15c;
+    outline: none;
+    padding-left: 3px;
+    padding-right: 3px;
+    text-decoration: none;
 }
 
 /* Set width on the form input elements since they're 100% wide by default */
-input,
+/*input,
 select,
 textarea {
     max-width: 280px;
-}
+}*/
+/*.box {
+    background: #fff;
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}*/
 
 /* styles for validation helpers */
 .field-validation-error {
@@ -39,14 +58,6 @@ input[type="checkbox"].input-validation-error {
 
 .validation-summary-valid {
     display: none;
-}
-
-
-
-
-/* Override */
-body{
-    line-height: 1.2em;
 }
 
 
