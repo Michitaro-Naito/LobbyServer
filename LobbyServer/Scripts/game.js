@@ -299,6 +299,22 @@
             s.clSendMessage = ko.computed(function () {
                 return 'mode' + s.roomSendMode().id;
             });
+            s.cpAliveActors = ko.computed(function () {
+                return Enumerable.From(s.actors()).Where(function (a) { return !a.isDead; }).ToArray();
+            });
+            s.cpDeadActors = ko.computed(function () {
+                return Enumerable.From(s.actors()).Where(function (a) { return a.isDead; }).ToArray();
+            });
+            s.cpAliveActorsExceptMe = ko.computed(function () {
+                /*var actors = [];
+                for (var n = 0; n < s.actors().length; n++) {
+                    var a = s.actors()[n];
+                    if (a.id !== s.myActorId())
+                        actors.push(a);
+                }
+                return actors;*/
+                return Enumerable.From(s.actors()).Where(function (a) { return !a.isDead && a.id !== s.myActorId(); }).ToArray();
+            });
             s.roomReport = function () {
                 s.hub.server.roomReportMessage(s.roomReportMessageId(), s.roomReportNote());
             }
@@ -313,15 +329,6 @@
                         return a;
                 }
                 return null;
-            }, this);
-            s.cpActorsExceptMe = ko.computed(function () {
-                var actors = [];
-                for (var n = 0; n < s.actors().length; n++) {
-                    var a = s.actors()[n];
-                    if (a.id !== s.myActorId())
-                        actors.push(a);
-                }
-                return actors;
             }, this);
             s.fmDuration = ko.computed(function () {
                 var totalSeconds = Math.ceil(s.duration());
@@ -493,14 +500,14 @@
                 s.ignoreVoteSubscription(true);
 
                 // Restore selections (if avairable)
-                for (var n = 0; n < s.cpActorsExceptMe().length; n++) {
+                /*for (var n = 0; n < s.cpActorsExceptMe().length; n++) {
                     var a = s.cpActorsExceptMe()[n];
                     if (a.id === data.executeId) {
                         s.actorToExecute(a);
                         break;
                     }
-                }
-                for (var n = 0; n < s.cpActorsExceptMe().length; n++) {
+                }*/
+                /*for (var n = 0; n < s.cpActorsExceptMe().length; n++) {
                     var a = s.cpActorsExceptMe()[n];
                     if (a.id === data.attackId) {
                         s.actorToAttack(a);
@@ -520,7 +527,15 @@
                         s.actorToGuard(a);
                         break;
                     }
-                }
+                }*/
+                var a = Enumerable.From(s.cpAliveActorsExceptMe()).FirstOrDefault(null, function (a) { return a.id === data.executeId });
+                s.actorToExecute(a);
+                var a = Enumerable.From(s.cpAliveActorsExceptMe()).FirstOrDefault(null, function (a) { return a.id === data.attackId });
+                s.actorToAttack(a);
+                var a = Enumerable.From(s.cpAliveActorsExceptMe()).FirstOrDefault(null, function (a) { return a.id === data.fortuneTellId });
+                s.actorToFortuneTell(a);
+                var a = Enumerable.From(s.cpAliveActorsExceptMe()).FirstOrDefault(null, function (a) { return a.id === data.guardId });
+                s.actorToGuard(a);
 
                 s.ignoreVoteSubscription(false);
             }

@@ -185,40 +185,48 @@
             <div class="col-sm-4">
 
                 <!-- Alive Actors -->
-                <div class="icon" style="background-position: 0px -336px"></div>生存者
-                <ul data-bind="foreach: actors" class="actors clearfix">
-                    <li data-bind="visible: !isDead">
-                        <div class="name" data-bind="text: fmTitleAndName, attr: {style: stName}"></div>
-                        <div>
-                            <table>
-                                <tr>
-                                    <td data-bind="text: fmGender"></td>
-                                    <td data-bind="text: fmRole"></td>
-                                    <td><div data-bind="attr: {style: cpStyle}" class="icon"></div></td>
-                                </tr>
-                            </table>
-                            <div class="user" data-bind="text: fmUser, attr: {style: stUser}"></div>
-                        </div>
-                    </li>
-                </ul>
+                <div data-bind="visible: cpAliveActors().length > 0" class="AliveActors">
+                    <table>
+                        <tr><td><div class="icon" style="background-position: 0px -336px"></div></td><td>生存者</td></tr>
+                    </table>
+                    <ul data-bind="foreach: actors" class="actors clearfix">
+                        <li data-bind="visible: !isDead">
+                            <div class="name" data-bind="text: fmTitleAndName, attr: {style: stName}"></div>
+                            <div>
+                                <table>
+                                    <tr>
+                                        <td data-bind="text: fmGender"></td>
+                                        <td data-bind="text: fmRole"></td>
+                                        <td><div data-bind="attr: {style: cpStyle}" class="icon"></div></td>
+                                    </tr>
+                                </table>
+                                <div class="user" data-bind="text: fmUser, attr: {style: stUser}"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
 
                 <!-- Dead Actors -->
-                <div class="icon" style="background-position: 0px -336px"></div>犠牲者
-                <ul data-bind="foreach: actors" class="actors clearfix">
-                    <li data-bind="visible: isDead">
-                        <div class="name" data-bind="text: fmTitleAndName, attr: {style: stName}"></div>
-                        <div>
-                            <table>
-                                <tr>
-                                    <td data-bind="text: fmGender"></td>
-                                    <td data-bind="text: fmRole"></td>
-                                    <td><div data-bind="attr: {style: cpStyle}" class="icon"></div></td>
-                                </tr>
-                            </table>
-                            <div class="user" data-bind="text: fmUser, attr: {style: stUser}"></div>
-                        </div>
-                    </li>
-                </ul>
+                <div data-bind="visible: cpDeadActors().length > 0" class="DeadActors">
+                    <table>
+                        <tr><td><div class="icon" style="background-position: 0px -360px"></div></td><td>犠牲者</td></tr>
+                    </table>
+                    <ul data-bind="foreach: actors" class="actors clearfix">
+                        <li data-bind="visible: isDead">
+                            <div class="name" data-bind="text: fmTitleAndName, attr: {style: stName}"></div>
+                            <div>
+                                <table>
+                                    <tr>
+                                        <td data-bind="text: fmGender"></td>
+                                        <td data-bind="text: fmRole"></td>
+                                        <td><div data-bind="attr: {style: cpStyle}" class="icon"></div></td>
+                                    </tr>
+                                </table>
+                                <div class="user" data-bind="text: fmUser, attr: {style: stUser}"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
 
             </div>
 
@@ -249,10 +257,10 @@
                             </div>
                             <div class="modal-body">
                                 <p>Select a character to execute. Changes will be saved automatically.</p>
-                                <select data-bind="options:cpActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToExecute, optionsCaption: 'select me'"></select>
-                                <select data-bind="options:cpActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToAttack, optionsCaption: 'select me'"></select>
-                                <select data-bind="options:cpActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToFortuneTell, optionsCaption: 'select me'"></select>
-                                <select data-bind="options:cpActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToGuard, optionsCaption: 'select me'"></select>
+                                <select data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToExecute, optionsCaption: 'select me'"></select>
+                                <select data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToAttack, optionsCaption: 'select me'"></select>
+                                <select data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToFortuneTell, optionsCaption: 'select me'"></select>
+                                <select data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToGuard, optionsCaption: 'select me'"></select>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
