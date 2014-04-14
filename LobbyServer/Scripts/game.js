@@ -278,7 +278,10 @@
                 s.Send('/GetRooms');
             }
             s.LobbySend = function () {
-                s.hub.server.lobbySend($('#LobbyChat').val());
+                var str = $('#LobbyChat').val();
+                if (str.length === 0)
+                    return;
+                s.hub.server.lobbySend(str);
                 $('#LobbyChat').val('');
             }
             $('#LobbyChat').keydown(function (event) {
@@ -324,7 +327,10 @@
                 s.hub.server.roomReportMessage(s.roomReportMessageId(), s.roomReportNote());
             }
             s.RoomSend = function () {
-                s.hub.server.roomSend(s.roomSendMode().id, s.roomSendTo().id, $('#RoomChat').val());
+                var str = $('#RoomChat').val();
+                if (str.length === 0)
+                    return;
+                s.hub.server.roomSend(s.roomSendMode().id, s.roomSendTo().id, str);
                 $('#RoomChat').val('');
             }
             $('#RoomChat').keydown(function (event) {
