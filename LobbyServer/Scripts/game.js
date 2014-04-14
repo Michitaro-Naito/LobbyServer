@@ -255,9 +255,12 @@
                 s.bootTime(time);
             }
 
-            // ----- Room, Configure -----
-            s.roomIdGoingToJoin = ko.observable();
+            // ----- Room, Join -----
+            s.roomGoingToJoin = ko.observable();
+            //s.roomIdGoingToJoin = ko.observable();
             s.roomPasswordGoingToJoin = ko.observable();
+
+            // ----- Room, Configure -----
             s.roomConfiguration = ko.observable(new Apwei.Game.RoomConfiguration());
             s.validationErrors = {
                 RoomConfiguration: ko.observableArray([]),
@@ -500,34 +503,6 @@
                 s.ignoreVoteSubscription(true);
 
                 // Restore selections (if avairable)
-                /*for (var n = 0; n < s.cpActorsExceptMe().length; n++) {
-                    var a = s.cpActorsExceptMe()[n];
-                    if (a.id === data.executeId) {
-                        s.actorToExecute(a);
-                        break;
-                    }
-                }*/
-                /*for (var n = 0; n < s.cpActorsExceptMe().length; n++) {
-                    var a = s.cpActorsExceptMe()[n];
-                    if (a.id === data.attackId) {
-                        s.actorToAttack(a);
-                        break;
-                    }
-                }
-                for (var n = 0; n < s.cpActorsExceptMe().length; n++) {
-                    var a = s.cpActorsExceptMe()[n];
-                    if (a.id === data.fortuneTellId) {
-                        s.actorToFortuneTell(a);
-                        break;
-                    }
-                }
-                for (var n = 0; n < s.cpActorsExceptMe().length; n++) {
-                    var a = s.cpActorsExceptMe()[n];
-                    if (a.id === data.guardId) {
-                        s.actorToGuard(a);
-                        break;
-                    }
-                }*/
                 var a = Enumerable.From(s.cpAliveActorsExceptMe()).FirstOrDefault(null, function (a) { return a.id === data.executeId });
                 s.actorToExecute(a);
                 var a = Enumerable.From(s.cpAliveActorsExceptMe()).FirstOrDefault(null, function (a) { return a.id === data.attackId });
@@ -576,14 +551,16 @@
                 s.Send('/CreateRoom');
             }
 
-            s.OpenRoomModal = function (roomId) {
-                s.roomIdGoingToJoin(roomId);
+            s.OpenRoomModal = function (/*roomId*/room) {
+                console.info(room);
+                s.roomGoingToJoin(room);
+                /*s.roomIdGoingToJoin(room.roomId);*/
                 $('#RoomModal').modal('show');
             }
 
             s.JoinRoom = function () {
-                //s.Send('/JoinRoom ' + s.roomIdGoingToJoin());
-                s.hub.server.joinRoom(s.roomIdGoingToJoin(), s.roomPasswordGoingToJoin());
+                //s.hub.server.joinRoom(s.roomIdGoingToJoin(), s.roomPasswordGoingToJoin());
+                s.hub.server.joinRoom(s.roomGoingToJoin().roomId, s.roomPasswordGoingToJoin());
             }
 
             s.RoomConfigure = function () {

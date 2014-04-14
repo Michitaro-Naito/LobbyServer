@@ -30,14 +30,21 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 data-bind="" class="modal-title" id="RoomModalLabel">RoomModal</h4>
+                    <h4 data-bind="" class="modal-title" id="RoomModalLabel">村の詳細</h4>
                 </div>
                 <div class="modal-body">
-                    <p data-bind="text: roomIdGoingToJoin"></p>
-                    <input type="text" data-bind="value: roomPasswordGoingToJoin" />
+                    <h4 data-bind="visible: roomGoingToJoin() !== null, with: roomGoingToJoin()">
+                        #<span data-bind="text: roomId"></span>
+                        &nbsp;<span data-bind="text: name"></span>
+                    </h4>
+                    <div class="form-group">
+                        <label for="JoinRoomPassword">パスワード</label>
+                        <input type="text" data-bind="value: roomPasswordGoingToJoin" class="form-control" id="RoomConfigurationName" placeholder="パスワード">
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" data-bind="click: JoinRoom">Join</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" data-bind="click: JoinRoom">参加する</button>
                 </div>
             </div>
         </div>
@@ -128,7 +135,7 @@
                             <td>
                                 <span data-bind="text: requiresPassword"></span>
                                 <button type="button"
-                                        data-bind="text: $root.Text('Join'), click: function(){ $root.OpenRoomModal(roomId); }"
+                                        data-bind="text: $root.Text('Join'), click: function(){ $root.OpenRoomModal($data); }"
                                         class="btn btn-primary btn-xs"></button>
                             </td>
                         </tr>
