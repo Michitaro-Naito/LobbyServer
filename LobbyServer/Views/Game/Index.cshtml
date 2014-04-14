@@ -328,7 +328,7 @@
                     </div>
                     
                     <!-- Send -->
-                    <div data-bind="attr: { class: clSendMessage }" id="RoomSendBox">
+                    <div data-bind="visible: roomState() !== RoomState.Ended, attr: { class: clSendMessage }" id="RoomSendBox">
                         <div class="form-inline">
                             <div class="form-group">
                                 <select data-bind="options:roomSendModes, optionsText: 'name', value: roomSendMode" class="form-control"></select>
