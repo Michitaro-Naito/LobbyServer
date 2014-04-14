@@ -374,8 +374,38 @@
             });
             // Callback
             s.hub.client.gotRoomConfigurations = function (data) {
-                console.info(data);
                 s.roomConfigurations(data);
+            }
+            s.hub.client.gotModes = function (modes) {
+                var mode = s.roomSendMode();
+                s.roomSendModes(modes);
+                if (mode !== undefined) {
+                    var restore = Enumerable.From(s.roomSendModes()).FirstOrDefault(null, function (m) { return m.id === mode.id; });
+                    if (restore !== null) {
+                        s.roomSendMode(restore);
+                    }
+                    else
+                        // Could not restore. Clear input (to prevent sending accidentally.)
+                        $('#RoomChat').val('');
+                }
+            }
+            s.hub.client.gotActors = function (actors) {
+                s.ignoreVoteSubscription(true);
+
+                var to = s.roomSendTo();
+
+                // Refresh array
+                var newActors = [];
+                for (var n = 0; n < actors.length; n++) {
+                    newActors.push(new Apwei.Game.Actor(s, actors[n]));
+                }
+                s.actors(newActors);
+
+                // Restore PrivateMessageTarget
+                if (to !== undefined)
+                    s.roomSendTo(Enumerable.From(s.actors()).FirstOrDefault(undefined, function (a) { return a.id === to.id; }));
+
+                s.ignoreVoteSubscription(false);
             }
             // Method
             s.roomReport = function () {
@@ -544,19 +574,6 @@
                 s.roomState(newRoomState);
             }
 
-            s.hub.client.gotActors = function (actors) {
-                s.ignoreVoteSubscription(true);
-
-                // Refresh array
-                var newActors = [];
-                for (var n = 0; n < actors.length; n++) {
-                    newActors.push(new Apwei.Game.Actor(s, actors[n]));
-                }
-                s.actors(newActors);
-
-                s.ignoreVoteSubscription(false);
-            }
-
             s.hub.client.gotYourActorId = function (id) {
                 s.myActorId(id);
             }
@@ -583,10 +600,6 @@
                 for (var n = 0; n < messages.length; n++) {
                     s.roomMessages.unshift(new Apwei.Game.RoomMessage(s, messages[n]));
                 }
-            }
-
-            s.hub.client.gotModes = function (modes) {
-                s.roomSendModes(modes);
             }
 
             s.hub.client.gotTimer = function (duration) {
