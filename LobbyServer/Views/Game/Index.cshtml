@@ -99,14 +99,17 @@
 
     <!-- Character Creation Scene -->
     <div data-bind="visible: state() == State.CreateCharacter">
-        <h3>Create Character</h3>
+        <h3>キャラクター作成</h3>
         <ul data-bind="foreach: validationErrors.CharacterCreation">
             <li data-bind="text: $data"></li>
         </ul>
         <div data-bind="with: createCharacterData">
-            <input type="text" data-bind="value: name"/>
+            <div class="form-group">
+                <label for="CreateCharacterName">キャラクター名</label>
+                <input type="text" data-bind="value: name" class="form-control" id="CreateCharacterName">
+            </div>
         </div>
-        <button type="button" data-bind="click: CreateCharacter">Create</button>
+        <button type="button" data-bind="click: CreateCharacter" class="btn btn-primary">作成する</button>
     </div>
 
     <!-- Lobby Scene -->
