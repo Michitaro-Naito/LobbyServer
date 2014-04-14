@@ -31,12 +31,18 @@
         },
 
         Room: function (data) {
+            var s = this;
             this.roomId = data.roomId;
             this.guid = data.guid;
             this.name = data.name;
             this.max = data.max;
             this.interval = data.interval;
-            this.requiresPassword = data.requiresPassword;
+            s.requiresPassword = data.requiresPassword;
+            s.clRow = ko.computed(function () {
+                if(s.requiresPassword)
+                    return 'mode3';
+                return '';
+            });
         },
 
         LobbyMessage: function(root, data){

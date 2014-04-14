@@ -23,6 +23,16 @@ a {
     text-decoration: none;
 }
 
+
+.mode1{
+    background: #DFD;
+}
+.mode2{
+    background: #DDD;
+}
+.mode3{
+    background: #FCF;
+}
 /* Set width on the form input elements since they're 100% wide by default */
 /*input,
 select,

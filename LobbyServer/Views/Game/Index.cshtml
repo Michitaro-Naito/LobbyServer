@@ -32,12 +32,12 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 data-bind="" class="modal-title" id="RoomModalLabel">村の詳細</h4>
                 </div>
-                <div class="modal-body">
-                    <h4 data-bind="visible: roomGoingToJoin() !== null, with: roomGoingToJoin()">
+                <div data-bind="if: roomGoingToJoin() !== undefined" class="modal-body">
+                    <h4 data-bind="with: roomGoingToJoin()">
                         #<span data-bind="text: roomId"></span>
                         &nbsp;<span data-bind="text: name"></span>
                     </h4>
-                    <div class="form-group">
+                    <div data-bind="visible: roomGoingToJoin().requiresPassword" class="form-group">
                         <label for="JoinRoomPassword">パスワード</label>
                         <input type="text" data-bind="value: roomPasswordGoingToJoin" class="form-control" id="RoomConfigurationName" placeholder="パスワード">
                     </div>
@@ -77,7 +77,7 @@
     <!-- Characters Scene -->
     <div data-bind="visible: state() == State.Characters">
         <h3 data-bind="text: Text('CharactersList')"></h3>
-        <button type="button" data-bind="click: function(){state(State.CreateCharacter)}" class="btn btn-default">Create</button>
+        <button type="button" data-bind="click: function(){state(State.CreateCharacter)}" class="btn btn-primary">作成する</button>
         <table class="table">
             <thead>
                 <tr>
@@ -130,16 +130,16 @@
                         </tr>
                     </thead>
                     <tbody data-bind="foreach: rooms">
-                        <tr>
+                        <tr data-bind="attr: { class : clRow }">
                             <td data-bind="text: roomId"></td>
                             <td data-bind="text: name"></td>
                             <td data-bind="text: max"></td>
                             <td data-bind="text: interval"></td>
                             <td>
-                                <span data-bind="text: requiresPassword"></span>
-                                <button type="button"
-                                        data-bind="text: $root.Text('Join'), click: function(){ $root.OpenRoomModal($data); }"
-                                        class="btn btn-primary btn-xs"></button>
+                                <button type="button" data-bind="click: function(){ $root.OpenRoomModal($data); }" class="btn btn-primary btn-xs">
+                                    <span data-bind="visible: requiresPassword" class="glyphicon glyphicon-link"></span>
+                                    <span data-bind="text: $root.Text('Join')"></span>
+                                </button>
                             </td>
                         </tr>
                     </tbody>
