@@ -19,7 +19,7 @@
                 <tr>
                     <td>@log.roomName</td>
                     <td>@Html.ActionLink("閲覧する", "Details", new { id = log.id }, new { target = "_blank" })</td>
-                    <td>@Html.ActionLink(log.fileName, "Details", new { id = log.id }, new { target = "_blank" })</td>
+                    <td>@Html.ActionLink(log.fileName, "Download", new { id = log.id })</td>
                 </tr>
             }
         </tbody>

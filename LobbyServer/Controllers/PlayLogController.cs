@@ -56,5 +56,38 @@ namespace LobbyServer.Controllers
             //return View(o.playLog);
             return Content(str);
         }
+
+        [OutputCache(Duration=60, VaryByParam="id")]
+        public ActionResult Download(int id = 0)
+        {
+            if (id == 0)
+                return HttpNotFound();
+
+            var o = ApiScheme.Client.Api.Get<GetPlayLogByIdOut>(new GetPlayLogByIdIn() { id = id });
+            if (o.playLog == null)
+                return HttpNotFound();
+
+            var url = ConfigurationManager.AppSettings["PlayLogUrl"] + o.playLog.fileName;
+            var req = WebRequest.Create(url);
+            string str;
+            try
+            {
+                Debug.WriteLine("Getting...");
+                using (var res = req.GetResponse())
+                {
+                    using (var rs = res.GetResponseStream())
+                    using (var reader = new StreamReader(rs, Encoding.UTF8))
+                    {
+                        str = reader.ReadToEnd();
+                    }
+                }
+            }
+            catch
+            {
+                return HttpNotFound();
+            }
+
+            return File(Encoding.UTF8.GetBytes(str), "application/octet-stream", o.playLog.fileName);
+        }
 	}
 }
