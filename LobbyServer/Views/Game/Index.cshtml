@@ -223,7 +223,7 @@
                             <tr><td><div class="icon" style="background-position: 0px -336px"></div></td><td>生存者</td></tr>
                         </table>
                         <ul data-bind="foreach: actors" class="actors clearfix">
-                            <li data-bind="visible: !isDead">
+                            <li data-bind="visible: !isDead, attr: {class:clItem}">
                                 <div class="name" data-bind="text: fmTitleAndName, attr: {style: stName}"></div>
                                 <div>
                                     <table>
@@ -245,7 +245,7 @@
                             <tr><td><div class="icon" style="background-position: 0px -360px"></div></td><td>犠牲者</td></tr>
                         </table>
                         <ul data-bind="foreach: actors" class="actors clearfix">
-                            <li data-bind="visible: isDead">
+                            <li data-bind="visible: isDead, attr: {class:clItem}">
                                 <div class="name" data-bind="text: fmTitleAndName, attr: {style: stName}"></div>
                                 <div>
                                     <table>

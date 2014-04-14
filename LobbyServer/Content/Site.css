@@ -178,6 +178,9 @@ ul.actors li{
     white-space: nowrap;
     overflow: hidden;
 }
+ul.actors li.me{
+    border: solid 1px yellow;
+}
 ul.actors li div.name{
 }
 ul.actors li table{

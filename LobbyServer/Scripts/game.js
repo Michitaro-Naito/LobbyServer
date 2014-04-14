@@ -148,6 +148,9 @@
             s.isPresent = data.isPresent;
             s.ColorIdentity = data.ColorIdentity;
 
+            s.IsLocal = ko.computed(function () {
+                return s.id === root.myActorId();
+            });
             this.fmTitleAndName = ko.computed(function () {
                 return this.title + ' ' + this.name;
             }, this);
@@ -172,6 +175,11 @@
                     return 'NPC';
                 return this.character;
             }, this);
+            s.clItem = ko.computed(function () {
+                if (s.IsLocal())
+                    return 'me';
+                return '';
+            });
             s.stUser = ko.computed(function () {
                 if (s.character === null)
                     return 'color:green;'
@@ -308,14 +316,6 @@
             s.roomReportMessageId = ko.observable();
             s.roomReportNote = ko.observable('');
             // Computed
-            /*s.cpMyActor = ko.computed(function () {
-                for (var n = 0; n < s.actors().length; n++) {
-                    var a = s.actors()[n];
-                    if (a.id === s.myActorId())
-                        return a;
-                }
-                return null;
-            }, this);*/
             s.cpMyActor = ko.computed(function () {
                 return Enumerable.From(s.actors()).FirstOrDefault(null, function (a) { return a.id === s.myActorId(); });
             });
