@@ -69,13 +69,13 @@
     </div>
 
     <!-- Disconnected Scene -->
-    <div data-bind="visible: state() == State.Disconnected">
+    <div data-bind="visible: state() == State.Disconnected" class="box">
         <h3>Disconnected</h3>
         <button type="button" data-bind="click: Connect">Connect</button>
     </div>
 
     <!-- Characters Scene -->
-    <div data-bind="visible: state() == State.Characters">
+    <div data-bind="visible: state() == State.Characters" class="box">
         <h3 data-bind="text: Text('CharactersList')"></h3>
         <button type="button" data-bind="click: function(){state(State.CreateCharacter)}" class="btn btn-primary">作成する</button>
         <table class="table">
@@ -98,7 +98,7 @@
     </div>
 
     <!-- Character Creation Scene -->
-    <div data-bind="visible: state() == State.CreateCharacter">
+    <div data-bind="visible: state() == State.CreateCharacter" class="box">
         <h3>キャラクター作成</h3>
         <ul data-bind="foreach: validationErrors.CharacterCreation">
             <li data-bind="text: $data"></li>
@@ -116,52 +116,56 @@
     <div data-bind="visible: state() == State.Rooms">
         <div class="row">
             <div class="col-sm-6">
-                <h3 data-bind="text: $root.Text('VillagesList')">Rooms</h3>
-                <button type="button" data-bind="text: $root.Text('Create'), click: CreateRoom" class="btn btn-default"></button>
-                <button type="button" data-bind="click: GetRooms" class="btn btn-default">更新</button>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>村の名前</th>
-                            <th>人数</th>
-                            <th>1日の長さ</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody data-bind="foreach: rooms">
-                        <tr data-bind="attr: { class : clRow }">
-                            <td data-bind="text: roomId"></td>
-                            <td data-bind="text: name"></td>
-                            <td data-bind="text: max"></td>
-                            <td data-bind="text: interval"></td>
-                            <td>
-                                <button type="button" data-bind="click: function(){ $root.OpenRoomModal($data); }" class="btn btn-primary btn-xs">
-                                    <span data-bind="visible: requiresPassword" class="glyphicon glyphicon-link"></span>
-                                    <span data-bind="text: $root.Text('Join')"></span>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="box">
+                    <h3 data-bind="text: $root.Text('VillagesList')">Rooms</h3>
+                    <button type="button" data-bind="text: $root.Text('Create'), click: CreateRoom" class="btn btn-primary"></button>
+                    <button type="button" data-bind="click: GetRooms" class="btn btn-default">更新</button>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>村の名前</th>
+                                <th>人数</th>
+                                <th>1日の長さ</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach: rooms">
+                            <tr data-bind="attr: { class : clRow }">
+                                <td data-bind="text: roomId"></td>
+                                <td data-bind="text: name"></td>
+                                <td data-bind="text: max"></td>
+                                <td data-bind="text: interval"></td>
+                                <td>
+                                    <button type="button" data-bind="click: function(){ $root.OpenRoomModal($data); }" class="btn btn-primary btn-xs">
+                                        <span data-bind="visible: requiresPassword" class="glyphicon glyphicon-link"></span>
+                                        <span data-bind="text: $root.Text('Join')"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div class="col-sm-6">
-                <h3>雑談・募集用チャット</h3>
-                <div class="input-group">
-                    <input type="text" id="LobbyChat" class="form-control" placeholder="ここからメッセージを送信できます"/>
-                    <span class="input-group-btn">
-                        <button class="btn btn-primary" type="button">送信</button>
-                    </span>
+                <div class="box">
+                    <h3>雑談・募集用チャット</h3>
+                    <div class="input-group">
+                        <input type="text" id="LobbyChat" class="form-control" placeholder="ここからメッセージを送信できます" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="button">送信</button>
+                        </span>
+                    </div>
+                    <ul data-bind="foreach: lobbyMessages" class="messages">
+                        <li data-bind="attr: { class: fmClass }">
+                            <div class="from">
+                                <span data-bind="text: name" class="name"></span>
+                                <span data-bind="text: fmCreated" class="time"></span>
+                            </div>
+                            <div data-bind="text: body" class="body"></div>
+                        </li>
+                    </ul>
                 </div>
-                <ul data-bind="foreach: lobbyMessages" class="messages">
-                    <li data-bind="attr: { class: fmClass }">
-                        <div class="from">
-                            <span data-bind="text: name" class="name"></span>
-                            <span data-bind="text: fmCreated" class="time"></span>
-                        </div>
-                        <div data-bind="text: body" class="body"></div>
-                    </li>
-                </ul>
             </div>
         </div>
     </div>
@@ -172,7 +176,7 @@
     <div data-bind="visible: state() == State.Playing">
 
         <!-- Configuring -->
-        <div data-bind="visible: roomState() == RoomState.Configuring">
+        <div data-bind="visible: roomState() == RoomState.Configuring" class="box">
             <h3>村の設定</h3>
             <ul data-bind="foreach: validationErrors.RoomConfiguration">
                 <li data-bind="text: $data"></li>
@@ -202,7 +206,7 @@
         <!-- Matchmaking, Playing, Ending, Ended -->
         <div data-bind="visible: roomState() != RoomState.Configuring">
             <!-- Top (RoomConfigurations) -->
-            <div data-bind="with: roomConfigurations">
+            <div data-bind="with: roomConfigurations" class="box">
                 <h3 data-bind="text: name"></h3>
                 <div>
                     <span>最大人数：<span data-bind="text: max"></span></span>
@@ -214,7 +218,7 @@
                 <div class="col-sm-4">
 
                     <!-- Alive Actors -->
-                    <div data-bind="visible: cpAliveActors().length > 0" class="AliveActors">
+                    <div data-bind="visible: cpAliveActors().length > 0" class="box AliveActors">
                         <table>
                             <tr><td><div class="icon" style="background-position: 0px -336px"></div></td><td>生存者</td></tr>
                         </table>
@@ -236,7 +240,7 @@
                     </div>
 
                     <!-- Dead Actors -->
-                    <div data-bind="visible: cpDeadActors().length > 0" class="DeadActors">
+                    <div data-bind="visible: cpDeadActors().length > 0" class="box DeadActors">
                         <table>
                             <tr><td><div class="icon" style="background-position: 0px -360px"></div></td><td>犠牲者</td></tr>
                         </table>
@@ -262,52 +266,54 @@
                 <!-- Right(Commands and Messages) -->
                 <div class="col-sm-8">
 
-                    <div data-bind="text: roomState"></div>
-
-                    <!-- Duration -->
-                    <div data-bind="visible: roomState() == RoomState.Matchmaking || roomState() == RoomState.Playing || roomState() == RoomState.Ending, text: fmDuration"></div>
-
                     <!-- Commands -->
-                    <!-- Start Button -->
-                    <button data-bind="visible: roomState() == RoomState.Matchmaking, text: $root.Text('Start'), click: RoomStart"
-                            class="btn btn-primary btn-sm">
-                        Start
-                    </button>
+                    <div class="box">
+                        <h4>行動</h4>
 
-                    <!-- Vote Button -->
-                    <button data-bind="visible: roomState() == RoomState.Playing"
-                            class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
-                        投票
-                    </button>
+                        <!-- Duration -->
+                        <div data-bind="visible: roomState() == RoomState.Matchmaking || roomState() == RoomState.Playing || roomState() == RoomState.Ending, text: fmDuration"></div>
 
-                    <!-- Vote Modal -->
-                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                    <h4 class="modal-title" id="myModalLabel">Vote</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <p>Select a character to execute. Changes will be saved automatically.</p>
-                                    <select data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToExecute, optionsCaption: 'select me'"></select>
-                                    <select data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToAttack, optionsCaption: 'select me'"></select>
-                                    <select data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToFortuneTell, optionsCaption: 'select me'"></select>
-                                    <select data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToGuard, optionsCaption: 'select me'"></select>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+                        <!-- Commands -->
+                        <!-- Start Button -->
+                        <button data-bind="visible: roomState() == RoomState.Matchmaking, text: $root.Text('Start'), click: RoomStart"
+                                class="btn btn-primary btn-sm">
+                            Start
+                        </button>
+
+                        <!-- Vote Button -->
+                        <button data-bind="visible: roomState() == RoomState.Playing"
+                                class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
+                            投票
+                        </button>
+
+                        <!-- Vote Modal -->
+                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title" id="myModalLabel">Vote</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Select a character to execute. Changes will be saved automatically.</p>
+                                        <select data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToExecute, optionsCaption: 'select me'"></select>
+                                        <select data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToAttack, optionsCaption: 'select me'"></select>
+                                        <select data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToFortuneTell, optionsCaption: 'select me'"></select>
+                                        <select data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToGuard, optionsCaption: 'select me'"></select>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Quit Button -->
+                        <button type="button" data-bind="text: $root.Text('QuitRoom'), click: QuitRoom" class="btn btn-warning btn-sm"></button>
                     </div>
-
-                    <!-- Quit Button -->
-                    <button type="button" data-bind="text: $root.Text('QuitRoom'), click: QuitRoom" class="btn btn-warning btn-sm"></button>
-
-                    <!-- RoomMessages -->
+                    
+                    <!-- Send -->
                     <div data-bind="attr: { class: clSendMessage }" id="RoomSendBox">
-                        <div data-bind="text: roomSendMode().name"></div>
                         <div class="form-inline">
                             <div class="form-group">
                                 <select data-bind="options:roomSendModes, optionsText: 'name', value: roomSendMode" class="form-control"></select>
@@ -324,19 +330,25 @@
                         </div>
                     </div>
 
-                    <ul data-bind="foreach: roomMessages" class="messages">
-                        <li data-bind="attr: { class: fmClass }">
-                            <div class="from">
-                                <span data-bind="text: cpFrom, attr:{style:stName}" class="name"></span>
-                                <span data-bind="visible: canReport, click: report" class="glyphicon glyphicon-thumbs-down"></span>
-                                <span data-bind="text: cpTo" class="to"></span>
-                                <span data-bind="text: fmCreated" class="time"></span>
-                            </div>
-                            <div data-bind="foreach: bodyRows" class="body">
-                                <div data-bind="text: $data"></div>
-                            </div>
-                        </li>
-                    </ul>
+                    <!-- Messages -->
+                    <div class="box">
+                        <h4>村の会話</h4>
+
+                        <!-- Log -->
+                        <ul data-bind="foreach: roomMessages" class="messages">
+                            <li data-bind="attr: { class: fmClass }">
+                                <div class="from">
+                                    <span data-bind="text: cpFrom, attr:{style:stName}" class="name"></span>
+                                    <span data-bind="visible: canReport, click: report" class="glyphicon glyphicon-thumbs-down"></span>
+                                    <span data-bind="text: cpTo" class="to"></span>
+                                    <span data-bind="text: fmCreated" class="time"></span>
+                                </div>
+                                <div data-bind="foreach: bodyRows" class="body">
+                                    <div data-bind="text: $data"></div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

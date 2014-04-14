@@ -3,107 +3,120 @@
 }
 
 <div itemscope itemtype="http://schema.org/SoftwareApplication">
-    <h1 itemprop="name">@_.ApplicationName</h1>
+    <div class="box">
+        <h1 itemprop="name">@_.ApplicationName</h1>
+    </div>
 
     <div class="row">
         <div class="col-sm-8">
-            <h2>ようこそ</h2>
-            <div class="alert alert-info">人狼ゲームオンライン２は現在オープンβテスト中です。</div>
-            <p itemprop="description">
-                人狼ゲームオンライン２はブラウザで遊べる無料の人狼ゲームです。
-                多くのパソコンとスマートフォンで動作します。
-                Google+のアカウントさえあれば、登録不要でお友達やネット上のプレイヤーとも手軽にゲームを開始できます。
-                人狼が初めての方も是非参加してみてください。
-            </p>
-            <p><a href="@Url.RouteUrl(new { controller="Game", action="Index" })" class="btn btn-primary"><span class="glyphicon glyphicon-play"></span> 遊んでみる</a></p>
-            <p><a href="http://jnro.net/" target="_blank">こちらから人狼ゲームオンライン１も遊べます。</a></p>
+            <div class="box sm-mh300">
+                <h2>ようこそ</h2>
+                <div class="alert alert-info">人狼ゲームオンライン２は現在オープンβテスト中です。</div>
+                <p itemprop="description">
+                    人狼ゲームオンライン２はブラウザで遊べる無料の人狼ゲームです。
+                    Google+のアカウントさえあれば、登録不要でお友達やネット上のプレイヤーとも手軽にゲームを開始できます。
+                    人狼が初めての方も是非参加してみてください。
+                </p>
+                <p><a href="@Url.RouteUrl(new { controller="Game", action="Index" })" class="btn btn-primary"><span class="glyphicon glyphicon-play"></span> 遊んでみる</a></p>
+                <p><a href="http://jnro.net/" target="_blank">こちらから人狼ゲームオンライン１も遊べます。</a></p>
+            </div>
         </div>
         <div class="col-sm-4">
-            <h2>統計</h2>
-            <table class="table">
-                <tbody>
-                    <tr>
-                        <td>登録数</td>
-                        <td>100</td>
-                    </tr>
-                    <tr>
-                        <td>閲覧中</td>
-                        <td>100</td>
-                    </tr>
-                    <tr>
-                        <td>プレイ中</td>
-                        <td>100</td>
-                    </tr>
-                    <tr>
-                        <td>昨日</td>
-                        <td>100</td>
-                    </tr>
-                    <tr>
-                        <td>人狼が現れた村の数</td>
-                        <td>1000</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="box sm-mh300">
+                <h2>統計</h2>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td>登録数</td>
+                            <td>100</td>
+                        </tr>
+                        <tr>
+                            <td>閲覧中</td>
+                            <td>100</td>
+                        </tr>
+                        <tr>
+                            <td>プレイ中</td>
+                            <td>100</td>
+                        </tr>
+                        <tr>
+                            <td>昨日</td>
+                            <td>100</td>
+                        </tr>
+                        <tr>
+                            <td>人狼が現れた村の数</td>
+                            <td>1000</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <div class="row">
         <div class="col-sm-4">
-            <h2>サーバ</h2>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>状態</th>
-                        <th>名称</th>
-                        <th>操作</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><span class="label label-warning">混雑</span></td>
-                        <td>東京第一サーバ</td>
-                    </tr>
-                    <tr>
-                        <td><span class="label label-success">快適</span></td>
-                        <td>東京第二サーバ</td>
-                    </tr>
-                </tbody>
-            </table>
-            <p>
-                村の一覧と募集チャットがサーバごとに分かれています。
-                キャラクターと戦績は全てのサーバで共有されます。
-            </p>
+            <div class="box sm-mh300">
+                <h2>サーバ</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>状態</th>
+                            <th>名称</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="label label-warning">混雑</span></td>
+                            <td>東京第一サーバ</td>
+                        </tr>
+                        <tr>
+                            <td><span class="label label-success">快適</span></td>
+                            <td>東京第二サーバ</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>
+                    村の一覧と募集チャットがサーバごとに分かれています。
+                    キャラクターと戦績は全てのサーバで共有されます。
+                </p>
+            </div>
         </div>
+
         <div class="col-sm-4">
-            <h2>記録</h2>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>村の名前</th>
-                        <th>操作</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>みんなで楽しく人狼ゲーム</td>
-                        <td>閲覧 DL</td>
-                    </tr>
-                    <tr>
-                        <td>みんなで楽しく人狼ゲーム</td>
-                        <td>閲覧 DL</td>
-                    </tr>
-                    <tr>
-                        <td>みんなで楽しく人狼ゲーム</td>
-                        <td>閲覧 DL</td>
-                    </tr>
-                </tbody>
-            </table>
-            <p><a class="btn btn-default" href="@Url.RouteUrl(new {controller="PlayLog", action="Index"})">もっと見る &raquo;</a></p>
+            <div class="box sm-mh300">
+                <h2>記録</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>村の名前</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>みんなで楽しく人狼ゲーム</td>
+                            <td>閲覧 DL</td>
+                        </tr>
+                        <tr>
+                            <td>みんなで楽しく人狼ゲーム</td>
+                            <td>閲覧 DL</td>
+                        </tr>
+                        <tr>
+                            <td>みんなで楽しく人狼ゲーム</td>
+                            <td>閲覧 DL</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p><a class="btn btn-default" href="@Url.RouteUrl(new {controller="PlayLog", action="Index"})">もっと見る &raquo;</a></p>
+            </div>
         </div>
+
         <div class="col-sm-4">
-            <h2>その他</h2>
-            <p>Twitter公式アカウント</p>
-            <p>開発ブログ</p>
+            <div class="box sm-mh300">
+                <h2>その他</h2>
+                <p>Twitter公式アカウント</p>
+                <p>開発ブログ</p>
+            </div>
         </div>
     </div>
 </div>

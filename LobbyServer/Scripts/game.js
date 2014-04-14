@@ -302,7 +302,7 @@
             s.roomReportMessageId = ko.observable();
             s.roomReportNote = ko.observable('');
             s.clSendMessage = ko.computed(function () {
-                return 'mode' + s.roomSendMode().id;
+                return 'box mode' + s.roomSendMode().id;
             });
             s.cpAliveActors = ko.computed(function () {
                 return Enumerable.From(s.actors()).Where(function (a) { return !a.isDead; }).ToArray();
