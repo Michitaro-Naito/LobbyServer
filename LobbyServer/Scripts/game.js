@@ -421,10 +421,6 @@
             // ----- Callback -----
 
             s.hub.client.addMessage = function (name, body) {
-                /*s.logs.unshift(new Apwei.Game.Log(name, body));
-                while (s.logs().length > 100) {
-                    s.logs.pop();
-                }*/
                 console.info(name + ',' + body);
             }
 
