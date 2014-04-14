@@ -303,12 +303,21 @@
             };
 
             // ----- Room Scene -----
-            //s.room = ko.observable();
+            // Variable
             s.roomConfigurations = ko.observable();
             s.roomReportMessageId = ko.observable();
             s.roomReportNote = ko.observable('');
-            s.clSendMessage = ko.computed(function () {
-                return 'box mode' + s.roomSendMode().id;
+            // Computed
+            /*s.cpMyActor = ko.computed(function () {
+                for (var n = 0; n < s.actors().length; n++) {
+                    var a = s.actors()[n];
+                    if (a.id === s.myActorId())
+                        return a;
+                }
+                return null;
+            }, this);*/
+            s.cpMyActor = ko.computed(function () {
+                return Enumerable.From(s.actors()).FirstOrDefault(null, function (a) { return a.id === s.myActorId(); });
             });
             s.cpAliveActors = ko.computed(function () {
                 return Enumerable.From(s.actors()).Where(function (a) { return !a.isDead; }).ToArray();
@@ -319,10 +328,48 @@
             s.cpAliveActorsExceptMe = ko.computed(function () {
                 return Enumerable.From(s.actors()).Where(function (a) { return !a.isDead && a.id !== s.myActorId(); }).ToArray();
             });
+            s.IsExecuteVisible = ko.computed(function () {
+                var me = s.cpMyActor();
+                if (me === null)
+                    return false;
+                if (me.isDead)
+                    return false;
+                return true;
+            });
+            s.IsAttackVisible = ko.computed(function () {
+                var me = s.cpMyActor();
+                if (me === null)
+                    return false;
+                if (me.isDead)
+                    return false;
+                return me.role === 2000;    // IsWerewolf?
+            });
+            s.IsFortuneTellVisible = ko.computed(function () {
+                var me = s.cpMyActor();
+                if (me === null)
+                    return false;
+                if (me.isDead)
+                    return false;
+                return me.role === 1001;    // IsFortuneTeller?
+            });
+            s.IsGuardVisible = ko.computed(function () {
+                var me = s.cpMyActor();
+                if (me === null)
+                    return false;
+                if (me.isDead)
+                    return false;
+                return me.role === 1003;    // IsHunter?
+            });
+            // Computed (Class)
+            s.clSendMessage = ko.computed(function () {
+                return 'box mode' + s.roomSendMode().id;
+            });
+            // Callback
             s.hub.client.gotRoomConfigurations = function (data) {
                 console.info(data);
                 s.roomConfigurations(data);
             }
+            // Method
             s.roomReport = function () {
                 s.hub.server.roomReportMessage(s.roomReportMessageId(), s.roomReportNote());
             }
@@ -333,6 +380,7 @@
                 s.hub.server.roomSend(s.roomSendMode().id, s.roomSendTo().id, str);
                 $('#RoomChat').val('');
             }
+            // Event
             $('#RoomChat').keydown(function (event) {
                 if (event.which == 13) {
                     event.preventDefault();
@@ -343,14 +391,6 @@
 
 
             // ----- Computed -----
-            s.cpMyActor = ko.computed(function () {
-                for (var n = 0; n < s.actors().length; n++) {
-                    var a = s.actors()[n];
-                    if (a.id === s.myActorId())
-                        return a;
-                }
-                return null;
-            }, this);
             s.fmDuration = ko.computed(function () {
                 var totalSeconds = Math.ceil(s.duration());
                 var hours = Math.floor(totalSeconds / 3600);

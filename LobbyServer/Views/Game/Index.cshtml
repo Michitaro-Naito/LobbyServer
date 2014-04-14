@@ -295,22 +295,22 @@
                                         <h4 class="modal-title" id="myModalLabel">Vote</h4>
                                     </div>
                                     <div class="modal-body">
-                                        <div class="form-group">
+                                        <div class="form-group" data-bind="visible: IsExecuteVisible">
                                             <label for="ActorToExecute">処刑する</label>
                                             <select id="ActorToExecute" class="form-control"
                                                     data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToExecute, optionsCaption: 'select me'"></select>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group" data-bind="visible: IsAttackVisible">
                                             <label for="ActorToAttack">襲撃する</label>
                                             <select id="ActorToAttack" class="form-control"
                                                     data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToAttack, optionsCaption: 'select me'"></select>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group" data-bind="visible: IsFortuneTellVisible">
                                             <label for="ActorToFortuneTell">占う</label>
                                             <select id="ActorToFortuneTell" class="form-control"
                                                     data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToFortuneTell, optionsCaption: 'select me'"></select>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group" data-bind="visible: IsGuardVisible">
                                             <label for="ActorToGuard">護衛する</label>
                                             <select id="ActorToGuard" class="form-control"
                                                     data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToGuard, optionsCaption: 'select me'"></select>
