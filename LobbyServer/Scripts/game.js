@@ -323,6 +323,16 @@
             s.roomReport = function () {
                 s.hub.server.roomReportMessage(s.roomReportMessageId(), s.roomReportNote());
             }
+            s.RoomSend = function () {
+                s.hub.server.roomSend(s.roomSendMode().id, s.roomSendTo().id, $('#RoomChat').val());
+                $('#RoomChat').val('');
+            }
+            $('#RoomChat').keydown(function (event) {
+                if (event.which == 13) {
+                    event.preventDefault();
+                    s.RoomSend();
+                }
+            });
 
 
 
@@ -622,13 +632,6 @@
                         event.preventDefault();
                         s.hub.server.send($('#logs').val());
                         $('#logs').val('').focus();
-                    }
-                });
-                $('#RoomChat').keydown(function (event) {
-                    if (event.which == 13) {
-                        event.preventDefault();
-                        s.hub.server.roomSend(s.roomSendMode().id, s.roomSendTo().id, $('#RoomChat').val());
-                        $('#RoomChat').val('');
                     }
                 });
             }
