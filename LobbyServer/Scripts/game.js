@@ -6,10 +6,6 @@
 
 
     var game = {
-        /*Log: function (name, body) {
-            this.name = name;
-            this.body = body;
-        },*/
 
         Character: function (data) {
             this.name = data.name;
@@ -261,18 +257,6 @@
                 s.bootTime(time);
             }
 
-            // ----- Room, Join -----
-            s.roomGoingToJoin = ko.observable();
-            //s.roomIdGoingToJoin = ko.observable();
-            s.roomPasswordGoingToJoin = ko.observable();
-
-            // ----- Room, Configure -----
-            s.roomConfiguration = ko.observable(new Apwei.Game.RoomConfiguration());
-            s.validationErrors = {
-                RoomConfiguration: ko.observableArray([]),
-                CharacterCreation: ko.observableArray([])
-            };
-
             // ----- Character Creation Scene -----
             s.createCharacterData = ko.observable(new Apwei.Game.CreateCharacterData());
             s.CreateCharacter = function () {
@@ -301,8 +285,20 @@
                 }
             });
 
-            // ----- Room Scene -----
+            // ----- Room, Join -----
+            s.roomGoingToJoin = ko.observable();
+            s.roomPasswordGoingToJoin = ko.observable();
 
+            // ----- Room, Configure -----
+            s.roomConfigurationsToSet = ko.observable(new Apwei.Game.RoomConfiguration());
+            s.validationErrors = {
+                RoomConfiguration: ko.observableArray([]),
+                CharacterCreation: ko.observableArray([])
+            };
+
+            // ----- Room Scene -----
+            //s.room = ko.observable();
+            s.roomConfigurations = ko.observable();
             s.roomReportMessageId = ko.observable();
             s.roomReportNote = ko.observable('');
             s.clSendMessage = ko.computed(function () {
@@ -315,15 +311,12 @@
                 return Enumerable.From(s.actors()).Where(function (a) { return a.isDead; }).ToArray();
             });
             s.cpAliveActorsExceptMe = ko.computed(function () {
-                /*var actors = [];
-                for (var n = 0; n < s.actors().length; n++) {
-                    var a = s.actors()[n];
-                    if (a.id !== s.myActorId())
-                        actors.push(a);
-                }
-                return actors;*/
                 return Enumerable.From(s.actors()).Where(function (a) { return !a.isDead && a.id !== s.myActorId(); }).ToArray();
             });
+            s.hub.client.gotRoomConfigurations = function (data) {
+                console.info(data);
+                s.roomConfigurations(data);
+            }
             s.roomReport = function () {
                 s.hub.server.roomReportMessage(s.roomReportMessageId(), s.roomReportNote());
             }
@@ -570,17 +563,12 @@
             }
 
             s.RoomConfigure = function () {
-                //s.hub.server.roomConfigure('Foo', 12, 5);
-                /*s.hub.server.roomConfigure(
-                    s.roomConfiguration().name(),
-                    s.roomConfiguration().max(),
-                    s.roomConfiguration().interval());*/
                 s.hub.server.roomConfigure({
-                    name: s.roomConfiguration().name(),
-                    password: s.roomConfiguration().password(),
-                    max: s.roomConfiguration().max(),
-                    interval: s.roomConfiguration().interval(),
-                    ModelName: s.roomConfiguration().ModelName
+                    name: s.roomConfigurationsToSet().name(),
+                    password: s.roomConfigurationsToSet().password(),
+                    max: s.roomConfigurationsToSet().max(),
+                    interval: s.roomConfigurationsToSet().interval(),
+                    ModelName: s.roomConfigurationsToSet().ModelName
                 });
             }
 
