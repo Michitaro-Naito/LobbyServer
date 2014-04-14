@@ -16,14 +16,14 @@ namespace LobbyServer.Controllers
     {
         //
         // GET: /PlayLog/
-        [OutputCache(Duration=60, VaryByParam="page")]
+        //[OutputCache(Duration=60, VaryByParam="page")]
         public ActionResult Index(int page = 0)
         {
             var o = ApiScheme.Client.Api.Get<GetPlayLogsOut>(new GetPlayLogsIn() { page = page });
             return View(o.playLogs);
         }
 
-        [OutputCache(Duration=60, VaryByParam="id")]
+        //[OutputCache(Duration=60, VaryByParam="id")]
         public ActionResult Details(int id = 0)
         {
             if (id == 0)

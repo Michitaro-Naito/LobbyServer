@@ -3,11 +3,25 @@
     ViewBag.Title = "Index";
 }
 
-<h2>PlayLog Index</h2>
-
-<ul>
-    @foreach (var log in Model)
-    {
-        <li>@log.fileName</li>
-    }
-</ul>
+<div class="box">
+    <h2>村の記録</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>村の名前</th>
+                <th>閲覧</th>
+                <th>ダウンロード</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var log in Model)
+            {
+                <tr>
+                    <td>@log.roomName</td>
+                    <td>@Html.ActionLink("閲覧する", "Details", new { id = log.id }, new { target = "_blank" })</td>
+                    <td>@Html.ActionLink(log.fileName, "Details", new { id = log.id }, new { target = "_blank" })</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
