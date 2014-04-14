@@ -277,11 +277,14 @@
             s.GetRooms = function () {
                 s.Send('/GetRooms');
             }
+            s.LobbySend = function () {
+                s.hub.server.lobbySend($('#LobbyChat').val());
+                $('#LobbyChat').val('');
+            }
             $('#LobbyChat').keydown(function (event) {
                 if (event.which == 13) {
                     event.preventDefault();
-                    s.hub.server.lobbySend($('#LobbyChat').val());
-                    $('#LobbyChat').val('');
+                    s.LobbySend();
                 }
             });
 

@@ -153,7 +153,7 @@
                     <div class="input-group">
                         <input type="text" id="LobbyChat" class="form-control" placeholder="ここからメッセージを送信できます" />
                         <span class="input-group-btn">
-                            <button class="btn btn-primary" type="button">送信</button>
+                            <button data-bind="click: LobbySend" class="btn btn-primary" type="button">送信</button>
                         </span>
                     </div>
                     <ul data-bind="foreach: lobbyMessages" class="messages">
