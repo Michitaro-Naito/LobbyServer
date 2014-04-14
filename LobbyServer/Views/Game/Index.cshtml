@@ -281,7 +281,7 @@
                         </button>
 
                         <!-- Vote Button -->
-                        <button data-bind="visible: roomState() == RoomState.Playing"
+                        <button data-bind="visible: roomState() == RoomState.Playing && IsLocalAlive"
                                 class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
                             投票
                         </button>

@@ -328,6 +328,14 @@
             s.cpAliveActorsExceptMe = ko.computed(function () {
                 return Enumerable.From(s.actors()).Where(function (a) { return !a.isDead && a.id !== s.myActorId(); }).ToArray();
             });
+            s.IsLocalAlive = ko.computed(function () {
+                var me = s.cpMyActor();
+                if (me === null)
+                    return false;
+                if (me.isDead)
+                    return false;
+                return true;
+            });
             s.IsExecuteVisible = ko.computed(function () {
                 var me = s.cpMyActor();
                 if (me === null)
