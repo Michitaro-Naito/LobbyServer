@@ -34,10 +34,18 @@
             this.max = data.max;
             this.interval = data.interval;
             s.requiresPassword = data.requiresPassword;
+            s.aliveActors = data.aliveActors;
+            s.alivePlayers = data.alivePlayers;
+            s.state = data.state;
             s.clRow = ko.computed(function () {
                 if(s.requiresPassword)
                     return 'mode3';
                 return '';
+            });
+            s.fmPlayers = ko.computed(function () {
+                if (s.state === 1)
+                    return s.aliveActors + '/' + s.max;
+                return s.alivePlayers + '/' + s.aliveActors + '/' + s.max;
             });
         },
 
@@ -123,10 +131,6 @@
             });
 
             s.report = function () {
-                /*alert('reporting:' + s.id + ',' + s.callerUserId);
-                if (confirm('Report?')) {
-                    root.hub.server.roomReportMessage(s.id, 'This message is suck!');
-                }*/
                 root.roomReportMessageId(s.id);
                 root.roomReportNote('');
                 $('#ReportModal').modal('show');
