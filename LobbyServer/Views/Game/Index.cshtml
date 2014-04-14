@@ -164,15 +164,27 @@
 
         <!-- Configuring -->
         <div data-bind="visible: roomState() == RoomState.Configuring">
-            <h4>Configuring</h4>
+            <h4>村の設定</h4>
             <ul data-bind="foreach: validationErrors.RoomConfiguration">
                 <li data-bind="text: $data"></li>
             </ul>
             <div data-bind="with: roomConfiguration">
-                <input type="text" data-bind="value: name" />
-                <input type="text" data-bind="value: password" />
-                <input type="number" data-bind="value: max" />
-                <input type="number" data-bind="value: interval" />
+                <div class="form-group">
+                    <label for="RoomConfigurationName">村の名前</label>
+                    <input type="text" data-bind="value: name" class="form-control" id="RoomConfigurationName" placeholder="村の名前">
+                </div>
+                <div class="form-group">
+                    <label for="RoomConfigurationPassword">パスワード</label>
+                    <input type="text" data-bind="value: password" class="form-control" id="RoomConfigurationPassword" placeholder="パスワード">
+                </div>
+                <div class="form-group">
+                    <label for="RoomConfigurationMax">最大人数</label>
+                    <input type="number" data-bind="value: max" class="form-control" id="RoomConfigurationMax" placeholder="最大人数">
+                </div>
+                <div class="form-group">
+                    <label for="RoomConfigurationInterval">1日の長さ</label>
+                    <input type="number" data-bind="value: interval" class="form-control" id="RoomConfigurationName" placeholder="1日の長さ">
+                </div>
             </div>
             <button type="button" data-bind="text: $root.Text('Configure'), click: RoomConfigure" class="btn btn-primary btn-sm"></button>
             <button type="button" data-bind="text: $root.Text('QuitRoom'), click: QuitRoom" class="btn btn-warning btn-sm"></button>
