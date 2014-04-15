@@ -249,3 +249,19 @@ ul.messages li div.body{
 #RoomSendBox.mode3{
     background: #FCF;
 }
+
+.box.FactionWon{
+    color: white;
+}
+.box.FactionWon.Faction0{
+    background-color: #ddd;
+}
+.box.FactionWon.Faction1{
+    background-color: blue;
+}
+.box.FactionWon.Faction2{
+    background-color: red;
+}
+.box.FactionWon.Faction3{
+    background-color: green;
+}

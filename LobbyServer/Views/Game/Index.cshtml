@@ -226,6 +226,44 @@
                 </div>
             </div>
 
+            <!-- Top (FactionWon) -->
+            <div data-bind="visible: roomState() == RoomState.Ending || roomState() == RoomState.Ended, attr:{class:clFactionWon}">
+                <div data-bind="visible: factionWon() === Faction.None">
+                    誰も生き残りませんでした・・・
+                </div>
+                <div data-bind="visible: factionWon() === Faction.Citizen">
+                    村人が人狼の血を根絶することに成功しました。<br/>
+                    村人の勝利です！
+                    <table>
+                        <tr>
+                            <td><div class="icon" style="background-position: -288px -24px"></div></td>
+                            <td><div class="icon" style="background-position: -216px 0px"></div></td>
+                            <td><div class="icon" style="background-position: -264px -168px"></div></td>
+                            <td><div class="icon" style="background-position: -240px 0px"></div></td>
+                        </tr>
+                    </table>
+                </div>
+                <div data-bind="visible: factionWon() === Faction.Werewolf">
+                    もはや村人には人狼に抵抗できる力は残っていません。<br />
+                    人狼の勝利です！
+                    <table>
+                        <tr>
+                            <td><div class="icon" style="background-position: -264px -288px"></div></td>
+                            <td><div class="icon" style="background-position: -192px -288px"></div></td>
+                        </tr>
+                    </table>
+                </div>
+                <div data-bind="visible: factionWon() === Faction.Fox">
+                    村人と人狼を出し抜き、妖狐がこの村を支配しました。<br />
+                    妖狐の勝利です！
+                    <table>
+                        <tr>
+                            <td><div class="icon" style="background-position: -168px -240px"></div></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
             <div class="row">
                 <!-- Left (Actors) -->
                 <div class="col-sm-4">

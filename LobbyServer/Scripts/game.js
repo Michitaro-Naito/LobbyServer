@@ -225,6 +225,12 @@
                 Ending: 0003,
                 Ended: 0004
             };
+            s.Faction = {
+                None: 0000,
+                Citizen: 0001,
+                Werewolf: 0002,
+                Fox: 0003
+            };
             s.roomSendModes = ko.observableArray([
                 { id: 0, name: 'All' },
                 { id: 1, name: 'Wolf' },
@@ -319,6 +325,7 @@
             s.roomConfigurations = ko.observable();
             s.roomReportMessageId = ko.observable();
             s.roomReportNote = ko.observable('');
+            s.factionWon = ko.observable();
             // Computed
             s.cpMyActor = ko.computed(function () {
                 return Enumerable.From(s.actors()).FirstOrDefault(null, function (a) { return a.id === s.myActorId(); });
@@ -376,6 +383,9 @@
             s.clSendMessage = ko.computed(function () {
                 return 'box mode' + s.roomSendMode().id;
             });
+            s.clFactionWon = ko.computed(function () {
+                return 'box FactionWon Faction' + s.factionWon();
+            });
             // Callback
             s.hub.client.gotRoomConfigurations = function (data) {
                 s.roomConfigurations(data);
@@ -410,6 +420,10 @@
                     s.roomSendTo(Enumerable.From(s.actors()).FirstOrDefault(undefined, function (a) { return a.id === to.id; }));
 
                 s.ignoreVoteSubscription(false);
+            }
+            s.hub.client.gotFactionWon = function (factionWon) {
+                console.info('FactionWon: ' + factionWon);
+                s.factionWon(factionWon);
             }
             // Method
             s.roomReport = function () {
