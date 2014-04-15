@@ -55,6 +55,9 @@
             s.Created = new Date(data.Created);
             s.name = data.name;
             s.body = data.body;
+            s.IsSystemMessage = ko.computed(function () {
+                return s.name === null;
+            });
             s.fmClass = ko.computed(function () {
                 if (s.name === 'test')
                     return 'mode1';
@@ -65,6 +68,11 @@
                 if (minutes < 10)
                     minutes = '0' + minutes;
                 return s.Created.getHours() + ':' + minutes;
+            });
+            s.cpBody = ko.computed(function () {
+                if (s.IsSystemMessage())
+                    return s.body;
+                return s.body.replace(Apwei.NGWordFilter.Pattern['ja-JP'], 'ワオーン');
             });
         },
 
