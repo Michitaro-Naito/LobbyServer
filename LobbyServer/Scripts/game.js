@@ -77,8 +77,11 @@
             this.mode = data.mode;
             this.fromId = data.fromId;
             this.toId = data.toId;
-            this.bodyRows = data.bodyRows;
+            s.bodyRows = data.bodyRows;
 
+            s.IsSystemMessage = ko.computed(function () {
+                return s.fromId === null;
+            });
             this.fmClass = ko.computed(function () {
                 return 'mode' + this.mode;
             }, this);
@@ -124,6 +127,15 @@
                 }
                 return 'To ' + target;
             }, this);
+            s.cpBodyRows = ko.computed(function () {
+                return Enumerable.From(s.bodyRows)
+                    .Select(function (row) {
+                        if (s.IsSystemMessage())
+                            return row;
+                        return row.replace(Apwei.NGWordFilter.Pattern['ja-JP'], 'ワオーン');
+                    })
+                    .ToArray();
+            });
             s.canReport = ko.computed(function () {
                 if (s.fromId === null)
                     return false;
