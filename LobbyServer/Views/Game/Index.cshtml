@@ -56,13 +56,25 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 data-bind="" class="modal-title" id="ReportModalLabel">ReportModal</h4>
+                    <h4 data-bind="" class="modal-title" id="ReportModalLabel">通報</h4>
                 </div>
                 <div class="modal-body">
-                    <input type="text" data-bind="value: roomReportNote" />
+                    <p>
+                        不正行為を報告します。
+                        選択したメッセージとそれ以前の履歴、その送信者情報、役職等が合わせて保存され、管理人に通知されます。
+                        可能な限り具体的に、発生した不正行為を備考へ記入してください。(「○○さんが味方の狼を暴露した」等)
+                        まずは話し合いによる解決を図り、通報は本当にやむを得ない場合にのみ行ってください。
+                        (むやみに通報するとその後の通報が届かなくなってしまうことがあります。)
+                        対応状況について個別の回答はいたしかねますのであらかじめご了承ください。
+                    </p>
+                    <div class="form-group">
+                        <label for="ReportModalNote">備考</label>
+                        <textarea data-bind="value: roomReportNote" id="ReportModalNote" class="form-control"></textarea>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" data-bind="click: roomReport">Join</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" data-bind="click: roomReport">報告する</button>
                 </div>
             </div>
         </div>
