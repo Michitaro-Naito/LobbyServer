@@ -44,7 +44,7 @@
             });
             s.fmPlayers = ko.computed(function () {
                 if (s.state === 1)
-                    return s.aliveActors + '/' + s.max;
+                    return s.alivePlayers + '/' + s.max;
                 return s.alivePlayers + '/' + s.aliveActors + '/' + s.max;
             });
         },
@@ -313,7 +313,8 @@
                     s.lobbyMessages.pop();
             }
             s.GetRooms = function () {
-                s.Send('/GetRooms');
+                //s.Send('/GetRooms');
+                s.hub.server.getRooms();
             }
             s.LobbySend = function () {
                 var str = $('#LobbyChat').val();
@@ -504,7 +505,8 @@
             s.state.subscribe(function (newValue) {
                 switch (newValue) {
                     case s.State.Characters:
-                        s.Send('/GetCharacters');
+                        //s.Send('/GetCharacters');
+                        s.hub.server.getCharacters();
                         break;
                     case s.State.CreateCharacter:
                         break;
@@ -649,9 +651,9 @@
 
             // ----- Method -----
 
-            s.Send = function (body) {
+            /*s.Send = function (body) {
                 s.hub.server.send(body);
-            }
+            }*/
 
             s.Connect = function () {
                 s.hub.connection.start();
@@ -662,7 +664,8 @@
             }
 
             s.CreateRoom = function () {
-                s.Send('/CreateRoom');
+                //s.Send('/CreateRoom');
+                s.hub.server.createRoom();
             }
 
             s.OpenRoomModal = function (/*roomId*/room) {
@@ -692,7 +695,8 @@
             }
 
             s.QuitRoom = function () {
-                s.Send('/QuitRoom');
+                //s.Send('/QuitRoom');
+                s.hub.server.roomQuit();
             }
 
             s.Vote = function () {

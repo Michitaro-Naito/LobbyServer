@@ -101,7 +101,7 @@
                 <tr>
                     <td data-bind="text: name"></td>
                     <td><button type="button"
-                                data-bind="text: $root.Text('Select'), click: function(){ $root.Send('/SelectCharacter ' + name); }"
+                                data-bind="text: $root.Text('Select'), click: function(){ $root.hub.server.selectCharacter(name); }"
                                 class="btn btn-primary btn-xs"></button></td>
                 </tr>
             </tbody>
