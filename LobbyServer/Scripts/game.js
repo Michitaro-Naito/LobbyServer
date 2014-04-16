@@ -510,6 +510,7 @@
                         break;
                     case s.State.Rooms:
                         //s.Send('/GetRooms');
+                        s.hub.server.getLobbyMessages();
                         s.GetRooms();
                         break;
                     case s.State.Playing:
