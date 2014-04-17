@@ -49,30 +49,7 @@
 
         <div class="col-sm-4">
             <div class="box sm-mh300">
-                <h2>記録</h2>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>村の名前</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>みんなで楽しく人狼ゲーム</td>
-                            <td>閲覧 DL</td>
-                        </tr>
-                        <tr>
-                            <td>みんなで楽しく人狼ゲーム</td>
-                            <td>閲覧 DL</td>
-                        </tr>
-                        <tr>
-                            <td>みんなで楽しく人狼ゲーム</td>
-                            <td>閲覧 DL</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <p><a class="btn btn-default" href="@Url.RouteUrl(new {controller="PlayLog", action="Index"})">もっと見る &raquo;</a></p>
+                @Html.Action("Index", new { controller = "PlayLog", partial = true})
             </div>
         </div>
 

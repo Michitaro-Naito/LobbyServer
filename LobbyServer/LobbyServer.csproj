@@ -231,6 +231,7 @@
     <Content Include="Views\Game\Play.cshtml" />
     <Content Include="Views\Game\IndexPartial.cshtml" />
     <Content Include="Views\Game\StatisticsPartial.cshtml" />
+    <Content Include="Views\PlayLog\IndexPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

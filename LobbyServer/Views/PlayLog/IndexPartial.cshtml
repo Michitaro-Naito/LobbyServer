@@ -1,0 +1,28 @@
+﻿@model List<ApiScheme.Scheme.PlayLogInfo>
+@{
+    Layout = null;
+}
+
+<h2>記録</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>村の名前</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (var n = 0; n < Math.Min(3, Model.Count); n++)
+        {
+            var log = Model[n];
+            <tr>
+                <td>@log.roomName</td>
+                <td>
+                    @Html.ActionLink("閲覧", "Details", new { id = log.id }, new { target = "_blank" })
+                    @Html.ActionLink("DL", "Download", new { id = log.id })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<p><a class="btn btn-default" href="@Url.RouteUrl(new { controller = "PlayLog", action = "Index" })">もっと見る &raquo;</a></p>

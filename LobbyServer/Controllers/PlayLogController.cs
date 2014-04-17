@@ -17,9 +17,11 @@ namespace LobbyServer.Controllers
         //
         // GET: /PlayLog/
         //[OutputCache(Duration=60, VaryByParam="page")]
-        public ActionResult Index(int page = 0)
+        public ActionResult Index(int page = 0, bool partial = false)
         {
             var o = ApiScheme.Client.Api.Get<GetPlayLogsOut>(new GetPlayLogsIn() { page = page });
+            if (partial)
+                return View("IndexPartial", o.playLogs);
             return View(o.playLogs);
         }
 
