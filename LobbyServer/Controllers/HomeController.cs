@@ -21,11 +21,6 @@ namespace LobbyServer.Controllers
 
         public ActionResult Index()
         {
-            /*Debug.WriteLine(Request.Url.Authority);
-            var uri = new Uri("http://amlitek.com:8080/foo/bar?pu=chan&abc=def");
-            Debug.WriteLine(uri.Authority);*/
-            //var url = ConfigurationManager.AppSettings["PortalServerAuthUrl"];
-            //return Redirect(url + "?redirectUrl=" + Url.Action("About", "Home", null, Request.Url.Scheme))
             return View();
         }
 
@@ -53,12 +48,6 @@ namespace LobbyServer.Controllers
             ViewBag.Message = "Your contact page.";
             Debug.WriteLine(ValidPass);
             return View();
-        }
-
-        public ActionResult Servers()
-        {
-            var o = ApiScheme.Client.Api.Get<GetGameServersOut>(new GetGameServersIn());
-            return View(o.servers);
         }
     }
 }

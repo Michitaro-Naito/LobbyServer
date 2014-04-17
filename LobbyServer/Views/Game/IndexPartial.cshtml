@@ -1,4 +1,7 @@
 ﻿@model List<ApiScheme.Scheme.GameServerStatus>
+@{
+    Layout = null;
+}
 
 <div class="box">
     <h2>サーバ</h2>
@@ -11,7 +14,7 @@
             </tr>
         </thead>
         <tbody>
-            @for (var n = 0; n < Model.Count; n++)
+            @for (var n = 0; n < Math.Min(2, Model.Count); n++)
             {
                 var s = Model[n];
                 <tr>
@@ -43,4 +46,5 @@
         村の一覧と募集チャットがサーバごとに分かれています。
         キャラクターと戦績は全てのサーバで共有されます。
     </p>
+    <p><a class="btn btn-default" href="@Url.RouteUrl(new {controller="Game", action="Index"})">もっと見る &raquo;</a></p>
 </div>
