@@ -1,7 +1,7 @@
 ﻿$(function () {
 
     // SignalR
-    $.connection.hub.url = "http://localhost:8080/signalr";
+    //$.connection.hub.url = "http://localhost:8080/signalr";
 
 
 

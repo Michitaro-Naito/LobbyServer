@@ -13,6 +13,13 @@ namespace LobbyServer
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            // GamePlay
+            routes.MapRoute(
+                name: "GamePlay",
+                url: "{culture}/Game/Play/{host}/{port}",
+                defaults: new { culture = "Auto", controller = "Game", action = "Play" }
+            );
+
             // PlayLog
             routes.MapRoute(
                 name: "PlayLogIndex",

@@ -1,0 +1,458 @@
+﻿@model LobbyServer.Models.GamePlayVM
+@{
+    ViewBag.Title = "Index";
+}
+
+
+
+<div id="Game" style="display: none;">
+
+    <!-- ErrorModal -->
+    <div class="modal fade" id="ErrorModal" tabindex="-1" role="dialog" aria-labelledby="ErrorModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 data-bind="text: lastError().title" class="modal-title" id="ErrorModalLabel"></h4>
+                </div>
+                <div class="modal-body">
+                    <p data-bind="text: lastError().body"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RoomModal -->
+    <div class="modal fade" id="RoomModal" tabindex="-1" role="dialog" aria-labelledby="RoomModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 data-bind="" class="modal-title" id="RoomModalLabel">村の詳細</h4>
+                </div>
+                <div data-bind="if: roomGoingToJoin() !== undefined" class="modal-body">
+                    <h4 data-bind="with: roomGoingToJoin()">
+                        #<span data-bind="text: roomId"></span>
+                        &nbsp;<span data-bind="text: name"></span>
+                    </h4>
+                    <div data-bind="visible: roomGoingToJoin().requiresPassword" class="form-group">
+                        <label for="JoinRoomPassword">パスワード</label>
+                        <input type="text" data-bind="value: roomPasswordGoingToJoin" class="form-control" id="RoomConfigurationName" placeholder="パスワード">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" data-bind="click: JoinRoom">参加する</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ReportModal -->
+    <div class="modal fade" id="ReportModal" tabindex="-1" role="dialog" aria-labelledby="ReportModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 data-bind="" class="modal-title" id="ReportModalLabel">通報</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        不正行為を報告します。
+                        選択したメッセージとそれ以前の履歴、その送信者情報、役職等が合わせて保存され、管理人に通知されます。
+                        可能な限り具体的に、発生した不正行為を備考へ記入してください。(「○○さんが味方の狼を暴露した」等)
+                        まずは話し合いによる解決を図り、通報は本当にやむを得ない場合にのみ行ってください。
+                        (むやみに通報するとその後の通報が届かなくなってしまうことがあります。)
+                        対応状況について個別の回答はいたしかねますのであらかじめご了承ください。
+                    </p>
+                    <div class="form-group">
+                        <label for="ReportModalNote">備考</label>
+                        <textarea data-bind="value: roomReportNote" id="ReportModalNote" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" data-bind="click: roomReport">報告する</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Disconnected Scene -->
+    <div data-bind="visible: state() == State.Disconnected" class="box">
+        <h3>Disconnected</h3>
+        <button type="button" data-bind="click: Connect">Connect</button>
+    </div>
+
+    <!-- Characters Scene -->
+    <div data-bind="visible: state() == State.Characters" class="box">
+        <h3 data-bind="text: Text('CharactersList')"></h3>
+        <button type="button" data-bind="click: function(){state(State.CreateCharacter)}" class="btn btn-primary">作成する</button>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>キャラクター名</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: characters">
+                <tr>
+                    <td data-bind="text: name"></td>
+                    <td>
+                        <button type="button"
+                                data-bind="text: $root.Text('Select'), click: function(){ $root.hub.server.selectCharacter(name); }"
+                                class="btn btn-primary btn-xs"></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="alert alert-warning">ユーザー情報保護のためキャラクターの削除はできません。</div>
+    </div>
+
+    <!-- Character Creation Scene -->
+    <div data-bind="visible: state() == State.CreateCharacter" class="box">
+        <h3>キャラクター作成</h3>
+        <ul data-bind="foreach: validationErrors.CharacterCreation">
+            <li data-bind="text: $data"></li>
+        </ul>
+        <div data-bind="with: createCharacterData">
+            <div class="form-group">
+                <label for="CreateCharacterName">キャラクター名</label>
+                <input type="text" data-bind="value: name" class="form-control" id="CreateCharacterName">
+            </div>
+        </div>
+        <button type="button" data-bind="click: CreateCharacter" class="btn btn-primary">作成する</button>
+    </div>
+
+    <!-- Lobby Scene -->
+    <div data-bind="visible: state() == State.Rooms">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="box">
+                    <h3 data-bind="text: $root.Text('VillagesList')">Rooms</h3>
+                    <button type="button" data-bind="text: $root.Text('Create'), click: CreateRoom" class="btn btn-primary"></button>
+                    <button type="button" data-bind="click: GetRooms" class="btn btn-default">更新</button>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>村の名前</th>
+                                <th>人数</th>
+                                <th>1日の長さ</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach: rooms">
+                            <tr data-bind="attr: { class : clRow }">
+                                <td data-bind="text: roomId"></td>
+                                <td data-bind="text: name"></td>
+                                <td data-bind="text: fmPlayers"></td>
+                                <td data-bind="text: interval"></td>
+                                <td>
+                                    <button type="button" data-bind="click: function(){ $root.OpenRoomModal($data); }" class="btn btn-primary btn-xs">
+                                        <span data-bind="visible: requiresPassword" class="glyphicon glyphicon-link"></span>
+                                        <span data-bind="text: $root.Text('Join')"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="box">
+                    <h3>雑談・募集用チャット</h3>
+                    <div class="input-group">
+                        <input type="text" id="LobbyChat" class="form-control" placeholder="ここからメッセージを送信できます" />
+                        <span class="input-group-btn">
+                            <button data-bind="click: LobbySend" class="btn btn-primary" type="button">送信</button>
+                        </span>
+                    </div>
+                    <ul data-bind="foreach: lobbyMessages" class="messages">
+                        <li data-bind="attr: { class: fmClass }">
+                            <div class="from">
+                                <span data-bind="text: name" class="name"></span>
+                                <span data-bind="text: fmCreated" class="time"></span>
+                            </div>
+                            <div data-bind="text: cpBody" class="body"></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Game Scene -->
+    <div data-bind="visible: state() == State.Playing">
+
+        <!-- Configuring -->
+        <div data-bind="visible: roomState() == RoomState.Configuring" class="box">
+            <h3>村の設定</h3>
+            <ul data-bind="foreach: validationErrors.RoomConfiguration">
+                <li data-bind="text: $data"></li>
+            </ul>
+            <div data-bind="with: roomConfigurationsToSet">
+                <div class="form-group">
+                    <label for="RoomConfigurationName">村の名前</label>
+                    <input type="text" data-bind="value: name" class="form-control" id="RoomConfigurationName" placeholder="村の名前">
+                </div>
+                <div class="form-group">
+                    <label for="RoomConfigurationPassword">パスワード</label>
+                    <input type="text" data-bind="value: password" class="form-control" id="RoomConfigurationPassword" placeholder="パスワード">
+                </div>
+                <div class="form-group">
+                    <label for="RoomConfigurationMax">最大人数</label>
+                    <input type="number" data-bind="value: max" class="form-control" id="RoomConfigurationMax" placeholder="最大人数">
+                </div>
+                <div class="form-group">
+                    <label for="RoomConfigurationInterval">1日の長さ</label>
+                    <input type="number" data-bind="value: interval" class="form-control" id="RoomConfigurationName" placeholder="1日の長さ">
+                </div>
+            </div>
+            <button type="button" data-bind="text: $root.Text('Configure'), click: RoomConfigure" class="btn btn-primary btn-sm"></button>
+            <button type="button" data-bind="text: $root.Text('QuitRoom'), click: QuitRoom" class="btn btn-warning btn-sm"></button>
+        </div>
+
+        <!-- Matchmaking, Playing, Ending, Ended -->
+        <div data-bind="visible: roomState() != RoomState.Configuring">
+            <!-- Top (RoomConfigurations) -->
+            <div data-bind="with: roomConfigurations" class="box">
+                <h3 data-bind="text: name"></h3>
+                <div>
+                    <span>最大人数：<span data-bind="text: max"></span></span>
+                    <span>1日の長さ(秒)：<span data-bind="text: interval"></span></span>
+                </div>
+            </div>
+
+            <!-- Top (FactionWon) -->
+            <div data-bind="visible: roomState() == RoomState.Ending || roomState() == RoomState.Ended, attr:{class:clFactionWon}">
+                <div data-bind="visible: factionWon() === Faction.None">
+                    誰も生き残りませんでした・・・
+                </div>
+                <div data-bind="visible: factionWon() === Faction.Citizen">
+                    村人が人狼の血を根絶することに成功しました。<br />
+                    村人の勝利です！
+                    <table>
+                        <tr>
+                            <td><div class="icon" style="background-position: -288px -24px"></div></td>
+                            <td><div class="icon" style="background-position: -216px 0px"></div></td>
+                            <td><div class="icon" style="background-position: -264px -168px"></div></td>
+                            <td><div class="icon" style="background-position: -240px 0px"></div></td>
+                        </tr>
+                    </table>
+                </div>
+                <div data-bind="visible: factionWon() === Faction.Werewolf">
+                    もはや村人には人狼に抵抗できる力は残っていません。<br />
+                    人狼の勝利です！
+                    <table>
+                        <tr>
+                            <td><div class="icon" style="background-position: -264px -288px"></div></td>
+                            <td><div class="icon" style="background-position: -192px -288px"></div></td>
+                        </tr>
+                    </table>
+                </div>
+                <div data-bind="visible: factionWon() === Faction.Fox">
+                    村人と人狼を出し抜き、妖狐がこの村を支配しました。<br />
+                    妖狐の勝利です！
+                    <table>
+                        <tr>
+                            <td><div class="icon" style="background-position: -168px -240px"></div></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Left (Actors) -->
+                <div class="col-sm-4">
+
+                    <!-- Alive Actors -->
+                    <div data-bind="visible: cpAliveActors().length > 0" class="box AliveActors">
+                        <table>
+                            <tr><td><div class="icon" style="background-position: 0px -336px"></div></td><td>生存者</td></tr>
+                        </table>
+                        <ul data-bind="foreach: actors" class="actors clearfix">
+                            <li data-bind="visible: !isDead, attr: {class:clItem}">
+                                <div class="name" data-bind="text: fmTitleAndName, attr: {style: stName}"></div>
+                                <div>
+                                    <table>
+                                        <tr>
+                                            <td data-bind="text: fmGender"></td>
+                                            <td data-bind="text: fmRole"></td>
+                                            <td><div data-bind="attr: {style: cpStyle}" class="icon"></div></td>
+                                        </tr>
+                                    </table>
+                                    <div class="user" data-bind="text: fmUser, attr: {style: stUser}"></div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Dead Actors -->
+                    <div data-bind="visible: cpDeadActors().length > 0" class="box DeadActors">
+                        <table>
+                            <tr><td><div class="icon" style="background-position: 0px -360px"></div></td><td>犠牲者</td></tr>
+                        </table>
+                        <ul data-bind="foreach: actors" class="actors clearfix">
+                            <li data-bind="visible: isDead, attr: {class:clItem}">
+                                <div class="name" data-bind="text: fmTitleAndName, attr: {style: stName}"></div>
+                                <div>
+                                    <table>
+                                        <tr>
+                                            <td data-bind="text: fmGender"></td>
+                                            <td data-bind="text: fmRole"></td>
+                                            <td><div data-bind="attr: {style: cpStyle}" class="icon"></div></td>
+                                        </tr>
+                                    </table>
+                                    <div class="user" data-bind="text: fmUser, attr: {style: stUser}"></div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+
+                <!-- Right(Commands and Messages) -->
+                <div class="col-sm-8">
+
+                    <!-- Commands -->
+                    <div class="box">
+                        <h4>行動</h4>
+
+                        <!-- Duration -->
+                        <div data-bind="visible: roomState() == RoomState.Matchmaking || roomState() == RoomState.Playing || roomState() == RoomState.Ending, text: fmDuration"></div>
+
+                        <!-- Commands -->
+                        <!-- Start Button -->
+                        <button data-bind="visible: roomState() == RoomState.Matchmaking && IsLocalRoomMaster, text: $root.Text('Start'), click: RoomStart"
+                                class="btn btn-primary btn-sm">
+                            Start
+                        </button>
+
+                        <!-- Vote Button -->
+                        <button data-bind="visible: roomState() == RoomState.Playing && IsLocalAlive"
+                                class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
+                            投票
+                        </button>
+
+                        <!-- Vote Modal -->
+                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title" id="myModalLabel">Vote</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group" data-bind="visible: IsExecuteVisible">
+                                            <label for="ActorToExecute">処刑する</label>
+                                            <select id="ActorToExecute" class="form-control"
+                                                    data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToExecute, optionsCaption: 'select me'"></select>
+                                        </div>
+                                        <div class="form-group" data-bind="visible: IsAttackVisible">
+                                            <label for="ActorToAttack">襲撃する</label>
+                                            <select id="ActorToAttack" class="form-control"
+                                                    data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToAttack, optionsCaption: 'select me'"></select>
+                                        </div>
+                                        <div class="form-group" data-bind="visible: IsFortuneTellVisible">
+                                            <label for="ActorToFortuneTell">占う</label>
+                                            <select id="ActorToFortuneTell" class="form-control"
+                                                    data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToFortuneTell, optionsCaption: 'select me'"></select>
+                                        </div>
+                                        <div class="form-group" data-bind="visible: IsGuardVisible">
+                                            <label for="ActorToGuard">護衛する</label>
+                                            <select id="ActorToGuard" class="form-control"
+                                                    data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToGuard, optionsCaption: 'select me'"></select>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quit Button -->
+                        <button type="button" data-bind="text: $root.Text('QuitRoom'), click: QuitRoom" class="btn btn-warning btn-sm"></button>
+                    </div>
+
+                    <!-- Send -->
+                    <div data-bind="visible: roomState() !== RoomState.Ended, attr: { class: clSendMessage }" id="RoomSendBox">
+                        <div class="form-inline">
+                            <div class="form-group">
+                                <select data-bind="options:roomSendModes, optionsText: 'name', value: roomSendMode" class="form-control"></select>
+                            </div>
+                            <div class="form-group">
+                                <select data-bind="visible: roomSendMode().id == 3, options:actors, optionsText: 'fmTitleAndName', value: roomSendTo" class="form-control"></select>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <input type="text" id="RoomChat" class="form-control" />
+                            <span class="input-group-btn">
+                                <button data-bind="click: RoomSend" class="btn btn-primary" type="button">送信する</button>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Messages -->
+                    <div class="box">
+                        <h4>村の会話</h4>
+
+                        <!-- Log -->
+                        <ul data-bind="foreach: roomMessages" class="messages">
+                            <li data-bind="attr: { class: fmClass }">
+                                <div class="from">
+                                    <span data-bind="text: cpFrom, attr:{style:stName}" class="name"></span>
+                                    <span data-bind="visible: canReport, click: report" class="glyphicon glyphicon-thumbs-down"></span>
+                                    <span data-bind="text: cpTo" class="to"></span>
+                                    <span data-bind="text: fmCreated" class="time"></span>
+                                </div>
+                                <div data-bind="foreach: cpBodyRows" class="body">
+                                    <div data-bind="text: $data"></div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+@section scripts{
+    <script src="~/Scripts/linq.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js"></script>
+    @Scripts.Render("~/bundles/signalr")
+    <!--<script src="http://localhost:8080/signalr/hubs"></script>-->
+    <script src="@(Model.GameServerSignalREndpoint.AbsoluteUri + "/hubs")"></script>
+    @Scripts.Render("~/bundles/game")
+    <script type="text/javascript">
+        $(function () {
+            // Gets Pass from Server.
+            var culture = '@Culture';
+            var pass = '@ViewBag.ValidPassString';
+            var topPageUrl = '@Url.Action("Index", "Home")';
+            var endpoint = '@Model.GameServerSignalREndpoint.AbsoluteUri';
+
+            // Initializes Game
+            if ($.connection.myHub === undefined) {
+                // GameServer is gone. Redirects to Home.
+                location.href = topPageUrl;
+                return;
+            }
+            //$.connection.hub.url = endpoint;
+            $.connection.myHub.connection.url = endpoint;
+            var model = new window.Apwei.Game.AppModel(culture, pass, $.connection.myHub);
+            ko.applyBindings(model, document.getElementById('Game'));
+            model.Connect();
+        });
+    </script>
+}
