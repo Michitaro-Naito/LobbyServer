@@ -228,9 +228,9 @@
     <Content Include="Views\PlayLog\Index.cshtml" />
     <Content Include="Views\PlayLog\Details.cshtml" />
     <Content Include="Views\Error\NotFound.cshtml" />
-    <Content Include="Views\Home\Servers.cshtml" />
     <Content Include="Views\Game\Play.cshtml" />
     <Content Include="Views\Game\IndexPartial.cshtml" />
+    <Content Include="Views\Game\StatisticsPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

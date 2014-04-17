@@ -1,0 +1,26 @@
+﻿@model ApiScheme.Scheme.GetStatisticsOut
+@{
+    Layout = null;
+}
+
+<h2>統計</h2>
+<table class="table">
+    <tbody>
+        <tr>
+            <td>ユーザー数</td>
+            <td class="text-right">@Model.users</td>
+        </tr>
+        <tr>
+            <td>キャラクター数</td>
+            <td class="text-right">@Model.characters</td>
+        </tr>
+        <tr>
+            <td>@Html.RouteLink("プレイ中", new {controller="Game", action="Index"})</td>
+            <td class="text-right">@Model.playings</td>
+        </tr>
+        <tr>
+            <td>@Html.RouteLink("人狼が現れた村の数", new { controller = "PlayLog", action = "Index" })</td>
+            <td class="text-right">@Model.playlogs</td>
+        </tr>
+    </tbody>
+</table>

@@ -35,31 +35,7 @@
         </div>
         <div class="col-sm-4">
             <div class="box sm-mh300">
-                <h2>統計</h2>
-                <table class="table">
-                    <tbody>
-                        <tr>
-                            <td>登録数</td>
-                            <td>100</td>
-                        </tr>
-                        <tr>
-                            <td>閲覧中</td>
-                            <td>100</td>
-                        </tr>
-                        <tr>
-                            <td>プレイ中</td>
-                            <td>100</td>
-                        </tr>
-                        <tr>
-                            <td>昨日</td>
-                            <td>100</td>
-                        </tr>
-                        <tr>
-                            <td>人狼が現れた村の数</td>
-                            <td>1000</td>
-                        </tr>
-                    </tbody>
-                </table>
+                @Html.Action("Statistics", "Game")
             </div>
         </div>
     </div>

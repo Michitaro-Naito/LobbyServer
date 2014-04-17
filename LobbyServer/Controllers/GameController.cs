@@ -54,6 +54,16 @@ namespace LobbyServer.Controllers
         }
 
         /// <summary>
+        /// Shows a statistics of this game.
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Statistics()
+        {
+            var o = ApiScheme.Client.Api.Get<GetStatisticsOut>(new GetStatisticsIn());
+            return View("StatisticsPartial", o);
+        }
+
+        /// <summary>
         /// Lets User join a GameServer.
         /// </summary>
         /// <param name="host"></param>
