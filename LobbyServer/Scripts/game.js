@@ -368,6 +368,12 @@
                     return false;
                 return true;
             });
+            s.IsLocalRoomMaster = ko.computed(function () {
+                var me = s.cpMyActor();
+                if (me === null)
+                    return false;
+                return me.isRoomMaster;
+            });
             s.IsExecuteVisible = ko.computed(function () {
                 var me = s.cpMyActor();
                 if (me === null)

@@ -326,7 +326,7 @@
 
                         <!-- Commands -->
                         <!-- Start Button -->
-                        <button data-bind="visible: roomState() == RoomState.Matchmaking, text: $root.Text('Start'), click: RoomStart"
+                        <button data-bind="visible: roomState() == RoomState.Matchmaking && IsLocalRoomMaster, text: $root.Text('Start'), click: RoomStart"
                                 class="btn btn-primary btn-sm">
                             Start
                         </button>
