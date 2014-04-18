@@ -57,6 +57,7 @@ namespace LobbyServer.Controllers
         /// <param name="host"></param>
         /// <param name="port"></param>
         /// <returns></returns>
+        [OutputCache(Duration=10, VaryByParam="host,port")]
         public ActionResult Play(string host, int port)
         {
             RequirePass();
