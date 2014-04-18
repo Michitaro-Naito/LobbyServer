@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -109,6 +110,27 @@ namespace LobbyServer.Controllers
             else
             {
                 Debug.WriteLine("Discarding...");
+                return HttpServiceUnavailable();
+            }
+        }
+
+        protected ActionResult SingletonAction(ConcurrentDictionary<string, int> locked, string key, Func<ActionResult> func)
+        {
+            if (locked.TryAdd(key, 1))
+            {
+                try
+                {
+                    return func();
+                }
+                finally
+                {
+                    int a = 0;
+                    locked.TryRemove(key, out a);
+                }
+            }
+            else
+            {
+                Debug.WriteLine("Discarding... (dic)");
                 return HttpServiceUnavailable();
             }
         }
