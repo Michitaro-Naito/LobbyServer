@@ -1,4 +1,5 @@
 ﻿using ApiScheme.Scheme;
+using LobbyServer.Controllers.Helper;
 using LobbyServer.Models;
 using System;
 using System.Collections.Generic;
@@ -25,33 +26,19 @@ namespace LobbyServer.Controllers
         /// GoodServers above. BadServers below.
         /// </summary>
         /// <returns></returns>
+        static int _renderingIndex = 0;
+        [OutputCache(Duration=10, VaryByParam="partial")]
         public ActionResult Index(bool partial = false)
         {
-            var o = ApiScheme.Client.Api.Get<GetGameServersOut>(new GetGameServersIn());
+            return SingletonAction(ref _renderingIndex, () =>
+            {
+                var o = ApiScheme.Client.Api.Get<GetGameServersOut>(new GetGameServersIn());
+                var servers = GameServerHelper.OrderByRecommended(o.servers);
 
-            // Finds a recommended GameServer.
-            var goodServers = o.servers
-                .OrderByDescending(s => s.players)
-                .Where(s =>
-                    s.framesPerInterval / s.reportIntervalSeconds > 60      // Fast. (Has > 60 frames per second in average.)
-                    && s.maxElapsedSeconds < 10);                           // No great lag. (Not stopped over 10 seconds.)
-
-            var goodAvailableServers = goodServers
-                .Where(s => s.players < 0.66 * s.maxPlayers);
-
-            var goodFullServers = goodServers
-                .Where(s => s.players >= 0.66 * s.maxPlayers);
-
-            var badServers = o.servers.Where(s => !goodServers.Contains(s));
-
-            var servers = new List<GameServerStatus>();
-            servers.AddRange(goodAvailableServers);     // Good and Can Join.
-            servers.AddRange(goodFullServers);          // Good but Mostly Full.
-            servers.AddRange(badServers);               // Bad. Laggy or Buggy... :(
-
-            if (partial)
-                return View("IndexPartial", servers);
-            return View(servers);
+                if (partial)
+                    return View("IndexPartial", servers);
+                return View(servers);
+            });
         }
 
         /// <summary>

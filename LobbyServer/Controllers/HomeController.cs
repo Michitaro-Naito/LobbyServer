@@ -52,13 +52,6 @@ namespace LobbyServer.Controllers
                 return View(new HomeIndexVM() { Statistics = statistics, Servers = servers, PlayLogs = playLogs.playLogs });
             });
         }
-        /*//static ConcurrentDictionary<string, int> _accessCounts = new ConcurrentDictionary<string, int>();
-        public ActionResult Index()
-        {
-            //var count = _accessCounts.AddOrUpdate(Request.UserHostAddress, 1, (key, value) => value + 1);
-            //Debug.WriteLine(string.Format("{0} {1}", Request.UserHostAddress, count));
-            return View();
-        }*/
 
         public ActionResult About(string gamePassString = null)
         {
