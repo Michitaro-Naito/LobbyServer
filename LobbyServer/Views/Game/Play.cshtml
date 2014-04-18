@@ -65,7 +65,6 @@
                         選択したメッセージとそれ以前の履歴、その送信者情報、役職等が合わせて保存され、管理人に通知されます。
                         可能な限り具体的に、発生した不正行為を備考へ記入してください。(「○○さんが味方の狼を暴露した」等)
                         まずは話し合いによる解決を図り、通報は本当にやむを得ない場合にのみ行ってください。
-                        (むやみに通報するとその後の通報が届かなくなってしまうことがあります。)
                         対応状況について個別の回答はいたしかねますのであらかじめご了承ください。
                     </p>
                     <div class="form-group">
@@ -83,8 +82,10 @@
 
     <!-- Disconnected Scene -->
     <div data-bind="visible: state() == State.Disconnected" class="box">
-        <h3>Disconnected</h3>
-        <button type="button" data-bind="click: Connect">Connect</button>
+        <h3>サーバに接続していません</h3>
+        <p data-bind="text: disconnectionReason"></p>
+        <a href="@Url.RouteUrl(new { controller = "Game", action = "Index" })" class="btn btn-primary">サーバ一覧へ戻る</a>
+        <button type="button" data-bind="click: Connect" id="ConnectButton" class="btn btn-default">再接続を試みる</button>
     </div>
 
     <!-- Characters Scene -->
@@ -447,6 +448,7 @@
             // Initializes Game
             if ($.connection.myHub === undefined) {
                 // GameServer is gone. Redirects to Home.
+                alert('サーバの応答がありませんでした。トップページへ戻ります。');
                 location.href = topPageUrl;
                 return;
             }

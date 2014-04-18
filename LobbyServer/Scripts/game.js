@@ -287,12 +287,17 @@
             s.strings = ko.observableArray([]);
 
             // ----- OnConnected -----
+            s.disconnectionReason = ko.observable();
             s.hub.client.gotBootTime = function (time) {
                 if (s.bootTime() !== null && s.bootTime() !== time) {
                     alert('サーバが再起動されたようです。ページを再読み込みします...');
                     location.reload();
                 }
                 s.bootTime(time);
+            }
+            s.hub.client.gotDisconnectionRequest = function (reason) {
+                s.disconnectionReason(reason);
+                s.Disconnect();
             }
             s.BackToCharacters = function () {
                 s.state(s.State.Characters);
@@ -566,10 +571,6 @@
                 }
             });
 
-            s.hub.client.gotDisconnectionRequest = function () {
-                s.Disconnect();
-            }
-
 
             // ----- Callback -----
 
@@ -671,6 +672,8 @@
             }*/
 
             s.Connect = function () {
+                $('#ConnectButton').disableFor(10000);
+                s.disconnectionReason('');
                 s.hub.connection.start();
             }
 
