@@ -110,6 +110,11 @@ div.box{
     }
 }
 
+dl.basic dd{
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+
 .mode1{
     background: #DFD;
 }

@@ -18,8 +18,8 @@
             <tr>
                 <td>@log.roomName</td>
                 <td>
-                    @Html.ActionLink("閲覧", "Details", new { id = log.id }, new { target = "_blank" })
-                    @Html.ActionLink("DL", "Download", new { id = log.id })
+                    @Html.ActionLink("閲覧", "Details", new { controller = "PlayLog", id = log.id }, new { target = "_blank" })
+                    @Html.ActionLink("DL", "Download", new { controller = "PlayLog", id = log.id })
                 </td>
             </tr>
         }

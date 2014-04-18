@@ -29,8 +29,11 @@
                     Google+のアカウントさえあれば、登録不要でお友達やネット上のプレイヤーとも手軽にゲームを開始できます。
                     人狼が初めての方も是非参加してみてください。
                 </p>
-                <p><a href="@Url.RouteUrl(new { controller="Game", action="Index" })" class="btn btn-primary"><span class="glyphicon glyphicon-play"></span> 遊んでみる</a></p>
-                <p><a href="http://jnro.net/" target="_blank">こちらから人狼ゲームオンライン１も遊べます。</a></p>
+                <p><a href="@Url.RouteUrl(new { controller="Game", action="Index" })" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-play"></span> 遊んでみる</a></p>
+                <p>
+                    @Html.RouteLink("遊び方", new {controller="Home",action="About"})
+                    <a href="http://jnro.net/" target="_blank">こちらから人狼ゲームオンライン１も遊べます。</a>
+                </p>
             </div>
         </div>
         <div class="col-sm-4">
@@ -57,6 +60,10 @@
             <div class="box sm-mh300">
                 <h2>その他</h2>
                 <p><a href="https://twitter.com/jinrogame" target="_blank">公式Twitterアカウント</a></p>
+                <p>
+                    メンテナンス時間：午前5時～午前9時
+                    (前日中に公式Twitterアカウントでアナウンスがない場合、メンテナンスは行われませんので平常通りに遊べます。)
+                </p>
             </div>
         </div>
     </div>
