@@ -87,36 +87,27 @@ namespace LobbyServer.Controllers
         }
 
         /// <summary>
+        /// Remembers rendering states for SingletonAction().
+        /// </summary>
+        ConcurrentDictionary<string, int> _rendering = new ConcurrentDictionary<string, int>();
+
+        /// <summary>
         /// Executes a singleton action in this instance.
         /// Especially useful for actions which has heavy workload like calling API.
         /// Not suitable for views which has heavy workload like calling another action in Razor.
         /// </summary>
-        /// <param name="locked"></param>
         /// <param name="func"></param>
+        /// <param name="keys"></param>
         /// <returns></returns>
-        protected ActionResult SingletonAction(ref int locked, Func<ActionResult> func)
+        protected ActionResult SingletonAction(Func<ActionResult> func, params object[] keys)
         {
-            if (0 == Interlocked.Exchange(ref locked, 1))
-            {
-                try
-                {
-                    return func();
-                }
-                finally
-                {
-                    Interlocked.Exchange(ref locked, 0);
-                }
-            }
-            else
-            {
-                Debug.WriteLine("Discarding...");
-                return HttpServiceUnavailable();
-            }
-        }
-
-        protected ActionResult SingletonAction(ConcurrentDictionary<string, int> locked, string key, Func<ActionResult> func)
-        {
-            if (locked.TryAdd(key, 1))
+            var keyInController = String.Join("-", keys);
+            var key = string.Format("{0}-{1}-{2}",
+                RouteData.Values["controller"],
+                RouteData.Values["action"],
+                keyInController);
+            Debug.WriteLine(key);
+            if (_rendering.TryAdd(key, 1))
             {
                 try
                 {
@@ -125,7 +116,7 @@ namespace LobbyServer.Controllers
                 finally
                 {
                     int a = 0;
-                    locked.TryRemove(key, out a);
+                    _rendering.TryRemove(key, out a);
                 }
             }
             else

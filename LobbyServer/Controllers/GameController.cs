@@ -26,11 +26,10 @@ namespace LobbyServer.Controllers
         /// GoodServers above. BadServers below.
         /// </summary>
         /// <returns></returns>
-        static int _renderingIndex = 0;
         [OutputCache(Duration=10, VaryByParam="partial")]
         public ActionResult Index(bool partial = false)
         {
-            return SingletonAction(ref _renderingIndex, () =>
+            return SingletonAction(() =>
             {
                 var o = ApiScheme.Client.Api.Get<GetGameServersOut>(new GetGameServersIn());
                 var servers = GameServerHelper.OrderByRecommended(o.servers);
@@ -38,7 +37,7 @@ namespace LobbyServer.Controllers
                 if (partial)
                     return View("IndexPartial", servers);
                 return View(servers);
-            });
+            }, partial);
         }
 
         /// <summary>

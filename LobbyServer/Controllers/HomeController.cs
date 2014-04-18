@@ -30,24 +30,21 @@ namespace LobbyServer.Controllers
         /// Shows a Home.
         /// </summary>
         /// <returns></returns>
-        static int _renderingIndex = 0;
         [OutputCache(Duration=10)]
         public ActionResult Index()
         {
-            return SingletonAction(ref _renderingIndex, () => {
+            return SingletonAction(() => {
                 // Got lock
                 GetStatisticsOut statistics = null;
                 GetGameServersOut gameServers = null;
                 GetPlayLogsOut playLogs = null;
                 List<GameServerStatus> servers = null;
 
-                //Debug.WriteLine("Heavy load");
                 Parallel.Invoke(
                     () => statistics = Api.Get<GetStatisticsOut>(new GetStatisticsIn()),
                     () => gameServers = Api.Get<GetGameServersOut>(new GetGameServersIn()),
                     () => playLogs = Api.Get<GetPlayLogsOut>(new GetPlayLogsIn() { page = 0 }));
                 servers = GameServerHelper.OrderByRecommended(gameServers.servers);
-                //Thread.Sleep(5000);
 
                 return View(new HomeIndexVM() { Statistics = statistics, Servers = servers, PlayLogs = playLogs.playLogs });
             });
