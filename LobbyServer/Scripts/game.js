@@ -294,6 +294,9 @@
                 }
                 s.bootTime(time);
             }
+            s.BackToCharacters = function () {
+                s.state(s.State.Characters);
+            }
 
             // ----- Character Creation Scene -----
             s.createCharacterData = ko.observable(new Apwei.Game.CreateCharacterData());

@@ -125,6 +125,7 @@
             </div>
         </div>
         <button type="button" data-bind="click: CreateCharacter" class="btn btn-primary">作成する</button>
+        <button type="button" data-bind="click: BackToCharacters" class="btn btn-default">戻る</button>
     </div>
 
     <!-- Lobby Scene -->
@@ -135,6 +136,7 @@
                     <h3 data-bind="text: $root.Text('VillagesList')">Rooms</h3>
                     <button type="button" data-bind="text: $root.Text('Create'), click: CreateRoom" class="btn btn-primary"></button>
                     <button type="button" data-bind="click: GetRooms" id="GetRooms" class="btn btn-default">更新</button>
+                    <button type="button" data-bind="click: BackToCharacters" class="btn btn-default">戻る</button>
                     <table class="table">
                         <thead>
                             <tr>
