@@ -1,10 +1,22 @@
-﻿@model List<ApiScheme.Scheme.PlayLogInfo>
+﻿@model LobbyServer.Models.PlayLogIndexVM
 @{
     ViewBag.Title = "Index";
 }
 
 <div class="box">
     <h2>村の記録</h2>
+
+    <ul class="pager">
+        @if (Model.Page > 0)
+        {
+            <li class="previous"><a href="@Url.RouteUrl(new { page = Model.Page - 1 })">&larr; 新しい</a></li>
+        }
+        @if (Model.PlayLogs.Count > 0)
+        {
+            <li class="next"><a href="@Url.RouteUrl(new { page = Model.Page + 1 })">古い &rarr;</a></li>
+        }
+    </ul>
+
     <table class="table">
         <thead>
             <tr>
@@ -14,7 +26,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var log in Model)
+            @foreach (var log in Model.PlayLogs)
             {
                 <tr>
                     <td>@log.roomName</td>
@@ -24,6 +36,18 @@
             }
         </tbody>
     </table>
+
+    <ul class="pager">
+        @if (Model.Page > 0)
+        {
+            <li class="previous"><a href="@Url.RouteUrl(new { page = Model.Page - 1 })">&larr; 新しい</a></li>
+        }
+        @if (Model.PlayLogs.Count > 0)
+        {
+            <li class="next"><a href="@Url.RouteUrl(new { page = Model.Page + 1 })">古い &rarr;</a></li>
+        }
+    </ul>
+
 </div>
 
 @section scripts{

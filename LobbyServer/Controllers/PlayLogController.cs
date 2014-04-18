@@ -1,4 +1,5 @@
 ﻿using ApiScheme.Scheme;
+using LobbyServer.Models;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace LobbyServer.Controllers
                 var o = ApiScheme.Client.Api.Get<GetPlayLogsOut>(new GetPlayLogsIn() { page = page });
                 if (partial)
                     return View("IndexPartial", o.playLogs);
-                return View(o.playLogs);
+                return View(new PlayLogIndexVM() { Page = page, PlayLogs = o.playLogs });
             }, page, partial);
         }
 

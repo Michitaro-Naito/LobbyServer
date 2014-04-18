@@ -21,4 +21,10 @@ namespace LobbyServer.Models
     {
         public Uri GameServerSignalREndpoint { get; set; }
     }
+
+    public class PlayLogIndexVM : ViewModel
+    {
+        public int Page { get; set; }
+        public List<PlayLogInfo> PlayLogs { get; set; }
+    }
 }
