@@ -19,9 +19,19 @@
                 <tr>
                     <td>@log.roomName</td>
                     <td>@Html.ActionLink("閲覧する", "Details", new { id = log.id }, new { target = "_blank" })</td>
-                    <td>@Html.ActionLink(log.fileName, "Download", new { id = log.id })</td>
+                    <td>@Html.ActionLink(log.fileName, "Download", new { id = log.id }, new { @class = "DownloadLink" })</td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
+
+@section scripts{
+    <script>
+        $('.DownloadLink').click(function (e) {
+            //e.preventDefault();
+            $(this).replaceWith($('<span>').text($(this).text()));
+            //$(this).removeAttr('href');
+        });
+    </script>
+}
