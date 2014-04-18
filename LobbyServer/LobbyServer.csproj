@@ -167,6 +167,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\GameController.cs" />
+    <Compile Include="Controllers\Helpers\GameServerHelper.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PassAuthenticatedController.cs" />
     <Compile Include="Controllers\PlayLogController.cs" />

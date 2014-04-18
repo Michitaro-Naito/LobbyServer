@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -70,6 +71,46 @@ namespace LobbyServer.Controllers
             }
 
             base.OnActionExecuting(filterContext);
+        }
+
+        /// <summary>
+        /// Returns 503 Service Unavailable.
+        /// Very similar with HttpNotFound().
+        /// </summary>
+        /// <returns></returns>
+        protected ActionResult HttpServiceUnavailable()
+        {
+            Response.StatusCode = 503;
+            Response.Status = "503 Service Unavailable";
+            return null;
+        }
+
+        /// <summary>
+        /// Executes a singleton action in this instance.
+        /// Especially useful for actions which has heavy workload like calling API.
+        /// Not suitable for views which has heavy workload like calling another action in Razor.
+        /// </summary>
+        /// <param name="locked"></param>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        protected ActionResult SingletonAction(ref int locked, Func<ActionResult> func)
+        {
+            if (0 == Interlocked.Exchange(ref locked, 1))
+            {
+                try
+                {
+                    return func();
+                }
+                finally
+                {
+                    Interlocked.Exchange(ref locked, 0);
+                }
+            }
+            else
+            {
+                Debug.WriteLine("Discarding...");
+                return HttpServiceUnavailable();
+            }
         }
     }
 }

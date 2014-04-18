@@ -1,10 +1,17 @@
-﻿using ApiScheme.Scheme;
+﻿using ApiScheme.Client;
+using ApiScheme.Scheme;
 using AuthUtility;
+using LobbyServer.Controllers.Helper;
+using LobbyServer.Models;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -19,10 +26,39 @@ namespace LobbyServer.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        /// <summary>
+        /// Shows a Home.
+        /// </summary>
+        /// <returns></returns>
+        static int _renderingIndex = 0;
+        [OutputCache(Duration=10)]
         public ActionResult Index()
         {
-            return View();
+            return SingletonAction(ref _renderingIndex, () => {
+                // Got lock
+                GetStatisticsOut statistics = null;
+                GetGameServersOut gameServers = null;
+                GetPlayLogsOut playLogs = null;
+                List<GameServerStatus> servers = null;
+
+                //Debug.WriteLine("Heavy load");
+                Parallel.Invoke(
+                    () => statistics = Api.Get<GetStatisticsOut>(new GetStatisticsIn()),
+                    () => gameServers = Api.Get<GetGameServersOut>(new GetGameServersIn()),
+                    () => playLogs = Api.Get<GetPlayLogsOut>(new GetPlayLogsIn() { page = 0 }));
+                servers = GameServerHelper.OrderByRecommended(gameServers.servers);
+                //Thread.Sleep(5000);
+
+                return View(new HomeIndexVM() { Statistics = statistics, Servers = servers, PlayLogs = playLogs.playLogs });
+            });
         }
+        /*//static ConcurrentDictionary<string, int> _accessCounts = new ConcurrentDictionary<string, int>();
+        public ActionResult Index()
+        {
+            //var count = _accessCounts.AddOrUpdate(Request.UserHostAddress, 1, (key, value) => value + 1);
+            //Debug.WriteLine(string.Format("{0} {1}", Request.UserHostAddress, count));
+            return View();
+        }*/
 
         public ActionResult About(string gamePassString = null)
         {
