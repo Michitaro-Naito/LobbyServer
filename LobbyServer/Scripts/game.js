@@ -313,15 +313,18 @@
                     s.lobbyMessages.pop();
             }
             s.GetRooms = function () {
-                //s.Send('/GetRooms');
                 s.hub.server.getRooms();
+                $('#GetRooms').disableFor(5000);
             }
             s.LobbySend = function () {
                 var str = $('#LobbyChat').val();
                 if (str.length === 0)
                     return;
+                if ($('#LobbySend').attr('disabled'))
+                    return;
                 s.hub.server.lobbySend(str);
                 $('#LobbyChat').val('');
+                $('#LobbySend').disableFor(5000);
             }
             $('#LobbyChat').keydown(function (event) {
                 if (event.which == 13) {
@@ -460,8 +463,11 @@
                 var str = $('#RoomChat').val();
                 if (str.length === 0)
                     return;
+                if ($('#RoomSend').attr('disabled'))
+                    return;
                 s.hub.server.roomSend(s.roomSendMode().id, s.roomSendTo().id, str);
                 $('#RoomChat').val('');
+                $('#RoomSend').disableFor(5000);
             }
             // Event
             $('#RoomChat').keydown(function (event) {

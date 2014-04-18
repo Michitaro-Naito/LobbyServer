@@ -134,7 +134,7 @@
                 <div class="box">
                     <h3 data-bind="text: $root.Text('VillagesList')">Rooms</h3>
                     <button type="button" data-bind="text: $root.Text('Create'), click: CreateRoom" class="btn btn-primary"></button>
-                    <button type="button" data-bind="click: GetRooms" class="btn btn-default">更新</button>
+                    <button type="button" data-bind="click: GetRooms" id="GetRooms" class="btn btn-default">更新</button>
                     <table class="table">
                         <thead>
                             <tr>
@@ -168,7 +168,7 @@
                     <div class="input-group">
                         <input type="text" id="LobbyChat" class="form-control" placeholder="ここからメッセージを送信できます" />
                         <span class="input-group-btn">
-                            <button data-bind="click: LobbySend" class="btn btn-primary" type="button">送信</button>
+                            <button data-bind="click: LobbySend" id="LobbySend" class="btn btn-primary" type="button">送信</button>
                         </span>
                     </div>
                     <ul data-bind="foreach: lobbyMessages" class="messages">
@@ -394,7 +394,7 @@
                         <div class="input-group">
                             <input type="text" id="RoomChat" class="form-control" />
                             <span class="input-group-btn">
-                                <button data-bind="click: RoomSend" class="btn btn-primary" type="button">送信する</button>
+                                <button data-bind="click: RoomSend" id="RoomSend" class="btn btn-primary" type="button">送信する</button>
                             </span>
                         </div>
                     </div>
