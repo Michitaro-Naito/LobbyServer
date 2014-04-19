@@ -61,15 +61,13 @@
                 </div>
                 <div class="modal-body">
                     <p>
-                        不正行為を報告します。
-                        選択したメッセージとそれ以前の履歴、その送信者情報、役職等が合わせて保存され、管理人に通知されます。
-                        可能な限り具体的に、発生した不正行為を備考へ記入してください。(「○○さんが味方の狼を暴露した」等)
+                        不正行為を報告します。発生した不正行為を備考へ記入してください。
                         まずは話し合いによる解決を図り、通報は本当にやむを得ない場合にのみ行ってください。
                         対応状況について個別の回答はいたしかねますのであらかじめご了承ください。
                     </p>
                     <div class="form-group">
                         <label for="ReportModalNote">備考</label>
-                        <textarea data-bind="value: roomReportNote" id="ReportModalNote" class="form-control"></textarea>
+                        <textarea data-bind="value: roomReportNote" id="ReportModalNote" class="form-control" placeholder="○○さんが味方の狼を暴露した"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
