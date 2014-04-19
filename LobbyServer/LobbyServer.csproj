@@ -234,10 +234,10 @@
     <Content Include="Views\Game\IndexPartial.cshtml" />
     <Content Include="Views\Game\StatisticsPartial.cshtml" />
     <Content Include="Views\PlayLog\IndexPartial.cshtml" />
+    <Content Include="Views\User\Logout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\User\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

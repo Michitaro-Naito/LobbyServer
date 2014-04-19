@@ -25,7 +25,9 @@ namespace LobbyServer.Controllers
         public ActionResult Logout()
         {
             ClearPass();
-            return RedirectToAction("Index", "Home");
+            //return Redirect("http://accounts.google.com/Logout");
+            return View();
+            //return RedirectToAction("Index", "Home");
         }
 	}
 }
