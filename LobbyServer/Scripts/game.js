@@ -480,7 +480,15 @@
                 s.hub.server.roomStart();
             }
             s.RoomStartManual = function () {
-                alert('Start manual');
+                console.info('start manual');
+                var roles = Enumerable.From(s.roles()).Select(function (r) {
+                    return {
+                        id: r.id,
+                        amount: r.amountToSet()
+                    };
+                }).ToArray();
+                console.info(roles);
+                s.hub.server.roomStart(roles);
             }
             s.roomReport = function () {
                 s.hub.server.roomReportMessage(s.roomReportMessageId(), s.roomReportNote());
