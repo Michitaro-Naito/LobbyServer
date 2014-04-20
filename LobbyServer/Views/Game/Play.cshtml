@@ -332,17 +332,64 @@
                         <div data-bind="visible: roomState() == RoomState.Matchmaking || roomState() == RoomState.Playing || roomState() == RoomState.Ending, text: fmDuration"></div>
 
                         <!-- Commands -->
-                        <!-- Start Button -->
-                        <button data-bind="visible: roomState() == RoomState.Matchmaking && IsLocalRoomMaster, text: $root.Text('Start'), click: RoomStart"
-                                class="btn btn-primary btn-sm">
-                            Start
-                        </button>
+                        <div id="RoomCommands">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#RC_General" data-toggle="tab">一般</a></li>
+                                <li><a href="#RC_Vote" data-toggle="tab" data-bind="visible: roomState() == RoomState.Playing && IsLocalAlive">投票</a></li>
+                            </ul>
 
-                        <!-- Vote Button -->
-                        <button data-bind="visible: roomState() == RoomState.Playing && IsLocalAlive"
-                                class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
-                            投票
-                        </button>
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                
+                                <!-- General Commands -->
+                                <div class="tab-pane active" id="RC_General">
+                                    <!-- Start Button (Auto) -->
+                                    <button data-bind="visible: roomState() == RoomState.Matchmaking && IsLocalRoomMaster, text: $root.Text('Start'), click: RoomStart"
+                                            class="btn btn-primary btn-sm">
+                                        Start
+                                    </button>
+                                    <!-- Quit Button -->
+                                    <button type="button" data-bind="text: $root.Text('QuitRoom'), click: QuitRoom" class="btn btn-warning btn-sm"></button>
+                                </div>
+
+                                <!-- Vote -->
+                                <div class="tab-pane" id="RC_Vote">
+                                    <div class="form-group" data-bind="visible: IsExecuteVisible">
+                                        <label for="ActorToExecute">処刑する</label>
+                                        <select id="ActorToExecute" class="form-control"
+                                                data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToExecute, optionsCaption: '選択してください'"></select>
+                                    </div>
+                                    <div class="form-group" data-bind="visible: IsAttackVisible">
+                                        <label for="ActorToAttack">襲撃する</label>
+                                        <select id="ActorToAttack" class="form-control"
+                                                data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToAttack, optionsCaption: '選択してください'"></select>
+                                    </div>
+                                    <div class="form-group" data-bind="visible: IsFortuneTellVisible">
+                                        <label for="ActorToFortuneTell">占う</label>
+                                        <select id="ActorToFortuneTell" class="form-control"
+                                                data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToFortuneTell, optionsCaption: '選択してください'"></select>
+                                    </div>
+                                    <div class="form-group" data-bind="visible: IsGuardVisible">
+                                        <label for="ActorToGuard">護衛する</label>
+                                        <select id="ActorToGuard" class="form-control"
+                                                data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToGuard, optionsCaption: '選択してください'"></select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Start Button (Manual) -->
+                        <button data-bind="visible: roomState() == RoomState.Matchmaking && IsLocalRoomMaster, click: ShowRolesSettingBox" class="btn btn-primary btn-sm">開始する(配役指定)</button>
+                        <div id="RolesSettingBox" style="display: none;">
+                            配役指定
+                            <div class="modal-body" data-bind="foreach: roles">
+                                <div>
+                                    <span data-bind="text: name"></span>
+                                    <input type="number" data-bind="value: amountToSet" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- Vote Modal -->
                         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -353,26 +400,6 @@
                                         <h4 class="modal-title" id="myModalLabel">投票</h4>
                                     </div>
                                     <div class="modal-body">
-                                        <div class="form-group" data-bind="visible: IsExecuteVisible">
-                                            <label for="ActorToExecute">処刑する</label>
-                                            <select id="ActorToExecute" class="form-control"
-                                                    data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToExecute, optionsCaption: '選択してください'"></select>
-                                        </div>
-                                        <div class="form-group" data-bind="visible: IsAttackVisible">
-                                            <label for="ActorToAttack">襲撃する</label>
-                                            <select id="ActorToAttack" class="form-control"
-                                                    data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToAttack, optionsCaption: '選択してください'"></select>
-                                        </div>
-                                        <div class="form-group" data-bind="visible: IsFortuneTellVisible">
-                                            <label for="ActorToFortuneTell">占う</label>
-                                            <select id="ActorToFortuneTell" class="form-control"
-                                                    data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToFortuneTell, optionsCaption: '選択してください'"></select>
-                                        </div>
-                                        <div class="form-group" data-bind="visible: IsGuardVisible">
-                                            <label for="ActorToGuard">護衛する</label>
-                                            <select id="ActorToGuard" class="form-control"
-                                                    data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToGuard, optionsCaption: '選択してください'"></select>
-                                        </div>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
@@ -380,9 +407,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Quit Button -->
-                        <button type="button" data-bind="text: $root.Text('QuitRoom'), click: QuitRoom" class="btn btn-warning btn-sm"></button>
                     </div>
 
                     <!-- Send -->

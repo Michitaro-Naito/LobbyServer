@@ -157,6 +157,17 @@
             }
         },
 
+        Role: function (data){
+            var s = this;
+            s.id = data.id;
+            s.name = data.name;
+            s.description = data.description;
+            s.x = data.x;
+            s.y = data.y;
+
+            s.amountToSet = ko.observable(0);
+        },
+
         Actor: function (root, data) {
             var s = this;
             s.root = root;
@@ -494,6 +505,9 @@
             s.SwapRoomSendMultipleLines = function () {
                 s.roomSendMultipleLines(!s.roomSendMultipleLines());
             }
+            s.ShowRolesSettingBox = function () {
+                $('#RolesSettingBox').show();
+            }
             // Event
             $('#RoomChat').keydown(function (event) {
                 if (event.which == 13) {
@@ -623,7 +637,9 @@
             }
 
             s.hub.client.gotRoles = function (roles) {
-                s.roles(roles);
+                console.info(roles);
+                //s.roles(roles);
+                s.roles(Enumerable.From(roles).Select(function (data) { return new Apwei.Game.Role(data); }).ToArray());
             }
 
             s.hub.client.gotGenders = function (genders) {
