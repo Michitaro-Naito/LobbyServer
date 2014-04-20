@@ -476,6 +476,12 @@
                 s.factionWon(factionWon);
             }
             // Method
+            s.RoomStart = function () {
+                s.hub.server.roomStart();
+            }
+            s.RoomStartManual = function () {
+                alert('Start manual');
+            }
             s.roomReport = function () {
                 s.hub.server.roomReportMessage(s.roomReportMessageId(), s.roomReportNote());
             }
@@ -504,9 +510,6 @@
             }
             s.SwapRoomSendMultipleLines = function () {
                 s.roomSendMultipleLines(!s.roomSendMultipleLines());
-            }
-            s.ShowRolesSettingBox = function () {
-                $('#RolesSettingBox').show();
             }
             // Event
             $('#RoomChat').keydown(function (event) {
@@ -739,10 +742,6 @@
                     interval: s.roomConfigurationsToSet().interval(),
                     ModelName: s.roomConfigurationsToSet().ModelName
                 });
-            }
-
-            s.RoomStart = function () {
-                s.hub.server.roomStart();
             }
 
             s.QuitRoom = function () {

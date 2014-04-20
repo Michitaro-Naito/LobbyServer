@@ -336,7 +336,9 @@
                             <!-- Nav tabs -->
                             <ul class="nav nav-tabs">
                                 <li class="active"><a href="#RC_General" data-toggle="tab">一般</a></li>
+                                <li><a href="#RC_Send" data-toggle="tab" data-bind="visible: roomState() !== RoomState.Ended">発言</a></li>
                                 <li><a href="#RC_Vote" data-toggle="tab" data-bind="visible: roomState() == RoomState.Playing && IsLocalAlive">投票</a></li>
+                                <li><a href="#RC_StartManual" data-toggle="tab" data-bind="visible: roomState() == RoomState.Matchmaking && IsLocalRoomMaster">配役</a></li>
                             </ul>
 
                             <!-- Tab panes -->
@@ -376,17 +378,46 @@
                                                 data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToGuard, optionsCaption: '選択してください'"></select>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <!-- Start Button (Manual) -->
-                        <button data-bind="visible: roomState() == RoomState.Matchmaking && IsLocalRoomMaster, click: ShowRolesSettingBox" class="btn btn-primary btn-sm">開始する(配役指定)</button>
-                        <div id="RolesSettingBox" style="display: none;">
-                            配役指定
-                            <div class="modal-body" data-bind="foreach: roles">
-                                <div>
-                                    <span data-bind="text: name"></span>
-                                    <input type="number" data-bind="value: amountToSet" class="form-control" />
+                                <!-- Start (Manual) -->
+                                <div class="tab-pane" id="RC_StartManual">
+                                    <button data-bind="click: RoomStartManual" class="btn btn-primary btn-sm">この配役で開始する</button>
+                                    <div data-bind="foreach: roles">
+                                        <div>
+                                            <span data-bind="text: name"></span>
+                                            <input type="number" data-bind="value: amountToSet" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Send -->
+                                <div class="tab-pane" id="RC_Send">
+                                    <div data-bind="visible: roomState() !== RoomState.Ended, attr: { class: clSendMessage }" id="RoomSendBox">
+                                        <div class="form-inline">
+                                            <div class="form-group">
+                                                <select data-bind="options:roomSendModes, optionsText: 'name', value: roomSendMode" class="form-control"></select>
+                                            </div>
+                                            <div class="form-group">
+                                                <select data-bind="visible: roomSendMode().id == 3, options:actors, optionsText: 'fmTitleAndName', value: roomSendTo" class="form-control"></select>
+                                            </div>
+                                        </div>
+                                        <!-- Single Line -->
+                                        <div data-bind="visible: !roomSendMultipleLines()">
+                                            <div class="input-group">
+                                                <input type="text" id="RoomChat" class="form-control" />
+                                                <span class="input-group-btn">
+                                                    <button data-bind="click: RoomSend" id="RoomSend" class="btn btn-primary" type="button">送信する</button>
+                                                </span>
+                                            </div>
+                                            <button type="button" data-bind="click: SwapRoomSendMultipleLines" class="btn btn-default">複数行にする</button>
+                                        </div>
+                                        <!-- Multiple Lines -->
+                                        <div data-bind="visible: roomSendMultipleLines()" class="form-group">
+                                            <textarea id="RoomChatMultipleLines" class="form-control"></textarea>
+                                            <button data-bind="click: RoomSend" id="RoomSendMultipleLines" class="btn btn-primary" type="button">送信する</button>
+                                            <button type="button" data-bind="click: SwapRoomSendMultipleLines" class="btn btn-default">1行にする</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -406,34 +437,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Send -->
-                    <div data-bind="visible: roomState() !== RoomState.Ended, attr: { class: clSendMessage }" id="RoomSendBox">
-                        <div class="form-inline">
-                            <div class="form-group">
-                                <select data-bind="options:roomSendModes, optionsText: 'name', value: roomSendMode" class="form-control"></select>
-                            </div>
-                            <div class="form-group">
-                                <select data-bind="visible: roomSendMode().id == 3, options:actors, optionsText: 'fmTitleAndName', value: roomSendTo" class="form-control"></select>
-                            </div>
-                        </div>
-                        <!-- Single Line -->
-                        <div data-bind="visible: !roomSendMultipleLines()">
-                            <div class="input-group">
-                                <input type="text" id="RoomChat" class="form-control" />
-                                <span class="input-group-btn">
-                                    <button data-bind="click: RoomSend" id="RoomSend" class="btn btn-primary" type="button">送信する</button>
-                                </span>
-                            </div>
-                            <button type="button" data-bind="click: SwapRoomSendMultipleLines" class="btn btn-default">複数行にする</button>
-                        </div>
-                        <!-- Multiple Lines -->
-                        <div data-bind="visible: roomSendMultipleLines()" class="form-group">
-                            <textarea id="RoomChatMultipleLines" class="form-control"></textarea>
-                            <button data-bind="click: RoomSend" id="RoomSendMultipleLines" class="btn btn-primary" type="button">送信する</button>
-                            <button type="button" data-bind="click: SwapRoomSendMultipleLines" class="btn btn-default">1行にする</button>
                         </div>
                     </div>
 
