@@ -232,6 +232,7 @@ ul.messages li div.from span.to{
     font-size: 12px;
     color: #999;
 }
+ul.messages li div.from span.report,
 ul.messages li div.from span.time{
     float: right;
     font-weight: normal;

@@ -29,9 +29,11 @@
                     Google+のアカウントさえあれば、登録不要でお友達やネット上のプレイヤーとも手軽にゲームを開始できます。
                     人狼が初めての方も是非参加してみてください。
                 </p>
-                <p><a href="@Url.RouteUrl(new { controller="Game", action="Index" })" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-play"></span> 遊んでみる</a></p>
                 <p>
-                    @Html.RouteLink("遊び方", new {controller="Home",action="About"})
+                    <a href="@Url.RouteUrl(new { controller="Game", action="Index" })" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-play"></span> 遊んでみる</a>
+                    <a href="@Url.RouteUrl(new { controller = "Home", action = "About" })" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-question-sign"></span> 遊び方</a>
+                </p>
+                <p>
                     <a href="http://jnro.net/" target="_blank">こちらから人狼ゲームオンライン１も遊べます。</a>
                 </p>
             </div>

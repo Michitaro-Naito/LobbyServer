@@ -90,7 +90,8 @@
     <div data-bind="visible: state() == State.Characters" class="box">
         <h3 data-bind="text: Text('CharactersList')"></h3>
         <button type="button" data-bind="click: function(){state(State.CreateCharacter)}" class="btn btn-primary">作成する</button>
-        <table class="table">
+        <p data-bind="visible: characters().length === 0">キャラクターがありません。作成してください。</p>
+        <table data-bind="visible: characters().length > 0" class="table">
             <thead>
                 <tr>
                     <th>キャラクター名</th>
@@ -108,7 +109,8 @@
                 </tr>
             </tbody>
         </table>
-        <div class="alert alert-warning">ユーザー情報保護のためキャラクターの削除はできません。</div>
+        <p>キャラクターは3人まで作成できます。</p>
+        <p>ユーザー保護のためキャラクターの削除はできません。</p>
     </div>
 
     <!-- Character Creation Scene -->
@@ -136,7 +138,8 @@
                     <button type="button" data-bind="text: $root.Text('Create'), click: CreateRoom" class="btn btn-primary"></button>
                     <button type="button" data-bind="click: GetRooms" id="GetRooms" class="btn btn-default">更新</button>
                     <button type="button" data-bind="click: BackToCharacters" class="btn btn-default">戻る</button>
-                    <table class="table">
+                    <p data-bind="visible: rooms().length == 0">募集中の村はありません。作成してみてください。</p>
+                    <table data-bind="visible: rooms().length > 0" class="table">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -347,28 +350,28 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h4 class="modal-title" id="myModalLabel">Vote</h4>
+                                        <h4 class="modal-title" id="myModalLabel">投票</h4>
                                     </div>
                                     <div class="modal-body">
                                         <div class="form-group" data-bind="visible: IsExecuteVisible">
                                             <label for="ActorToExecute">処刑する</label>
                                             <select id="ActorToExecute" class="form-control"
-                                                    data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToExecute, optionsCaption: 'select me'"></select>
+                                                    data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToExecute, optionsCaption: '選択してください'"></select>
                                         </div>
                                         <div class="form-group" data-bind="visible: IsAttackVisible">
                                             <label for="ActorToAttack">襲撃する</label>
                                             <select id="ActorToAttack" class="form-control"
-                                                    data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToAttack, optionsCaption: 'select me'"></select>
+                                                    data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToAttack, optionsCaption: '選択してください'"></select>
                                         </div>
                                         <div class="form-group" data-bind="visible: IsFortuneTellVisible">
                                             <label for="ActorToFortuneTell">占う</label>
                                             <select id="ActorToFortuneTell" class="form-control"
-                                                    data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToFortuneTell, optionsCaption: 'select me'"></select>
+                                                    data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToFortuneTell, optionsCaption: '選択してください'"></select>
                                         </div>
                                         <div class="form-group" data-bind="visible: IsGuardVisible">
                                             <label for="ActorToGuard">護衛する</label>
                                             <select id="ActorToGuard" class="form-control"
-                                                    data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToGuard, optionsCaption: 'select me'"></select>
+                                                    data-bind="options:cpAliveActorsExceptMe, optionsText: 'fmTitleAndName', value: actorToGuard, optionsCaption: '選択してください'"></select>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -409,9 +412,9 @@
                             <li data-bind="attr: { class: fmClass }">
                                 <div class="from">
                                     <span data-bind="text: cpFrom, attr:{style:stName}" class="name"></span>
-                                    <span data-bind="visible: canReport, click: report" class="glyphicon glyphicon-thumbs-down"></span>
                                     <span data-bind="text: cpTo" class="to"></span>
                                     <span data-bind="text: fmCreated" class="time"></span>
+                                    <span data-bind="visible: canReport, click: report" class="report"><span class="glyphicon glyphicon-thumbs-down"></span>通報する</span>
                                 </div>
                                 <div data-bind="foreach: cpBodyRows" class="body">
                                     <div data-bind="text: $data"></div>

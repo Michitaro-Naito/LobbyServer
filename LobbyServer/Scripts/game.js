@@ -14,7 +14,7 @@
         RoomConfiguration: function () {
             var s = this;
             s.ModelName = 'RoomConfiguration';
-            s.name = ko.observable("Let's play.");
+            s.name = ko.observable("みんなで楽しく人狼ゲーム");
             s.password = ko.observable('');
             s.max = ko.observable(12);
             s.interval = ko.observable(300);
