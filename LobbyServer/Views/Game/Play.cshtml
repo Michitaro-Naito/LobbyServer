@@ -483,6 +483,10 @@
             var topPageUrl = '@Url.Action("Index", "Home")';
             var endpoint = '@Model.GameServerSignalREndpoint.AbsoluteUri';
 
+            $(window).on('beforeunload', function () {
+                return 'ページを移動や再読み込みするとゲームから退出します。本当によろしいですか？';
+            });
+
             // Initializes Game
             if ($.connection.myHub === undefined) {
                 // GameServer is gone. Redirects to Home.

@@ -302,6 +302,7 @@
             s.hub.client.gotBootTime = function (time) {
                 if (s.bootTime() !== null && s.bootTime() !== time) {
                     alert('サーバが再起動されたようです。ページを再読み込みします...');
+                    $(window).off('beforeunload');
                     location.reload();
                 }
                 s.bootTime(time);
