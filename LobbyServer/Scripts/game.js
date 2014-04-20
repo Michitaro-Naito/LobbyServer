@@ -754,7 +754,8 @@
 
             s.QuitRoom = function () {
                 //s.Send('/QuitRoom');
-                s.hub.server.roomQuit();
+                if(confirm('村から退出します。本当によろしいですか？'))
+                    s.hub.server.roomQuit();
             }
 
             s.Vote = function () {
