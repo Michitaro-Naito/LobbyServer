@@ -160,6 +160,7 @@
                                         <span data-bind="visible: requiresPassword" class="glyphicon glyphicon-link"></span>
                                         <span data-bind="text: $root.Text('Join')"></span>
                                     </button>
+                                    <button type="button" data-bind="click: function(){ $root.SpectateRoom($data.roomId) }" class="btn btn-primary btn-xs">観戦する</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -331,8 +332,14 @@
                         <!-- Duration -->
                         <div data-bind="visible: roomState() == RoomState.Matchmaking || roomState() == RoomState.Playing || roomState() == RoomState.Ending, text: fmDuration"></div>
 
+                        <!-- Spectator Commands -->
+                        <div data-bind="visible: cpMyActor() === null">
+                            <p>あなたは観戦中です。</p>
+                            <button type="button" data-bind="text: $root.Text('QuitRoom'), click: QuitRoom" class="btn btn-warning btn-sm"></button>
+                        </div>
+
                         <!-- Commands -->
-                        <div id="RoomCommands">
+                        <div data-bind="visible: cpMyActor() !== null" id="RoomCommands">
                             <!-- Nav tabs -->
                             <ul class="nav nav-tabs">
                                 <li class="active"><a href="#RC_General" data-toggle="tab">一般</a></li>
@@ -398,7 +405,7 @@
                                                 <select data-bind="options:roomSendModes, optionsText: 'name', value: roomSendMode" class="form-control"></select>
                                             </div>
                                             <div class="form-group">
-                                                <select data-bind="visible: roomSendMode().id == 3, options:actors, optionsText: 'fmTitleAndName', value: roomSendTo" class="form-control"></select>
+                                                <select data-bind="visible: IsRoomSendToVisible, options:actors, optionsText: 'fmTitleAndName', value: roomSendTo" class="form-control"></select>
                                             </div>
                                         </div>
                                         <!-- Single Line -->
@@ -422,22 +429,6 @@
                             </div>
                         </div>
 
-                        <!-- Vote Modal -->
-                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h4 class="modal-title" id="myModalLabel">投票</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- Messages -->

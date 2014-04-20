@@ -346,6 +346,13 @@
                 $('#LobbyChat').val('');
                 $('#LobbySend').disableFor(5000);
             }
+            s.JoinRoom = function () {
+                s.hub.server.joinRoom(s.roomGoingToJoin().roomId, s.roomPasswordGoingToJoin());
+            }
+            s.SpectateRoom = function (roomId) {
+                console.info('spectate' + roomId);
+                s.hub.server.spectateRoom(roomId);
+            }
             $('#LobbyChat').keydown(function (event) {
                 if (event.which == 13) {
                     event.preventDefault();
@@ -430,8 +437,16 @@
                     return false;
                 return me.role === 1003;    // IsHunter?
             });
+            s.IsRoomSendToVisible = ko.computed(function () {
+                var mode = s.roomSendMode();
+                if (mode === undefined)
+                    return false;
+                return mode.id === 3;
+            });
             // Computed (Class)
             s.clSendMessage = ko.computed(function () {
+                if (s.roomSendMode() === undefined)
+                    return 'box mode';
                 return 'box mode' + s.roomSendMode().id;
             });
             s.clFactionWon = ko.computed(function () {
@@ -736,11 +751,6 @@
                 s.roomGoingToJoin(room);
                 /*s.roomIdGoingToJoin(room.roomId);*/
                 $('#RoomModal').modal('show');
-            }
-
-            s.JoinRoom = function () {
-                //s.hub.server.joinRoom(s.roomIdGoingToJoin(), s.roomPasswordGoingToJoin());
-                s.hub.server.joinRoom(s.roomGoingToJoin().roomId, s.roomPasswordGoingToJoin());
             }
 
             s.RoomConfigure = function () {
