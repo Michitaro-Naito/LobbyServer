@@ -395,11 +395,21 @@
                                 <select data-bind="visible: roomSendMode().id == 3, options:actors, optionsText: 'fmTitleAndName', value: roomSendTo" class="form-control"></select>
                             </div>
                         </div>
-                        <div class="input-group">
-                            <input type="text" id="RoomChat" class="form-control" />
-                            <span class="input-group-btn">
-                                <button data-bind="click: RoomSend" id="RoomSend" class="btn btn-primary" type="button">送信する</button>
-                            </span>
+                        <!-- Single Line -->
+                        <div data-bind="visible: !roomSendMultipleLines()">
+                            <div class="input-group">
+                                <input type="text" id="RoomChat" class="form-control" />
+                                <span class="input-group-btn">
+                                    <button data-bind="click: RoomSend" id="RoomSend" class="btn btn-primary" type="button">送信する</button>
+                                </span>
+                            </div>
+                            <button type="button" data-bind="click: SwapRoomSendMultipleLines" class="btn btn-default">複数行にする</button>
+                        </div>
+                        <!-- Multiple Lines -->
+                        <div data-bind="visible: roomSendMultipleLines()" class="form-group">
+                            <textarea id="RoomChatMultipleLines" class="form-control"></textarea>
+                            <button data-bind="click: RoomSend" id="RoomSendMultipleLines" class="btn btn-primary" type="button">送信する</button>
+                            <button type="button" data-bind="click: SwapRoomSendMultipleLines" class="btn btn-default">1行にする</button>
                         </div>
                     </div>
 

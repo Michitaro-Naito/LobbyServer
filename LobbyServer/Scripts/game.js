@@ -358,6 +358,7 @@
             s.roomReportMessageId = ko.observable();
             s.roomReportNote = ko.observable('');
             s.factionWon = ko.observable();
+            s.roomSendMultipleLines = ko.observable(false);
             // Computed
             s.cpMyActor = ko.computed(function () {
                 return Enumerable.From(s.actors()).FirstOrDefault(null, function (a) { return a.id === s.myActorId(); });
@@ -468,14 +469,30 @@
                 s.hub.server.roomReportMessage(s.roomReportMessageId(), s.roomReportNote());
             }
             s.RoomSend = function () {
-                var str = $('#RoomChat').val();
-                if (str.length === 0)
-                    return;
-                if ($('#RoomSend').attr('disabled'))
-                    return;
-                s.hub.server.roomSend(s.roomSendMode().id, s.roomSendTo().id, str);
-                $('#RoomChat').val('');
-                $('#RoomSend').disableFor(5000);
+                if (s.roomSendMultipleLines()) {
+                    // MultipleLines
+                    var str = $('#RoomChatMultipleLines').val();
+                    if (str.length === 0)
+                        return;
+                    if ($('#RoomSendMultipleLines').attr('disabled'))
+                        return;
+                    s.hub.server.roomSend(s.roomSendMode().id, s.roomSendTo().id, str);
+                    $('#RoomChatMultipleLines').val('');
+                    $('#RoomSendMultipleLines').disableFor(5000);
+                } else {
+                    // SingleLine
+                    var str = $('#RoomChat').val();
+                    if (str.length === 0)
+                        return;
+                    if ($('#RoomSend').attr('disabled'))
+                        return;
+                    s.hub.server.roomSend(s.roomSendMode().id, s.roomSendTo().id, str);
+                    $('#RoomChat').val('');
+                    $('#RoomSend').disableFor(5000);
+                }
+            }
+            s.SwapRoomSendMultipleLines = function () {
+                s.roomSendMultipleLines(!s.roomSendMultipleLines());
             }
             // Event
             $('#RoomChat').keydown(function (event) {
