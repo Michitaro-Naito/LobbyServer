@@ -89,6 +89,7 @@
     <!-- Characters Scene -->
     <div data-bind="visible: state() == State.Characters" class="box">
         <h3 data-bind="text: Text('CharactersList')"></h3>
+        <div class="alert alert-info">ゲーム画面は自動で更新されますのでブラウザの更新ボタンを押さないようにお気を付けください。</div>
         <button type="button" data-bind="click: function(){state(State.CreateCharacter)}" class="btn btn-primary">作成する</button>
         <p data-bind="visible: characters().length === 0">キャラクターがありません。作成してください。</p>
         <table data-bind="visible: characters().length > 0" class="table">
@@ -287,7 +288,7 @@
                                 <div>
                                     <table>
                                         <tr>
-                                            <td data-bind="text: fmGender"></td>
+                                            <td data-bind="text: fmGenderAndStar"></td>
                                             <td data-bind="text: fmRole"></td>
                                             <td><div data-bind="attr: {style: cpStyle}" class="icon"></div></td>
                                         </tr>
@@ -309,7 +310,7 @@
                                 <div>
                                     <table>
                                         <tr>
-                                            <td data-bind="text: fmGender"></td>
+                                            <td data-bind="text: fmGenderAndStar"></td>
                                             <td data-bind="text: fmRole"></td>
                                             <td><div data-bind="attr: {style: cpStyle}" class="icon"></div></td>
                                         </tr>
@@ -340,6 +341,12 @@
 
                         <!-- Commands -->
                         <div data-bind="visible: cpMyActor() !== null" id="RoomCommands">
+                            <!-- About -->
+                            <div data-bind="with: cpMyActor()">
+                                <p>あなたは<span data-bind="text: fmGender"></span>の<span data-bind="text: fmRole"></span>です。</p>
+                                <p data-bind="text: fmDescription"></p>
+                            </div>
+
                             <!-- Nav tabs -->
                             <ul class="nav nav-tabs">
                                 <li class="active"><a href="#RC_General" data-toggle="tab">一般</a></li>

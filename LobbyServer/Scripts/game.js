@@ -189,14 +189,22 @@
             this.fmTitleAndName = ko.computed(function () {
                 return this.title + ' ' + this.name;
             }, this);
-            this.fmGender = ko.computed(function () {
-                var str = '';
+            s.fmGender = ko.computed(function () {
+                var gender = Enumerable.From(s.root.genders())
+                    .FirstOrDefault(null, function (g) { return g.id === s.gender; });
+                return gender.name;
+            });
+            this.fmGenderAndStar = ko.computed(function () {
+                /*var str = '';
                 if (s.isRoomMaster)
                     str += '★';
                 var gender = Enumerable.From(s.root.genders())
                     .FirstOrDefault(null, function (g) { return g.id === s.gender; });
                 str += gender.name;
-                return str;
+                return str;*/
+                if (s.isRoomMaster)
+                    return '★' + s.fmGender();
+                return s.fmGender();
             });
             this.fmRole = ko.computed(function () {
                 var role = this.root.FindRole(this.role);
@@ -205,6 +213,10 @@
                     str += '?';
                 return str;
             }, this);
+            s.fmDescription = ko.computed(function () {
+                var role = s.root.FindRole(s.role);
+                return role.description;
+            });
             this.fmUser = ko.computed(function () {
                 if (s.character === null)
                     return 'NPC';
