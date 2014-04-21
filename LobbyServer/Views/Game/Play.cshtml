@@ -431,6 +431,7 @@
                                 <!-- Master Commands -->
                                 <div class="tab-pane" id="RC_Master">
                                     <button data-bind="visible: roomState() === RoomState.Playing || roomState() === RoomState.Ending, click: RoomSkip" class="btn btn-warning">スキップする</button>
+
                                     <div class="input-group" data-bind="visible: roomState() === RoomState.Matchmaking || roomState() === RoomState.Playing">
                                         <input type="text" data-bind="value: roomCharacterNameToKick" class="form-control" placeholder="キャラクター名(例：test)" />
                                         <span class="input-group-btn">
@@ -438,7 +439,7 @@
                                         </span>
                                     </div>
                                     <div class="input-group" data-bind="visible: roomState() === RoomState.Matchmaking || roomState() === RoomState.Playing">
-                                        <input type="text" class="form-control" placeholder="村民名" />
+                                        <select data-bind="options: actors, optionsText: 'fmTitleAndName', value: roomKillTarget" class="form-control"></select>
                                         <span class="input-group-btn">
                                             <button data-bind="click: RoomKill" class="btn btn-danger">殺害する</button>
                                         </span>

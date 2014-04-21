@@ -379,6 +379,7 @@
             s.factionWon = ko.observable();
             s.roomSendMultipleLines = ko.observable(false);
             s.roomCharacterNameToKick = ko.observable('');
+            s.roomKillTarget = ko.observable();
             // Computed
             s.cpMyActor = ko.computed(function () {
                 return Enumerable.From(s.actors()).FirstOrDefault(null, function (a) { return a.id === s.myActorId(); });
@@ -547,6 +548,12 @@
             }
             s.RoomKill = function () {
                 console.info('room kill');
+                var target = s.roomKillTarget();
+                console.info(target);
+                if (target === undefined)
+                    return;
+                if (confirm(target.fmTitleAndName() + 'を殺害します。本当によろしいですか？'))
+                    s.hub.server.roomKill({ActorId: target.id});
             }
             // Event
             $('#RoomChat').keydown(function (event) {
