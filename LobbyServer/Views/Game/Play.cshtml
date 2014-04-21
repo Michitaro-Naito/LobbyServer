@@ -145,15 +145,17 @@
                             <tr>
                                 <th>#</th>
                                 <th>村の名前</th>
+                                <th>状態</th>
                                 <th>人数</th>
                                 <th>1日の長さ</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
                         <tbody data-bind="foreach: rooms">
-                            <tr data-bind="attr: { class : clRow }">
+                            <tr data-bind="visible: IsVisible, attr: { class : clRow }">
                                 <td data-bind="text: roomId"></td>
                                 <td data-bind="text: name"></td>
+                                <td data-bind="text: fmState"></td>
                                 <td data-bind="text: fmPlayers"></td>
                                 <td data-bind="text: interval"></td>
                                 <td>

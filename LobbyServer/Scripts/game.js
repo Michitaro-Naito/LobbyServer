@@ -37,10 +37,34 @@
             s.aliveActors = data.aliveActors;
             s.alivePlayers = data.alivePlayers;
             s.state = data.state;
+            s.IsVisible = ko.computed(function () {
+                switch (s.state) {
+                    case 1:
+                    case 2:
+                    case 3:
+                        return true;
+                }
+                return false;
+            })
             s.clRow = ko.computed(function () {
                 if(s.requiresPassword)
                     return 'mode3';
                 return '';
+            });
+            s.fmState = ko.computed(function () {
+                switch (s.state) {
+                    case 0:
+                        return '設定中';
+                    case 1:
+                        return '募集中';
+                    case 2:
+                        return '進行中';
+                    case 3:
+                        return '終了中';
+                    case 4:
+                        return '終了';
+                }
+                return '?';
             });
             s.fmPlayers = ko.computed(function () {
                 if (s.state === 1)
