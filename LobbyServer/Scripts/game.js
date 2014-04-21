@@ -124,7 +124,7 @@
                 var target = '?';
                 if (this.mode !== 3) {
                     //target = 'All';
-                    var mode = Enumerable.From(s.root.roomSendModes()).First(function (mode) { return mode.id === s.mode; });
+                    var mode = Enumerable.From(s.root.roomSendModesAll()).First(function (mode) { return mode.id === s.mode; });
                     target = mode.name;
                 } else {
                     for (var n = 0; n < root.actors().length; n++) {
@@ -282,6 +282,7 @@
                 { id: 2, name: 'Ghost' },
                 { id: 3, name: 'Private' }
             ]);
+            s.roomSendModesAll = ko.observableArray([]);
             s.state = ko.observable(s.State.Disconnected);
             s.roomState = ko.observable(s.RoomState.Configuring);
             s.bootTime = ko.observable(null);
@@ -471,6 +472,9 @@
             // Callback
             s.hub.client.gotRoomConfigurations = function (data) {
                 s.roomConfigurations(data);
+            }
+            s.hub.client.gotAllModes = function (modes) {
+                s.roomSendModesAll(modes);
             }
             s.hub.client.gotModes = function (modes) {
                 var mode = s.roomSendMode();

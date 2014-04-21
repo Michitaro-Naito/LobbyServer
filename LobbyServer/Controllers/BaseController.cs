@@ -19,6 +19,17 @@ namespace LobbyServer.Controllers
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
+            if (Request.Url.Authority == "localhost:50731")
+            {
+                // 301 Redirect to 192.168.100.3 from localhost
+                Response.Redirect("http://192.168.100.3:50731" + Request.Url.AbsolutePath);
+                return;
+            }
+            if (/*Request.Url.Authority == "debug.apwei.expressweb.jp" ||*/ Request.Url.Authority == "v2.xn--sckyeodz36l941b.com" || Request.Url.Authority == "v2.人狼ゲーム.com")
+            {
+                Response.Redirect("http://werewolfgame.apwei.com" + Request.Url.AbsolutePath);
+            }
+            //if(Request)
             /*Debug.WriteLine("OnActionExecuting");
 
             // Select culture from routing data.
