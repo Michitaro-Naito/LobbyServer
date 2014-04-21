@@ -123,7 +123,9 @@
                     return '';
                 var target = '?';
                 if (this.mode !== 3) {
-                    target = 'All';
+                    //target = 'All';
+                    var mode = Enumerable.From(s.root.roomSendModes()).First(function (mode) { return mode.id === s.mode; });
+                    target = mode.name;
                 } else {
                     for (var n = 0; n < root.actors().length; n++) {
                         var a = root.actors()[n];
