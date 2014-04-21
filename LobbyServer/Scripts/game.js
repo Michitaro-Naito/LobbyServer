@@ -378,6 +378,7 @@
             s.roomReportNote = ko.observable('');
             s.factionWon = ko.observable();
             s.roomSendMultipleLines = ko.observable(false);
+            s.roomCharacterNameToKick = ko.observable('');
             // Computed
             s.cpMyActor = ko.computed(function () {
                 return Enumerable.From(s.actors()).FirstOrDefault(null, function (a) { return a.id === s.myActorId(); });
@@ -538,6 +539,14 @@
             s.RoomSkip = function () {
                 if(confirm('翌日までスキップします。本当によろしいですか？'))
                     s.hub.server.roomSkip();
+            }
+            s.RoomKick = function () {
+                var name = s.roomCharacterNameToKick();
+                if(confirm(name + 'の追放を試みます。本当によろしいですか？'))
+                    s.hub.server.roomKick({CharacterName: name});
+            }
+            s.RoomKill = function () {
+                console.info('room kill');
             }
             // Event
             $('#RoomChat').keydown(function (event) {
