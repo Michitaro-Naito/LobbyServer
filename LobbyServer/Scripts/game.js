@@ -394,7 +394,8 @@
             s.factionWon = ko.observable();
             s.roomSendMultipleLines = ko.observable(false);
             s.roomCharacterNameToKick = ko.observable('');
-            s.roomKillTarget = ko.observable();
+            s.roomMasterTarget = ko.observable();
+            s.roomRoleToSet = ko.observable();
             // Computed
             s.cpMyActor = ko.computed(function () {
                 return Enumerable.From(s.actors()).FirstOrDefault(null, function (a) { return a.id === s.myActorId(); });
@@ -566,12 +567,27 @@
             }
             s.RoomKill = function () {
                 console.info('room kill');
-                var target = s.roomKillTarget();
+                var target = s.roomMasterTarget();
                 console.info(target);
                 if (target === undefined)
                     return;
                 if (confirm(target.fmTitleAndName() + 'を殺害します。本当によろしいですか？'))
                     s.hub.server.roomKill({ActorId: target.id});
+            }
+            s.RoomRevive = function () {
+                var target = s.roomMasterTarget();
+                if (target === undefined)
+                    return;
+                if (confirm(target.fmTitleAndName() + 'を蘇生します。本当によろしいですか？'))
+                    s.hub.server.roomRevive({ ActorId: target.id });
+            }
+            s.RoomSetRole = function () {
+                var target = s.roomMasterTarget();
+                var role = s.roomRoleToSet();
+                if (target === undefined || role === undefined)
+                    return;
+                if (confirm(target.fmTitleAndName() + 'に' + role.name + 'を設定します。本当によろしいですか？'))
+                    s.hub.server.roomSetRole({ActorId: target.id, Role: role.id});
             }
             // Event
             $('#RoomChat').keydown(function (event) {
