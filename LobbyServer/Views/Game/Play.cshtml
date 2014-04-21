@@ -345,6 +345,7 @@
                                 <li class="active"><a href="#RC_General" data-toggle="tab">一般</a></li>
                                 <li><a href="#RC_Send" data-toggle="tab" data-bind="visible: roomState() !== RoomState.Ended">発言</a></li>
                                 <li><a href="#RC_Vote" data-toggle="tab" data-bind="visible: roomState() == RoomState.Playing && IsLocalAlive">投票</a></li>
+                                <li><a href="#RC_Master" data-toggle="tab" data-bind="visible: IsLocalRoomMaster">村長</a></li>
                                 <li><a href="#RC_StartManual" data-toggle="tab" data-bind="visible: roomState() == RoomState.Matchmaking && IsLocalRoomMaster">配役</a></li>
                             </ul>
 
@@ -425,6 +426,30 @@
                                             <button type="button" data-bind="click: SwapRoomSendMultipleLines" class="btn btn-default">1行にする</button>
                                         </div>
                                     </div>
+                                </div>
+                                
+                                <!-- Master Commands -->
+                                <div class="tab-pane" id="RC_Master">
+                                    <button data-bind="visible: roomState() === RoomState.Playing || roomState() === RoomState.Ending, click: RoomSkip" class="btn btn-warning">スキップする</button>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="キャラクター名(例：test)" />
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-danger">追放する</button>
+                                        </span>
+                                    </div>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="村民名" />
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-danger">殺害する</button>
+                                        </span>
+                                    </div>
+                                    <p>
+                                        これらのボタンはルームマスター専用です。
+                                        全てのプレイヤー(荒らしを除く)が楽しく遊ぶために不可欠な場合にのみ使用してください。
+                                        スキップはパワープレイが確定した場合や、全員が投票を終えた場合など、通常のゲームにおいて便宜上必要な場合にのみ使用してください。
+                                        実験目的などの連続スキップは厳禁です。
+                                        むやみに使用すると何らかのペナルティを受ける恐れがありますので、くれぐれもご注意ください。
+                                    </p>
                                 </div>
                             </div>
                         </div>

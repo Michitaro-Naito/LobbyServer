@@ -535,6 +535,10 @@
             s.SwapRoomSendMultipleLines = function () {
                 s.roomSendMultipleLines(!s.roomSendMultipleLines());
             }
+            s.RoomSkip = function () {
+                if(confirm('翌日までスキップします。本当によろしいですか？'))
+                    s.hub.server.roomSkip();
+            }
             // Event
             $('#RoomChat').keydown(function (event) {
                 if (event.which == 13) {
