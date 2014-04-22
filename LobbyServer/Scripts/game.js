@@ -462,7 +462,7 @@
                     return false;
                 if (me.isDead)
                     return false;
-                return me.role === 2000;    // IsWerewolf?
+                return me.role === 2000 || me.role === 2003;    // IsWerewolf or ElderWolf?
             });
             s.IsFortuneTellVisible = ko.computed(function () {
                 var me = s.cpMyActor();
@@ -478,7 +478,7 @@
                     return false;
                 if (me.isDead)
                     return false;
-                return me.role === 1003;    // IsHunter?
+                return me.role === 1003 || me.role === 1006;    // IsHunter or Poacher?
             });
             s.IsRoomSendToVisible = ko.computed(function () {
                 var mode = s.roomSendMode();

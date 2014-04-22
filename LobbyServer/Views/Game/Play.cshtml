@@ -251,6 +251,9 @@
                             <td><div class="icon" style="background-position: -216px 0px"></div></td>
                             <td><div class="icon" style="background-position: -264px -168px"></div></td>
                             <td><div class="icon" style="background-position: -240px 0px"></div></td>
+                            <td><div class="icon" style="background-position: -192px -120px"></div></td>
+                            <td><div class="icon" style="background-position: -24px -48px"></div></td>
+                            <td><div class="icon" style="background-position: -264px 0px"></div></td>
                         </tr>
                     </table>
                 </div>
@@ -261,6 +264,8 @@
                         <tr>
                             <td><div class="icon" style="background-position: -264px -288px"></div></td>
                             <td><div class="icon" style="background-position: -192px -288px"></div></td>
+                            <td><div class="icon" style="background-position: -216px -288px"></div></td>
+                            <td><div class="icon" style="background-position: -240px -288px"></div></td>
                         </tr>
                     </table>
                 </div>
@@ -270,6 +275,7 @@
                     <table>
                         <tr>
                             <td><div class="icon" style="background-position: -168px -240px"></div></td>
+                            <td><div class="icon" style="background-position: -24px -240px"></div></td>
                         </tr>
                     </table>
                 </div>
@@ -333,7 +339,13 @@
                         <h4>行動</h4>
 
                         <!-- Duration -->
-                        <div data-bind="visible: roomState() == RoomState.Matchmaking || roomState() == RoomState.Playing || roomState() == RoomState.Ending, text: fmDuration"></div>
+                        <p data-bind="visible: roomState() === RoomState.Matchmaking">
+                            ルームマスターがゲームを開始するのを待機しています。
+                        </p>
+                        <p data-bind="visible: (roomState()===RoomState.Matchmaking && duration()>0) || roomState() === RoomState.Playing || roomState() === RoomState.Ending">
+                            更新まで：
+                            <span data-bind="text: fmDuration"></span>
+                        </p>
 
                         <!-- Spectator Commands -->
                         <div data-bind="visible: cpMyActor() === null">
@@ -344,7 +356,9 @@
                         <!-- Commands -->
                         <div data-bind="visible: cpMyActor() !== null" id="RoomCommands">
                             <!-- About -->
-                            <div data-bind="with: cpMyActor()">
+                            <p data-bind="visible: roomState() === RoomState.Ending">ゲームが決着しました。記録が書き出されるまで他の参加者とチャットできます。</p>
+                            <p data-bind="visible: roomState() === RoomState.Ended">ゲームが終了しました。待合室へ戻って他の村に参加してみましょう。</p>
+                            <div data-bind="visible: roomState() === RoomState.Playing, with: cpMyActor()">
                                 <p>あなたは<span data-bind="text: fmGender"></span>の<span data-bind="text: fmRole"></span>です。</p>
                                 <p data-bind="text: fmDescription"></p>
                             </div>
@@ -476,7 +490,6 @@
                                         荒らしを除く全てのプレイヤーが楽しく遊ぶために不可欠な場合にのみ使用してください。
                                         特殊村への使用歓迎です。
                                         スキップは全員が投票を終えた場合など、通常のゲームにおいて便宜上必要な場合にのみ使用してください。
-                                        実験目的などの連続スキップは厳禁です。
                                         むやみに使用すると何らかのペナルティを受ける恐れがありますので、くれぐれもご注意ください。
                                     </p>
                                 </div>
