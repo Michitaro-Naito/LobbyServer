@@ -6,6 +6,7 @@
 
 
     var game = {
+        Version: '1.0.1',
 
         Character: function (data) {
             this.name = data.name;
