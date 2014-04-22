@@ -1,9 +1,6 @@
-﻿$(function () {
-
-    // SignalR
-    //$.connection.hub.url = "http://localhost:8080/signalr";
-
-
+﻿//console = {};
+//console.info = function (str) { alert(JSON.stringify(str)); };
+$(function () {
 
     var game = {
         Version: '1.0.1',
@@ -148,7 +145,6 @@
                     return '';
                 var target = '?';
                 if (this.mode !== 3) {
-                    //target = 'All';
                     var mode = Enumerable.From(s.root.roomSendModesAll()).First(function (mode) { return mode.id === s.mode; });
                     target = mode.name;
                 } else {
@@ -222,13 +218,6 @@
                 return gender.name;
             });
             this.fmGenderAndStar = ko.computed(function () {
-                /*var str = '';
-                if (s.isRoomMaster)
-                    str += '★';
-                var gender = Enumerable.From(s.root.genders())
-                    .FirstOrDefault(null, function (g) { return g.id === s.gender; });
-                str += gender.name;
-                return str;*/
                 if (s.isRoomMaster)
                     return '★' + s.fmGender();
                 return s.fmGender();
@@ -262,8 +251,6 @@
                 return 'color:#CCC;';
             });
             this.cpStyle = ko.computed(function () {
-                //if (!this.root)
-                //    return;
                 var role = this.root.FindRole(this.role);
                 return 'background-position: ' + (-24 * role.x) + 'px ' + (-24 * role.y) + 'px;';
             }, this);
@@ -329,7 +316,6 @@
             s.ignoreVoteSubscription = ko.observable(false);
             s.duration = ko.observable(0.0);
 
-            //s.logs = ko.observableArray([]);
             s.lastUpdate = new Date();
             s.lastError = ko.observable('');
 
@@ -643,7 +629,6 @@
                 return str;
             });
 
-            //s.Text = function (key) { return 'foo'+key;}
             s.Text = function (key) {
                 return ko.computed({
                     read: function () {
@@ -662,13 +647,11 @@
             s.state.subscribe(function (newValue) {
                 switch (newValue) {
                     case s.State.Characters:
-                        //s.Send('/GetCharacters');
                         s.hub.server.getCharacters();
                         break;
                     case s.State.CreateCharacter:
                         break;
                     case s.State.Rooms:
-                        //s.Send('/GetRooms');
                         s.hub.server.getLobbyMessages();
                         s.GetRooms();
                         break;
@@ -744,7 +727,6 @@
 
             s.hub.client.gotRoles = function (roles) {
                 console.info(roles);
-                //s.roles(roles);
                 s.roles(Enumerable.From(roles).Select(function (data) { return new Apwei.Game.Role(data); }).ToArray());
             }
 
@@ -806,10 +788,6 @@
 
             // ----- Method -----
 
-            /*s.Send = function (body) {
-                s.hub.server.send(body);
-            }*/
-
             s.Connect = function () {
                 $('#ConnectButton').disableFor(10000);
                 s.disconnectionReason('');
@@ -821,14 +799,12 @@
             }
 
             s.CreateRoom = function () {
-                //s.Send('/CreateRoom');
                 s.hub.server.createRoom();
             }
 
-            s.OpenRoomModal = function (/*roomId*/room) {
+            s.OpenRoomModal = function (room) {
                 console.info(room);
                 s.roomGoingToJoin(room);
-                /*s.roomIdGoingToJoin(room.roomId);*/
                 $('#RoomModal').modal('show');
             }
 
@@ -843,7 +819,6 @@
             }
 
             s.QuitRoom = function () {
-                //s.Send('/QuitRoom');
                 if(confirm('村から退出します。本当によろしいですか？'))
                     s.hub.server.roomQuit();
             }

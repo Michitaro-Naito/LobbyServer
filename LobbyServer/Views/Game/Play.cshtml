@@ -5,6 +5,26 @@
 
 
 
+<!-- Not Supported -->
+<div>
+    <!--[if lt IE 9]>
+    <div class="alert alert-danger">
+        お使いのブラウザは人狼ゲームオンライン２に対応していません。
+        <a href="https://www.google.com/intl/ja/chrome/browser/" target="_blank">Google Chrome</a>
+        か<a href="http://www.mozilla.jp/firefox/" target="_blank">Firefox</a>
+        をインストールしてお使いいただくと解決する可能性があります。
+    </div>
+    <![endif]-->
+
+    <noscript>
+        <div class="alert alert-danger">
+            人狼ゲームオンライン２をプレイするにはJavaScriptを有効にしてください。
+        </div>
+    </noscript>
+</div>
+
+
+
 <div id="Game" style="display: none;">
 
     <!-- ErrorModal -->
@@ -238,7 +258,7 @@
             </div>
 
             <!-- Top (FactionWon) -->
-            <div data-bind="visible: roomState() == RoomState.Ending || roomState() == RoomState.Ended, attr:{class:clFactionWon}">
+            <div data-bind="visible: roomState() == RoomState.Ending || roomState() == RoomState.Ended, attr:{'class':clFactionWon}">
                 <div data-bind="visible: factionWon() === Faction.None">
                     誰も生き残りませんでした・・・
                 </div>
@@ -424,7 +444,7 @@
 
                                 <!-- Send -->
                                 <div class="tab-pane" id="RC_Send">
-                                    <div data-bind="visible: roomState() !== RoomState.Ended, attr: { class: clSendMessage }" id="RoomSendBox">
+                                    <div data-bind="visible: roomState() !== RoomState.Ended, attr: { 'class': clSendMessage }" id="RoomSendBox">
                                         <div class="form-inline">
                                             <div class="form-group">
                                                 <select data-bind="options:roomSendModes, optionsText: 'name', value: roomSendMode" class="form-control"></select>
@@ -552,11 +572,14 @@
                 location.href = topPageUrl;
                 return;
             }
-            //$.connection.hub.url = endpoint;
-            $.connection.myHub.connection.url = endpoint;
-            var model = new window.Apwei.Game.AppModel(culture, pass, $.connection.myHub);
-            ko.applyBindings(model, document.getElementById('Game'));
-            model.Connect();
+            try {
+                $.connection.myHub.connection.url = endpoint;
+                var model = new window.Apwei.Game.AppModel(culture, pass, $.connection.myHub);
+                ko.applyBindings(model, document.getElementById('Game'));
+                model.Connect();
+            }catch (e){
+                //alert(e);
+            }
         });
     </script>
 }
