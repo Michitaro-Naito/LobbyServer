@@ -607,6 +607,53 @@ $(function () {
                     s.RoomSend();
                 }
             });
+            // ----- Room (Messages) -----
+            s.RoomGettingOlderMessages = ko.observable(false);
+            s.RoomNoMoreOlderMessages = ko.observable(false);
+            s.RoomCleanMessages = function () {
+                if (s.roomMessages().length > 50) {
+                    s.roomMessages.pop();
+                    s.RoomNoMoreOlderMessages(false);
+                }
+            }
+            s.RoomGetOlderMessages = function () {
+                if (s.state() !== s.State.Playing)
+                    return;
+                if (s.RoomNoMoreOlderMessages())
+                    return;
+                if (s.RoomGettingOlderMessages())
+                    return;
+                var oldest = Enumerable.From(s.roomMessages()).LastOrDefault(null);
+                var id = null;
+                if (oldest)
+                    id = oldest.id;
+                if (id === 0) {
+                    s.RoomNoMoreOlderMessages(true);
+                    return;
+                }
+                console.info('getting older than: ' + id);
+                s.RoomGettingOlderMessages(true);
+                s.hub.server.roomGetOlderMessages({Id:id});
+            }
+            s.hub.client.gotRoomMessages = function (messages, clear) {
+                if (clear) {
+                    s.roomMessages([]);
+                    s.RoomNoMoreOlderMessages(false);
+                    s.RoomGettingOlderMessages(false);
+                }
+                for (var n = 0; n < messages.length; n++) {
+                    s.roomMessages.unshift(new Apwei.Game.RoomMessage(s, messages[n]));
+                }
+            }
+            s.hub.client.roomGotOlderMessages = function (messages) {
+                s.RoomGettingOlderMessages(false);
+                if (messages.length == 0) {
+                    s.RoomNoMoreOlderMessages(true);
+                }
+                for (var n = messages.length - 1; n >= 0; n--) {
+                    s.roomMessages.push(new Apwei.Game.RoomMessage(s, messages[n]));
+                }
+            }
 
 
 
@@ -772,14 +819,6 @@ $(function () {
                 s.ignoreVoteSubscription(false);
             }
 
-            s.hub.client.gotRoomMessages = function (messages, clear) {
-                if (clear)
-                    s.roomMessages([]);
-                for (var n = 0; n < messages.length; n++) {
-                    s.roomMessages.unshift(new Apwei.Game.RoomMessage(s, messages[n]));
-                }
-            }
-
             s.hub.client.gotTimer = function (duration) {
                 s.duration(duration);
             }
@@ -856,6 +895,16 @@ $(function () {
                 if (duration < 0.0)
                     duration = 0.0;
                 s.duration(duration);
+
+                // Marker
+                var ot = $('#RoomMessagesTopMarker').offset().top;
+                var ob = $('#RoomMessagesBottomMarker').offset().top;
+                var st = $(window).scrollTop();
+                var h = $(window).innerHeight();
+                if (ot > st)
+                    s.RoomCleanMessages();
+                if (ob >= st && ob <= (st + h))
+                    s.RoomGetOlderMessages();
             }
 
             s.Initialize = function () {

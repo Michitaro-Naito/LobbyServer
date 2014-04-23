@@ -522,6 +522,9 @@
                     <div class="box">
                         <h4>村の会話</h4>
 
+                        <!-- Top Marker -->
+                        <div id="RoomMessagesTopMarker"></div>
+
                         <!-- Log -->
                         <ul data-bind="foreach: roomMessages" class="messages">
                             <li data-bind="attr: { class: fmClass }">
@@ -536,6 +539,9 @@
                                 </div>
                             </li>
                         </ul>
+
+                        <!-- Bottom Marker (to load older) -->
+                        <div id="RoomMessagesBottomMarker"></div>
                     </div>
                 </div>
             </div>
