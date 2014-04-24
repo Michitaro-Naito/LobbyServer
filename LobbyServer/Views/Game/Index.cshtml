@@ -1,7 +1,14 @@
 ﻿@model List<ApiScheme.Scheme.GameServerStatus>
+@{
+    ViewBag.Title = "サーバ一覧";
+}
 
 <div class="box">
     <h2>サーバ一覧</h2>
+    <p>
+        クリックするとチャットに参加します。
+        キャラクターと戦績は全てのサーバで共有されます。
+    </p>
     <table class="table">
         <thead>
             <tr>
@@ -39,8 +46,4 @@
             }
         </tbody>
     </table>
-    <p>
-        クリックするとチャットに参加します。
-        キャラクターと戦績は全てのサーバで共有されます。
-    </p>
 </div>

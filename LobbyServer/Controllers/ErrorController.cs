@@ -8,6 +8,7 @@ namespace LobbyServer.Controllers
 {
     public class ErrorController : BaseController
     {
+        [OutputCache(Duration=60)]
         public ActionResult NotFound()
         {
             return View();

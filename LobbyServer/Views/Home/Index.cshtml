@@ -1,20 +1,19 @@
 ﻿@model LobbyServer.Models.HomeIndexVM
 @{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = null;
 }
 
-<div itemscope itemtype="http://schema.org/SoftwareApplication">
+<div itemscope itemtype="http://schema.org/WebApplication">
     <div class="box">
-        <h1 itemprop="name">@_.ApplicationName</h1>
+        <h1><span itemprop="name">人狼ゲームオンライン</span><span itemprop="version softwareVersion">2</span></h1>
+        <meta itemprop="inLanguage" content="ja" />
+        <meta itemprop="isFamilyFriendly" content="True" />
     </div>
 
     <div class="row">
         <div class="col-sm-8">
             <div class="box sm-mh300">
                 <h2>ようこそ</h2>
-                <div class="alert alert-info">
-                    人狼ゲームオンライン２は現在オープンβテスト中です。
-                </div>
                 <table>
                     <tr>
                         <td><div class="icon" style="background-position: -288px -24px"></div></td>
@@ -35,18 +34,19 @@
                     </tr>
                 </table>
                 <p itemprop="description">
-                    人狼ゲームオンライン２はブラウザで遊べる無料の人狼ゲームです。
-                    Google+のアカウントさえあれば、登録不要でお友達やネット上のプレイヤーとも手軽にゲームを開始できます。
+                    人狼ゲームオンライン2はブラウザで遊べる無料の<span itemprop="applicationSubCategory">人狼<span itemprop="genre applicationCategory">ゲーム</span></span>です。
+                    Google+アカウントさえあれば、登録不要でお友達やネット上のプレイヤーとも手軽にゲームを開始できます。
                     人狼が初めての方も是非参加してみてください。
                 </p>
                 <p>おすすめプレイ時間：午後8時～午後12時ごろ</p>
                 <p>
-                    <a href="@Url.RouteUrl(new { controller="Game", action="Index" })" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-play"></span> 遊んでみる</a>
-                    <a href="@Url.RouteUrl(new { controller = "Home", action = "About" })" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-question-sign"></span> 遊び方</a>
+                    <a itemprop="url sameAs downloadUrl installUrl" href="@Url.RouteUrl(new { controller="Game", action="Index" })" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-play"></span> 遊んでみる</a>
+                    <a itemprop="featureList releaseNotes" href="@Url.RouteUrl(new { controller = "Home", action = "About" })" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-question-sign"></span> 遊び方</a>
                 </p>
-                <p><a href="https://twitter.com/jinrogame" target="_blank">メンテナンスやアップデートのお知らせは公式Twitterアカウントをご覧ください。</a></p>
+                <p>メンテナンスやアップデートのお知らせは<a itemprop="url sameAs" href="https://twitter.com/jinrogame" target="_blank">公式Twitterアカウント</a>をご覧ください。</p>
                 <p>
-                    <a href="http://jnro.net/" target="_blank">こちらから人狼ゲームオンライン１も遊べます。</a>
+                    <a href="@Url.Action("AboutOne", "Home")">人狼ゲームオンライン1(前作)について</a>
+                    <a href="http://www54.atwiki.jp/jnro/" target="_blank">wiki</a>
                 </p>
             </div>
         </div>
@@ -73,12 +73,51 @@
         <div class="col-sm-4">
             <div class="box sm-mh300">
                 <h2>その他</h2>
-                <p><a href="https://twitter.com/jinrogame" target="_blank">公式Twitterアカウント</a></p>
+                <p><a itemprop="url sameAs" href="https://twitter.com/jinrogame" target="_blank">公式Twitterアカウント</a></p>
                 <p>
                     メンテナンス時間：午前5時～午前8時
                     (前日中に公式Twitterアカウントでアナウンスがない場合、メンテナンスは行われませんので平常通りに遊べます。)
                 </p>
             </div>
         </div>
+    </div>
+
+    <div class="box">
+
+        対応端末
+        <ul class="list-inline">
+            <li itemprop="device">Windows</li>
+            <li itemprop="device">Mac</li>
+            <li itemprop="device">iPhone</li>
+            <li itemprop="device">iPad</li>
+            <li itemprop="device">Android</li>
+            <li itemprop="device">Windows Phone</li>
+        </ul>
+
+        対応OS
+        <ul class="list-inline">
+            <li itemprop="operatingSystem">Windows Vista</li>
+            <li itemprop="operatingSystem">Mac OS X</li>
+            <li itemprop="operatingSystem">iOS 5.1.1</li>
+            <li itemprop="operatingSystem">Android 2.3.1</li>
+            <li itemprop="operatingSystem">Windows Phone 8</li>
+        </ul>
+
+        <!--ブラウザ要件
+        <ul class="list-inline">
+            <li itemprop="browserRequirements">HTML5</li>
+            <li itemprop="browserRequirements">Cookie</li>
+            <li itemprop="browserRequirements">JavaScript</li>
+        </ul>-->
+
+        対応地域
+        <ul class="list-inline">
+            <li itemprop="countriesSupported">日本</li>
+        </ul>
+
+        開発運営
+        <ul class="list-inline">
+            <li><a itemprop="author creator publisher" href="http://amlitek.com/" target="_blank">Amlitek.com</a></li>
+        </ul>
     </div>
 </div>

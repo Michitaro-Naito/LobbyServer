@@ -59,6 +59,11 @@ namespace LobbyServer.Controllers
         /// <returns></returns>
         public ActionResult Play(string host, int port)
         {
+            if (ViewBag.CanonicalAuthority != Request.Url.Authority)
+            {
+                return Redirect(ViewBag.CanonicalUrl);
+            }
+
             RequirePass();
 
             var uri = new Uri(string.Format("http://{0}:{1}/signalr", host, port));

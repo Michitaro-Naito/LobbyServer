@@ -3,7 +3,7 @@
 $(function () {
 
     var game = {
-        Version: '1.0.1',
+        Version: '1.0.2',
 
         Character: function (data) {
             this.name = data.name;

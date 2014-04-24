@@ -236,6 +236,7 @@
     <Content Include="Views\Game\StatisticsPartial.cshtml" />
     <Content Include="Views\PlayLog\IndexPartial.cshtml" />
     <Content Include="Views\User\Logout.cshtml" />
+    <Content Include="Views\Home\AboutOne.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

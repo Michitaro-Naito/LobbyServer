@@ -3,26 +3,28 @@
     Layout = null;
 }
 
-<h2>記録</h2>
-<table class="table">
-    <thead>
-        <tr>
-            <th>村の名前</th>
-            <th>操作</th>
-        </tr>
-    </thead>
-    <tbody>
-        @for (var n = 0; n < Math.Min(3, Model.Count); n++)
-        {
-            var log = Model[n];
+<div>
+    <h2>村の記録</h2>
+    <table class="table">
+        <thead>
             <tr>
-                <td>@log.roomName</td>
-                <td>
-                    @Html.ActionLink("閲覧", "Details", new { controller = "PlayLog", id = log.id }, new { target = "_blank" })
-                    @Html.ActionLink("DL", "Download", new { controller = "PlayLog", id = log.id })
-                </td>
+                <th>村の名前</th>
+                <th>操作</th>
             </tr>
-        }
-    </tbody>
-</table>
-<p><a class="btn btn-default" href="@Url.RouteUrl(new { controller = "PlayLog", action = "Index" })">もっと見る &raquo;</a></p>
+        </thead>
+        <tbody>
+            @for (var n = 0; n < Math.Min(3, Model.Count); n++)
+            {
+                var log = Model[n];
+                <tr>
+                    <td>@log.roomName</td>
+                    <td>
+                        <a itemprop="url" href="@Url.Action("Details", new { controller = "PlayLog", id = log.id })" target="_blank">閲覧</a>
+                        @Html.ActionLink("DL", "Download", new { controller = "PlayLog", id = log.id })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <p><a itemprop="url" class="btn btn-default" href="@Url.RouteUrl(new { controller = "PlayLog", action = "Index" })">もっと見る &raquo;</a></p>
+</div>

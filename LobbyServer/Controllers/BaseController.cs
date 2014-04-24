@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -19,15 +20,31 @@ namespace LobbyServer.Controllers
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (Request.Url.Authority == "localhost:50731")
+            /*if (Request.Url.Authority == "localhost:50731")
             {
                 // 301 Redirect to 192.168.100.3 from localhost
                 Response.Redirect("http://192.168.100.3:50731" + Request.Url.AbsolutePath);
+                ViewBag.CanonicalUrl = "http://192.168.100.3:50731" + Request.Url.AbsolutePath;
                 return;
             }
-            if (/*Request.Url.Authority == "debug.apwei.expressweb.jp" ||*/ Request.Url.Authority == "v2.xn--sckyeodz36l941b.com" || Request.Url.Authority == "v2.人狼ゲーム.com")
+            if (Request.Url.Authority == "v2.xn--sckyeodz36l941b.com" || Request.Url.Authority == "v2.人狼ゲーム.com")
             {
                 Response.Redirect("http://werewolfgame.apwei.com" + Request.Url.AbsolutePath);
+                ViewBag.CanonicalUrl = "http://werewolfgame.apwei.com" + Request.Url.AbsolutePath;
+            }*/
+
+            if (RouteData.Values["culture"] != null)
+            {
+                var authority = ConfigurationManager.AppSettings["CanonicalAuthority"];// "localhost:50731";//"werewolfgame.apwei.com";
+                if (RouteData.Values["culture"].Equals("ja-JP")
+                    && !(RouteData.Values["controller"].Equals("Game") && RouteData.Values["action"].Equals("Play")))
+                    authority = ConfigurationManager.AppSettings["CanonicalAuthority.ja-JP"]; //"192.168.100.3:50731";//"xn--sckyeodz36l941b.com";
+                var canonicalUrl = "http://" + authority + Request.Url.AbsolutePath;
+                //if (Request.Url.Authority != authority)
+                //    Response.Redirect(canonicalUrl);
+                ViewBag.CanonicalAuthority = authority;
+                ViewBag.CanonicalUrl = canonicalUrl;
+
             }
             //if(Request)
             /*Debug.WriteLine("OnActionExecuting");

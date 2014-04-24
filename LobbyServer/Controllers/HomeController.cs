@@ -69,6 +69,11 @@ namespace LobbyServer.Controllers
             return View();
         }
 
+        public ActionResult AboutOne()
+        {
+            return View();
+        }
+
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";

@@ -1,10 +1,16 @@
 ﻿@model LobbyServer.Models.PlayLogIndexVM
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "村の記録";
 }
 
 <div class="box">
     <h2>村の記録</h2>
+
+    <p>
+        決着したゲームの一覧を閲覧できます。
+        パソコンやAndroidをお使いの方は、1クリックで記録のダウンロードもできます。
+        思い出の名勝負を是非お使いの端末にも保存してください。
+    </p>
 
     <ul class="pager">
         @if (Model.Page > 0)

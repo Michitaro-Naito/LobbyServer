@@ -1,7 +1,12 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "NotFound";
 }
 
-<h2>NotFound</h2>
+<div class="box">
+    <h2>NotFound</h2>
 
+    <p>
+        お探しのページが見つかりません。
+        @Html.ActionLink("トップページ", "Index", "Home") から探してみてください。
+    </p>
+</div>
