@@ -112,6 +112,7 @@
         <h3 data-bind="text: Text('CharactersList')"></h3>
         <div class="alert alert-info">ゲーム画面は自動で更新されますのでブラウザの更新ボタンを押さないようにお気を付けください。</div>
         <button type="button" data-bind="click: function(){state(State.CreateCharacter)}" class="btn btn-primary">作成する</button>
+        <a href="@Url.RouteUrl(new { controller = "Game", action = "Index" })" class="btn btn-default">サーバ一覧へ戻る</a>
         <p data-bind="visible: characters().length === 0">キャラクターがありません。作成してください。</p>
         <table data-bind="visible: characters().length > 0" class="table">
             <thead>
@@ -157,10 +158,14 @@
         <div class="row">
             <div class="col-sm-6">
                 <div class="box">
-                    <h3 data-bind="text: $root.Text('VillagesList')">Rooms</h3>
+                    <h3>
+                        <a name="Rooms"></a>
+                        <span data-bind="text: $root.Text('VillagesList')">Rooms</span>
+                    </h3>
                     <button type="button" data-bind="text: $root.Text('Create'), click: CreateRoom" class="btn btn-primary"></button>
                     <button type="button" data-bind="click: GetRooms" id="GetRooms" class="btn btn-default">更新</button>
                     <button type="button" data-bind="click: BackToCharacters" class="btn btn-default">戻る</button>
+                    <a href="#Chat" class="visible-xs">チャットへ↓</a>
                     <p data-bind="visible: rooms().length == 0">募集中の村はありません。作成してみてください。</p>
                     <table data-bind="visible: rooms().length > 0" class="table">
                         <thead>
@@ -194,7 +199,11 @@
             </div>
             <div class="col-sm-6">
                 <div class="box">
-                    <h3>雑談・募集用チャット</h3>
+                    <h3>
+                        <a name="Chat"></a>
+                        雑談・募集用チャット
+                    </h3>
+                    <a href="#Rooms" class="visible-xs">村一覧へ↑</a>
                     <div class="input-group">
                         <input type="text" id="LobbyChat" class="form-control" placeholder="ここからメッセージを送信できます" />
                         <span class="input-group-btn">
@@ -220,8 +229,18 @@
     <!-- Game Scene -->
     <div data-bind="visible: state() == State.Playing">
 
+        <!-- Loading -->
+        <div data-bind="visible: !isRoomLoaded()" class="box">
+            <p>読み込み中...</p>
+            <div class="progress progress-striped active">
+                <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        </div>
+
         <!-- Configuring -->
-        <div data-bind="visible: roomState() == RoomState.Configuring" class="box">
+        <div data-bind="visible: isRoomLoaded() && roomState() == RoomState.Configuring" class="box">
             <h3>村の設定</h3>
             <ul data-bind="foreach: validationErrors.RoomConfiguration">
                 <li data-bind="text: $data"></li>
@@ -249,7 +268,7 @@
         </div>
 
         <!-- Matchmaking, Playing, Ending, Ended -->
-        <div data-bind="visible: roomState() != RoomState.Configuring">
+        <div data-bind="visible: isRoomLoaded() && roomState() != RoomState.Configuring">
             <!-- Top (RoomConfigurations) -->
             <div data-bind="with: roomConfigurations" class="box">
                 <h3 data-bind="text: name"></h3>
@@ -566,20 +585,21 @@
             // Gets Pass from Server.
             var culture = '@Culture';
             var pass = '@ViewBag.ValidPassString';
-            var topPageUrl = '@Url.Action("Index", "Home")';
+            var topPageUrl = '@Url.Action("Index", "Game")';
             var endpoint = '@Model.GameServerSignalREndpoint.AbsoluteUri';
-
-            $(window).on('beforeunload', function () {
-                return 'ページを移動や再読み込みするとゲームから退出します。本当によろしいですか？';
-            });
 
             // Initializes Game
             if ($.connection.myHub === undefined) {
                 // GameServer is gone. Redirects to Home.
-                alert('サーバの応答がありませんでした。トップページへ戻ります。');
+                alert('サーバの応答がありませんでした。サーバ一覧へ戻ります。');
                 location.href = topPageUrl;
                 return;
             }
+
+            $(window).on('beforeunload', function () {
+                return 'ページを移動や再読み込みするとゲームから退出します。本当によろしいですか？';
+            });
+            
             try {
                 $.connection.myHub.connection.url = endpoint;
                 var model = new window.Apwei.Game.AppModel(culture, pass, $.connection.myHub);

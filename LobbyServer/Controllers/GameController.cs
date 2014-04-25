@@ -57,9 +57,12 @@ namespace LobbyServer.Controllers
         /// <param name="host"></param>
         /// <param name="port"></param>
         /// <returns></returns>
-        public ActionResult Play(string host, int port)
+        public ActionResult Play(string host, int port, bool debug = false)
         {
-            if (ViewBag.CanonicalAuthority != Request.Url.Authority)
+            if (!debug && Request.UrlReferrer == null)
+                return RedirectToAction("Index", "Game");
+
+            if (!debug && ViewBag.CanonicalAuthority != Request.Url.Authority)
             {
                 return Redirect(ViewBag.CanonicalUrl);
             }
@@ -67,7 +70,6 @@ namespace LobbyServer.Controllers
             RequirePass();
 
             var uri = new Uri(string.Format("http://{0}:{1}/signalr", host, port));
-            Debug.WriteLine(uri.AbsoluteUri);
             return View(new GamePlayVM() { GameServerSignalREndpoint = uri });
         }
 

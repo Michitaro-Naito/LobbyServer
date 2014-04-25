@@ -407,6 +407,7 @@ $(function () {
             s.roomCharacterNameToKick = ko.observable('');
             s.roomMasterTarget = ko.observable();
             s.roomRoleToSet = ko.observable();
+            s.isRoomLoaded = ko.observable(false);
             // Computed
             s.cpMyActor = ko.computed(function () {
                 return Enumerable.From(s.actors()).FirstOrDefault(null, function (a) { return a.id === s.myActorId(); });
@@ -482,13 +483,77 @@ $(function () {
                 return 'box FactionWon Faction' + s.factionWon();
             });
             // Callback
-            s.hub.client.gotRoomConfigurations = function (data) {
-                s.roomConfigurations(data);
+            s.hub.client.gotRoomData = function (data) {
+                console.info(data);
+                
+                // Configurations
+                s.roomConfigurations(data.Configurations);
+
+                // RoomState
+                $('.modal').modal('hide');
+                s.roomState(data.State);
+
+                // Actors
+                var actors = data.Actors;
+                s.ignoreVoteSubscription(true);
+                var to = s.roomSendTo();
+                // Refresh array
+                var newActors = [];
+                for (var n = 0; n < actors.length; n++) {
+                    newActors.push(new Apwei.Game.Actor(s, actors[n]));
+                }
+                s.actors(newActors);
+                // Restore PrivateMessageTarget
+                if (to !== undefined)
+                    s.roomSendTo(Enumerable.From(s.actors()).FirstOrDefault(undefined, function (a) { return a.id === to.id; }));
+                s.ignoreVoteSubscription(false);
+
+                // YourActorId
+                s.myActorId(data.YourActorId);
+
+                // VoteInfo
+                var voteInfo = data.VoteInfo;
+                if (voteInfo !== null) {
+                    s.ignoreVoteSubscription(true);
+                    // Restore selections (if avairable)
+                    var a = Enumerable.From(s.cpAliveActorsExceptMe()).FirstOrDefault(null, function (a) { return a.id === voteInfo.executeId });
+                    s.actorToExecute(a);
+                    var a = Enumerable.From(s.cpAliveActorsExceptMe()).FirstOrDefault(null, function (a) { return a.id === voteInfo.attackId });
+                    s.actorToAttack(a);
+                    var a = Enumerable.From(s.cpAliveActorsExceptMe()).FirstOrDefault(null, function (a) { return a.id === voteInfo.fortuneTellId });
+                    s.actorToFortuneTell(a);
+                    var a = Enumerable.From(s.cpAliveActorsExceptMe()).FirstOrDefault(null, function (a) { return a.id === voteInfo.guardId });
+                    s.actorToGuard(a);
+                    s.ignoreVoteSubscription(false);
+                }
+
+                // ChatModes
+                var mode = s.roomSendMode();
+                s.roomSendModes(data.ChatModes);
+                if (mode !== undefined) {
+                    var restore = Enumerable.From(s.roomSendModes()).FirstOrDefault(null, function (m) { return m.id === mode.id; });
+                    if (restore !== null) {
+                        s.roomSendMode(restore);
+                    }
+                    else
+                        // Could not restore. Clear input (to prevent sending accidentally.)
+                        $('#RoomChat').val('');
+                }
+
+                // Duration
+                s.duration(data.Duration);
+
+                // FactionWon
+                s.factionWon(data.FactionWon);
+                s.isRoomLoaded(true);
             }
+            /*s.hub.client.gotRoomConfigurations = function (data) {
+                s.roomConfigurations(data);
+            }*/
             s.hub.client.gotAllModes = function (modes) {
                 s.roomSendModesAll(modes);
             }
-            s.hub.client.gotModes = function (modes) {
+            /*s.hub.client.gotModes = function (modes) {
                 var mode = s.roomSendMode();
                 s.roomSendModes(modes);
                 if (mode !== undefined) {
@@ -500,8 +565,8 @@ $(function () {
                         // Could not restore. Clear input (to prevent sending accidentally.)
                         $('#RoomChat').val('');
                 }
-            }
-            s.hub.client.gotActors = function (actors) {
+            }*/
+            /*s.hub.client.gotActors = function (actors) {
                 s.ignoreVoteSubscription(true);
 
                 var to = s.roomSendTo();
@@ -518,11 +583,12 @@ $(function () {
                     s.roomSendTo(Enumerable.From(s.actors()).FirstOrDefault(undefined, function (a) { return a.id === to.id; }));
 
                 s.ignoreVoteSubscription(false);
-            }
-            s.hub.client.gotFactionWon = function (factionWon) {
+            }*/
+            /*s.hub.client.gotFactionWon = function (factionWon) {
                 console.info('FactionWon: ' + factionWon);
                 s.factionWon(factionWon);
-            }
+                s.isRoomLoaded(true);
+            }*/
             // Method
             s.RoomStart = function () {
                 s.hub.server.roomStart();
@@ -617,6 +683,8 @@ $(function () {
                 }
             }
             s.RoomGetOlderMessages = function () {
+                if (!s.isRoomLoaded())
+                    return;
                 if (s.state() !== s.State.Playing)
                     return;
                 if (s.RoomNoMoreOlderMessages())
@@ -748,6 +816,9 @@ $(function () {
             s.hub.client.broughtTo = function (state) {
                 console.info('broughtTo');
                 console.info(state);
+                if (state === s.State.Playing) {
+                    s.isRoomLoaded(false);
+                }
                 s.state(state);
             }
 
@@ -794,16 +865,16 @@ $(function () {
 
             // ----- Callback (in Room) -----
 
-            s.hub.client.gotRoomState = function (newRoomState) {
+            /*s.hub.client.gotRoomState = function (newRoomState) {
                 $('.modal').modal('hide');
                 s.roomState(newRoomState);
-            }
+            }*/
 
-            s.hub.client.gotYourActorId = function (id) {
+            /*s.hub.client.gotYourActorId = function (id) {
                 s.myActorId(id);
-            }
+            }*/
 
-            s.hub.client.gotYourSelections = function (data) {
+            /*s.hub.client.gotYourSelections = function (data) {
                 s.ignoreVoteSubscription(true);
 
                 // Restore selections (if avairable)
@@ -817,11 +888,11 @@ $(function () {
                 s.actorToGuard(a);
 
                 s.ignoreVoteSubscription(false);
-            }
+            }*/
 
-            s.hub.client.gotTimer = function (duration) {
+            /*s.hub.client.gotTimer = function (duration) {
                 s.duration(duration);
-            }
+            }*/
 
 
 
