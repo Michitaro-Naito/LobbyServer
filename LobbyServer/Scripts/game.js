@@ -191,6 +191,24 @@ $(function () {
             s.amountToSet = ko.observable(0);
         },
 
+        RoleAmount: function(roles, data){
+            var s = this;
+            s.Id = data.Id;
+            s.Amount = data.Amount;
+            s.fmName = ko.computed(function () {
+                var role = Enumerable.From(roles()).FirstOrDefault(null, function (r) { return r.id === s.Id });
+                if (role === null)
+                    return '?';
+                return role.name;
+            });
+            s.fmDescription = ko.computed(function () {
+                var role = Enumerable.From(roles()).FirstOrDefault(null, function (r) { return r.id === s.Id });
+                if (role === null)
+                    return '?';
+                return role.description;
+            });
+        },
+
         Actor: function (root, data) {
             var s = this;
             s.root = root;
@@ -408,6 +426,7 @@ $(function () {
             s.roomMasterTarget = ko.observable();
             s.roomRoleToSet = ko.observable();
             s.isRoomLoaded = ko.observable(false);
+            s.rolesInRoom = ko.observableArray([]);
             // Computed
             s.cpMyActor = ko.computed(function () {
                 return Enumerable.From(s.actors()).FirstOrDefault(null, function (a) { return a.id === s.myActorId(); });
@@ -545,6 +564,11 @@ $(function () {
 
                 // FactionWon
                 s.factionWon(data.FactionWon);
+
+                // RolesInRoom
+                //s.rolesInRoom(data.RolesInRoom);
+                s.rolesInRoom(Enumerable.From(data.RolesInRoom).Select(function (r) { return new Apwei.Game.RoleAmount(s.roles, r); }).ToArray());
+
                 s.isRoomLoaded(true);
             }
             /*s.hub.client.gotRoomConfigurations = function (data) {

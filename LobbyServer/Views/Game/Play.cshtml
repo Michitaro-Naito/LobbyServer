@@ -104,6 +104,7 @@
         <p data-bind="text: disconnectionReason"></p>
         <a href="@Url.RouteUrl(new { controller = "Game", action = "Index" })" class="btn btn-primary">サーバ一覧へ戻る</a>
         <button type="button" data-bind="click: Connect" id="ConnectButton" class="btn btn-default">再接続を試みる</button>
+        <p>サーバの接続情報は日によって変わることがあります。一覧に戻っていただくと手ごろなサーバがあるかもしれません。</p>
         <p>全く接続できない場合は、最新のブラウザをお使いいただいたり、ウィルス対策ソフトのリアルタイムスキャンを一時的に無効にしていただくことで改善することがあります。</p>
     </div>
 
@@ -205,7 +206,7 @@
                     </h3>
                     <a href="#Rooms" class="visible-xs">村一覧へ↑</a>
                     <div class="input-group">
-                        <input type="text" id="LobbyChat" class="form-control" placeholder="ここからメッセージを送信できます" />
+                        <input type="text" id="LobbyChat" class="form-control" placeholder="ここからメッセージを送信できます" maxlength="50" />
                         <span class="input-group-btn">
                             <button data-bind="click: LobbySend" id="LobbySend" class="btn btn-primary" type="button">送信</button>
                         </span>
@@ -403,6 +404,16 @@
                                 <p>あなたは<span data-bind="text: fmGender"></span>の<span data-bind="text: fmRole"></span>です。</p>
                                 <p data-bind="text: fmDescription"></p>
                             </div>
+
+                            <p>
+                                この村の内訳はあなたを含めて以下のようになっています。
+                                <ul data-bind="foreach: rolesInRoom" class="list-inline">
+                                    <li data-bind="visible: Amount > 0">
+                                        <a data-bind="text: fmName, attr: {'title':fmDescription}"></a>
+                                        <span data-bind="text: Amount"></span>
+                                    </li>
+                                </ul>
+                            </p>
 
                             <!-- Nav tabs -->
                             <ul class="nav nav-tabs">

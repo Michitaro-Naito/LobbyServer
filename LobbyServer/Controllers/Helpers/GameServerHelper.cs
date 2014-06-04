@@ -18,10 +18,10 @@ namespace LobbyServer.Controllers.Helper
                     && s.maxElapsedSeconds < 10);                           // No great lag. (Not stopped over 10 seconds.)
 
             var goodAvailableServers = goodServers
-                .Where(s => s.players < 0.66 * s.maxPlayers);
+                .Where(s => s.players < 0.90 * s.maxPlayers);
 
             var goodFullServers = goodServers
-                .Where(s => s.players >= 0.66 * s.maxPlayers);
+                .Where(s => s.players >= 0.90 * s.maxPlayers);
 
             var badServers = unorderedServers.Where(s => !goodServers.Contains(s));
 

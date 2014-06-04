@@ -23,7 +23,7 @@
                 var s = Model[n];
                 <tr>
                     <td>
-                        @if (s.players >= 0.66 * s.maxPlayers)
+                        @if (s.players >= 0.90 * s.maxPlayers)
                         {
                             <span class="label label-danger">満員 (<span>@s.players</span>人)</span>
                         }
@@ -31,7 +31,7 @@
                         {
                             <span class="label label-success">推奨 (<span>@s.players</span>人)</span>
                         }
-                        else if (s.players >= 0.33 * s.maxPlayers)
+                        else if (s.players >= 0.60 * s.maxPlayers)
                         {
                             <span class="label label-warning">混雑 (<span>@s.players</span>人)</span>
                         }
