@@ -27,4 +27,9 @@ namespace LobbyServer.Models
         public int Page { get; set; }
         public List<PlayLogInfo> PlayLogs { get; set; }
     }
+
+    public class AdPartialVM : ViewModel
+    {
+        public string Key { get; set; }
+    }
 }

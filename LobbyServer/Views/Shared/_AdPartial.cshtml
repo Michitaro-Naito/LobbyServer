@@ -1,0 +1,107 @@
+﻿@model LobbyServer.Models.AdPartialVM
+
+@if (Model.Key == "Head")
+{
+    <script type='text/javascript'>
+        var googletag = googletag || {};
+        googletag.cmd = googletag.cmd || [];
+        (function () {
+            var gads = document.createElement('script');
+            gads.async = true;
+            gads.type = 'text/javascript';
+            var useSSL = 'https:' == document.location.protocol;
+            gads.src = (useSSL ? 'https:' : 'http:') +
+            '//www.googletagservices.com/tag/js/gpt.js';
+            var node = document.getElementsByTagName('script')[0];
+            node.parentNode.insertBefore(gads, node);
+        })();
+    </script>
+    <script type='text/javascript'>
+        googletag.cmd.push(function () {
+            googletag.defineSlot('/91519777/JGO-Root-Top-PC', [728, 90], 'div-gpt-ad-1382526207957-0').addService(googletag.pubads());
+            googletag.defineSlot('/91519777/JGO-Root-MLeft-PC', [300, 250], 'div-gpt-ad-1382588561003-0').addService(googletag.pubads());
+            googletag.defineSlot('/91519777/JGO-Root-MRight-PC', [300, 250], 'div-gpt-ad-1382590896721-0').addService(googletag.pubads());
+            googletag.defineSlot('/91519777/JGO-Root-Top-Mobile', [320, 50], 'div-gpt-ad-1382595991674-0').addService(googletag.pubads());
+            googletag.defineSlot('/91519777/JGO-Root-Middle-Mobile', [320, 50], 'div-gpt-ad-1382603425559-0').addService(googletag.pubads());
+            googletag.defineSlot('/91519777/JGO-Root-Bottom-Mobile', [300, 250], 'div-gpt-ad-1382603476746-0').addService(googletag.pubads());
+            googletag.pubads().enableSingleRequest();
+            googletag.enableServices();
+        });
+    </script>
+    return;
+}
+
+@if (!UserAgent.IsMobile())
+{
+    switch (Model.Key)
+    {
+        case "Root-Top":
+            <!-- JGO-Root-Top-PC -->
+            <div id='div-gpt-ad-1382526207957-0' style='width:728px; height:90px; padding: 0; margin: 0 0 10px 0;'>
+                <script type='text/javascript'>
+                    googletag.cmd.push(function () { googletag.display('div-gpt-ad-1382526207957-0'); });
+                </script>
+            </div>
+            break;
+
+        case "Root-Middle":
+            break;
+
+        case "Root-Bottom":
+        <table style="margin-bottom: 10px;">
+            <tr>
+                <td>
+                    <!-- JGO-Root-MLeft-PC -->
+                    <div id='div-gpt-ad-1382588561003-0' style='width: 300px; height: 250px; padding: 0; margin-right: 10px;'>
+                        <script type='text/javascript'>
+                            googletag.cmd.push(function () { googletag.display('div-gpt-ad-1382588561003-0'); });
+                        </script>
+                    </div>
+                </td>
+                <td>
+                    <!-- JGO-Root-MRight-PC -->
+                    <div id='div-gpt-ad-1382590896721-0' style='width:300px; height:250px; padding: 0;'>
+                        <script type='text/javascript'>
+                            googletag.cmd.push(function () { googletag.display('div-gpt-ad-1382590896721-0'); });
+                        </script>
+                    </div>
+                </td>
+            </tr>
+        </table>
+            break;
+    }
+}
+else
+{
+    switch (Model.Key)
+    {
+        case "Root-Top":
+            <div class="row">
+                <!-- JGO-Root-Top-Mobile -->
+                <div id='div-gpt-ad-1382595991674-0' style='width:320px; height:50px; padding: 0; margin-bottom: 10px;'>
+                    <script type='text/javascript'>
+                        googletag.cmd.push(function () { googletag.display('div-gpt-ad-1382595991674-0'); });
+                    </script>
+                </div>
+            </div>
+            break;
+
+        case "Root-Middle":
+            <!-- JGO-Root-Middle-Mobile -->
+        <div id='div-gpt-ad-1382603425559-0' style='width: 320px; height: 50px; padding-bottom: 10px;'>
+            <script type='text/javascript'>
+                googletag.cmd.push(function () { googletag.display('div-gpt-ad-1382603425559-0'); });
+            </script>
+        </div>
+            break;
+
+        case "Root-Bottom":
+            <!-- JGO-Root-Bottom-Mobile -->
+        <div id='div-gpt-ad-1382603476746-0' style='width: 300px; height: 250px; padding: 0; margin-bottom: 10px;'>
+            <script type='text/javascript'>
+                googletag.cmd.push(function () { googletag.display('div-gpt-ad-1382603476746-0'); });
+            </script>
+        </div>
+            break;
+    }
+}

@@ -30,7 +30,7 @@ namespace LobbyServer.Controllers
         /// Shows a Home.
         /// </summary>
         /// <returns></returns>
-        [OutputCache(Duration=10)]
+        [OutputCache(Duration=10, VaryByCustom="VaryByUserAgent")]
         public ActionResult Index()
         {
             return SingletonAction(() => {

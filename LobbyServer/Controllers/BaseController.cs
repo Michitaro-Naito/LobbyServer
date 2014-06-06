@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LobbyServer.Utility;
+using System;
 using System.Collections.Concurrent;
 using System.Configuration;
 using System.Diagnostics;
@@ -17,7 +18,13 @@ namespace LobbyServer.Controllers
             get { return _culture; }
             private set { _culture = value; }
         }
-
+        UserAgent _userAgent;
+        public UserAgent UserAgent
+        {
+            get { return _userAgent; }
+            private set { _userAgent = value; }
+        }
+        
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             /*if (Request.Url.Authority == "localhost:50731")
@@ -33,6 +40,10 @@ namespace LobbyServer.Controllers
                 ViewBag.CanonicalUrl = "http://werewolfgame.apwei.com" + Request.Url.AbsolutePath;
             }*/
 
+            // UserAgent
+            UserAgent = UserAgentHelper.GetUserAgent(Request.UserAgent);
+
+            // Routing
             if (RouteData.Values["culture"] != null)
             {
                 var authority = ConfigurationManager.AppSettings["CanonicalAuthority"];// "localhost:50731";//"werewolfgame.apwei.com";

@@ -17,6 +17,7 @@
     }
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @Html.Partial("_AdPartial", new LobbyServer.Models.AdPartialVM() { Key = "Head" })
 
 </head>
 <body>
@@ -43,7 +44,9 @@
         </div>
     </div>
     <div class="container body-content">
+        @Html.Partial("_AdPartial", new LobbyServer.Models.AdPartialVM() { Key = "Root-Top" })
         @RenderBody()
+        @Html.Partial("_AdPartial", new LobbyServer.Models.AdPartialVM() { Key = "Root-Bottom" })
         <div class="box">
             <footer>&copy; @DateTime.Now.Year - @_.ApplicationName</footer>
         </div>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LobbyServer.Utility;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -16,6 +17,17 @@ namespace LobbyServer
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+        }
+
+        public override string GetVaryByCustomString(HttpContext context, string custom)
+        {
+            if (custom == "VaryByUserAgent")
+            {
+                var ua = UserAgentHelper.GetUserAgent(context.Request.UserAgent);
+                return ua.ToString();
+            }
+
+            return base.GetVaryByCustomString(context, custom);
         }
     }
 }
