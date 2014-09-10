@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "相互リンク";
+}
+<div class="box">
+    <h2>相互リンク</h2>
+    <p>
+        人狼ゲームオンライン2は以下のサイト様と相互リンクになっています。(敬称略)
+    </p>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>サイト名</th>
+                <th>紹介</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><a href="http://ge-mu.net/" target="_blank">オンラインゲーム総合サイト</a></td>
+                <td>インターネット黎明期(管理人が高校生だった頃)から存在する老舗のオンラインゲーム紹介サイトです。パソコン向けのものが中心ですが、最近はスマートフォン向けのものも紹介されているようです。</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>@Html.ActionLink("トップページへ戻る", "Index", "Home")</p>
+</div>

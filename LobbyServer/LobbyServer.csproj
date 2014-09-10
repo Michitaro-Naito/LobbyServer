@@ -240,6 +240,7 @@
     <Content Include="Views\User\Logout.cshtml" />
     <Content Include="Views\Home\AboutOne.cshtml" />
     <Content Include="Views\Shared\_AdPartial.cshtml" />
+    <Content Include="Views\Home\Links.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

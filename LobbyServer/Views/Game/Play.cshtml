@@ -113,6 +113,7 @@
         <h3 data-bind="text: Text('CharactersList')"></h3>
         <div class="alert alert-info">ゲーム画面は自動で更新されますのでブラウザの更新ボタンを押さないようにお気を付けください。</div>
         <button type="button" data-bind="click: function(){state(State.CreateCharacter)}" class="btn btn-primary">作成する</button>
+        <button type="button" data-bind="click: function(){state(State.Supporters)}" class="btn btn-default">支援する</button>
         <a href="@Url.RouteUrl(new { controller = "Game", action = "Index" })" class="btn btn-default">サーバ一覧へ戻る</a>
         <p data-bind="visible: characters().length === 0">キャラクターがありません。作成してください。</p>
         <table data-bind="visible: characters().length > 0" class="table">
@@ -152,6 +153,96 @@
         </div>
         <button type="button" data-bind="click: CreateCharacter" class="btn btn-primary">作成する</button>
         <button type="button" data-bind="click: BackToCharacters" class="btn btn-default">戻る</button>
+    </div>
+
+    <!-- Supporters Scene -->
+    <div data-bind="visible: state() == State.Supporters" class="box">
+        <button type="button" data-bind="click: BackToCharacters" class="btn btn-default">キャラクター選択に戻る</button>
+
+        <h3>ご支援のお願い</h3>
+
+        <p>
+            現在人狼ゲームオンライン2の運営費は広告収入と有志による援助によってまかなわれていますが、今後もよりよいサービスを提供させていただくにはより多くのご支援を必要としています。
+            人狼ゲームオンライン2は皆さんにゲームを提供するためにいつも数台のサーバをレンタルして稼働させています。
+            また、国内外の企業と契約してサービスの向上にも努めています。
+            もしこのゲームが気に入ったら、これからもインフラを維持し皆さんが楽しく遊べる環境を作れるようにどうか私たちを支えてください。
+        </p>
+
+        <h3>あなたのご支援でできること</h3>
+        <p>いただいたご支援は、例えば次のようなことに役立てられます。</p>
+        <table class="table">
+            <tr>
+                <th>500円</th>
+                <td>1ヶ月の間、サーバの収容人数を20人程度多く保てます。</td>
+            </tr>
+            <tr>
+                <th>2,000円</th>
+                <td>1ヶ月の間、1台の機器で発生するラグなどのトラブルを大きく軽減できます。</td>
+            </tr>
+            <tr>
+                <th>10,000円</th>
+                <td>1ヶ月の間、副管理人が不正対応などにあたる時間を毎日20分程度延長できます。</td>
+            </tr>
+        </table>
+
+        <h3>目標</h3>
+        <p>
+            優先度の高いものから順に、それぞれ以下の費用をねん出したいと考えています。
+            目標を達成できた際には、公式Twitterアカウントでご報告をさせていただきます。
+            また、もしご支援をいただいた金額が目標を上回った場合は、副管理人の対応時間延長と各種のアップデート、インフラの増強、ゲームの宣伝に充てさせていただきます。
+        </p>
+        <table class="table">
+            <tr>
+                <th>#</th>
+                <th>目標</th>
+                <th>金額</th>
+                <th>内容</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>維持管理</td>
+                <td>5万円/月</td>
+                <td>
+                    サーバや村の記録の保管など、毎月かかっている経費に充てさせていただきます。
+                </td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>SMS認証</td>
+                <td>20万円(1回)</td>
+                <td>
+                    SMSによる携帯電話番号認証をプレイヤー全員に実施します。<br />
+                    これができれば、悪いプレイヤーが皆さんに近づくことをより効率的に予防できます。
+                </td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>副管理人</td>
+                <td>3万円/月</td>
+                <td>
+                    人の多い時間帯(20:00～24:00ごろ)を中心に、毎日1時間ほど副管理人(アルバイトを想定)が不正対応などにあたります。
+                </td>
+            </tr>
+        </table>
+
+        <h3>毎月支援する</h3>
+        <div data-bind="foreach: cpGoodsSubscription">
+            <button data-bind="text: price, click: Purchase" class="btn btn-primary"></button>
+        </div>
+
+        <h3>1回支援する</h3>
+        <div data-bind="foreach: cpGoodsOneTime">
+            <button data-bind="text: price, click: Purchase" class="btn btn-primary"></button>
+        </div>
+        <br />
+        <p>上のボタンから人狼ゲームオンライン2のサービス向上にご協力ください。</p>
+        <p><strong>人狼ゲームオンライン2は無料のブラウザゲームです。支援しなくてもプレイできます。(!)</strong></p>
+        <p>特典や個別の御礼はございません。あらかじめご了承ください。</p>
+        <p>毎月のご支援はいつでも<a href="http://wallet.google.com" target="_blank">Google Wallet</a>から停止できます。</p>
+        <p>もし、お子様が誤ってご両親様のクレジットカードで決済してしまった場合は、消費者センターを通じて運営者の連絡先まで返金をご請求ください。</p>
+        <p>末筆ながら、いつも様々な形でのご理解とご協力をいただきありがとうございます。</p>
+
+        <button type="button" data-bind="click: BackToCharacters" class="btn btn-default">キャラクター選択に戻る</button>
     </div>
 
     <!-- Lobby Scene -->
@@ -620,5 +711,21 @@
                 //alert(e);
             }
         });
+    </script>
+    <script src="@System.Configuration.ConfigurationManager.AppSettings["GoogleWalletScriptUrl"]"></script>
+    <script>
+    //Success handler
+    var successHandler = function (purchaseAction) {
+        if (window.console != undefined) {
+            console.log("Purchase completed successfully.");
+        }
+    }
+
+    //Failure handler
+    var failureHandler = function (purchaseActionError) {
+        if (window.console != undefined) {
+            console.log("Purchase did not complete.");
+        }
+    }
     </script>
 }

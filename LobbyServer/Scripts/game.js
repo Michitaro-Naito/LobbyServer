@@ -24,6 +24,23 @@ $(function () {
             s.name = ko.observable('');
         },
 
+        Good: function(data){
+            var s = this;
+            s.sku = data.sku;
+            s.name = data.name;
+            s.description = data.description;
+            s.price = data.price;
+            s.jwt = data.jwt;
+
+            s.Purchase = function () {
+                google.payments.inapp.buy({
+                    jwt: s.jwt,
+                    success: successHandler,
+                    failure: failureHandler
+                });
+            }
+        },
+
         Room: function (data) {
             var s = this;
             this.roomId = data.roomId;
@@ -290,6 +307,7 @@ $(function () {
                 Disconnected: 0000,
                 Characters: 1000,
                 CreateCharacter: 1001,
+                Supporters: 1002,
                 Rooms: 2000,
                 Playing: 3000
             };
@@ -363,6 +381,23 @@ $(function () {
             s.createCharacterData = ko.observable(new Apwei.Game.CreateCharacterData());
             s.CreateCharacter = function () {
                 s.hub.server.createCharacter('CharacterCreation', s.createCharacterData().name());
+            }
+
+            // ----- Supporters Scene -----
+            s.goods = ko.observableArray([]);
+            s.cpGoodsSubscription = ko.computed(function () {
+                return Enumerable.From(s.goods()).Where(function (g) { return g.sku.indexOf('Monthly_') !== -1; }).ToArray();
+            });
+            s.cpGoodsOneTime = ko.computed(function () {
+                return Enumerable.From(s.goods()).Where(function (g) { return g.sku.indexOf('Monthly_') === -1; }).ToArray();
+            });
+            s.hub.client.gotGoods = function (goods) {
+                console.info(goods);
+                //s.goods(goods);
+                s.goods([]);
+                for (var n = 0; n < goods.length; n++) {
+                    s.goods.push(new Apwei.Game.Good(goods[n]));
+                }
             }
 
             // ----- Lobby Scene -----
@@ -790,6 +825,9 @@ $(function () {
                         break;
                     case s.State.CreateCharacter:
                         break;
+                    case s.State.Supporters:
+                        s.hub.server.getGoods();
+                        break;
                     case s.State.Rooms:
                         s.hub.server.getLobbyMessages();
                         s.GetRooms();
@@ -832,6 +870,10 @@ $(function () {
 
 
             // ----- Callback -----
+
+            s.hub.client.log = function (obj) {
+                console.info(obj);
+            }
 
             s.hub.client.addMessage = function (name, body) {
                 console.info(name + ',' + body);
