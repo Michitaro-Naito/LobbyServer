@@ -16,6 +16,11 @@ $(function () {
             s.password = ko.observable('');
             s.max = ko.observable(12);
             s.interval = ko.observable(300);
+
+            s.noFirstDayFortuneTelling = ko.observable(false);
+            s.noPrivateMessage = ko.observable(false);
+            s.strongShaman = ko.observable(false);
+            s.characterNameSet = ko.observable(0);
         },
 
         CreateCharacterData: function(){
@@ -990,6 +995,10 @@ $(function () {
                     password: s.roomConfigurationsToSet().password(),
                     max: s.roomConfigurationsToSet().max(),
                     interval: s.roomConfigurationsToSet().interval(),
+                    noFirstDayFortuneTelling: s.roomConfigurationsToSet().noFirstDayFortuneTelling(),
+                    noPrivateMessage: s.roomConfigurationsToSet().noPrivateMessage(),
+                    strongShaman: s.roomConfigurationsToSet().strongShaman(),
+                    characterNameSet: s.roomConfigurationsToSet().characterNameSet(),
                     ModelName: s.roomConfigurationsToSet().ModelName
                 });
             }

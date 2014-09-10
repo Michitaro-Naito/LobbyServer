@@ -354,6 +354,29 @@
                     <label for="RoomConfigurationInterval">1日の長さ</label>
                     <input type="number" data-bind="value: interval" class="form-control" id="RoomConfigurationName" placeholder="1日の長さ">
                 </div>
+
+                <div class="checkbox">
+                    <label>
+                        <input data-bind="checked: noFirstDayFortuneTelling" type="checkbox"> 初日占いなし
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input data-bind="checked: noPrivateMessage" type="checkbox"> ささやきなし
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input data-bind="checked: strongShaman" type="checkbox"> 強化霊媒師
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label for="RoomConfigurationInterval">キャラクター名</label>
+                    <select data-bind="value: characterNameSet" class="form-control">
+                        <option value="0">既定</option>
+                        <option value="1">和名</option>
+                    </select>
+                </div>
             </div>
             <button type="button" data-bind="text: $root.Text('Configure'), click: RoomConfigure" class="btn btn-primary btn-sm"></button>
             <button type="button" data-bind="text: $root.Text('QuitRoom'), click: QuitRoom" class="btn btn-warning btn-sm"></button>
@@ -367,6 +390,10 @@
                 <div>
                     <span>最大人数：<span data-bind="text: max"></span></span>
                     <span>1日の長さ(秒)：<span data-bind="text: interval"></span></span>
+                    <span>初日占いなし：<span data-bind="text: noFirstDayFortuneTelling"></span></span>
+                    <span>ささやきなし：<span data-bind="text: noPrivateMessage"></span></span>
+                    <span>強化霊媒師：<span data-bind="text: strongShaman"></span></span>
+                    <span>キャラクター名：<span data-bind="text: characterNameSet"></span></span>
                 </div>
             </div>
 
