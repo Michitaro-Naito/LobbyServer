@@ -426,6 +426,11 @@
                         <input data-bind="checked: strongShaman" type="checkbox"> 強化霊媒師
                     </label>
                 </div>
+                <div class="checkbox">
+                    <label>
+                        <input data-bind="checked: hideCharacterNames" type="checkbox"> 名前非表示
+                    </label>
+                </div>
                 <div class="form-group">
                     <label for="RoomConfigurationInterval">キャラクター名</label>
                     <select data-bind="value: characterNameSet" class="form-control">
@@ -450,6 +455,7 @@
                     <span>ささやきなし：<span data-bind="text: noPrivateMessage"></span></span>
                     <span>強化霊媒師：<span data-bind="text: strongShaman"></span></span>
                     <span>キャラクター名：<span data-bind="text: characterNameSet"></span></span>
+                    <span>名前非表示：<span data-bind="text: hideCharacterNames"></span></span>
                 </div>
             </div>
 

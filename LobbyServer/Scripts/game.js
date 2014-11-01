@@ -20,6 +20,7 @@ $(function () {
             s.noFirstDayFortuneTelling = ko.observable(false);
             s.noPrivateMessage = ko.observable(false);
             s.strongShaman = ko.observable(false);
+            s.hideCharacterNames = ko.observable(false);
             s.characterNameSet = ko.observable(0);
         },
 
@@ -1015,6 +1016,7 @@ $(function () {
                     noFirstDayFortuneTelling: s.roomConfigurationsToSet().noFirstDayFortuneTelling(),
                     noPrivateMessage: s.roomConfigurationsToSet().noPrivateMessage(),
                     strongShaman: s.roomConfigurationsToSet().strongShaman(),
+                    hideCharacterNames: s.roomConfigurationsToSet().hideCharacterNames(),
                     characterNameSet: s.roomConfigurationsToSet().characterNameSet(),
                     ModelName: s.roomConfigurationsToSet().ModelName
                 });
