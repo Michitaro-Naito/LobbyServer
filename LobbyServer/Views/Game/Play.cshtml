@@ -451,11 +451,26 @@
                 <div>
                     <span>最大人数：<span data-bind="text: max"></span></span>
                     <span>1日の長さ(秒)：<span data-bind="text: interval"></span></span>
-                    <span>初日占いなし：<span data-bind="text: noFirstDayFortuneTelling"></span></span>
-                    <span>ささやきなし：<span data-bind="text: noPrivateMessage"></span></span>
-                    <span>強化霊媒師：<span data-bind="text: strongShaman"></span></span>
-                    <span>キャラクター名：<span data-bind="text: characterNameSet"></span></span>
-                    <span>名前非表示：<span data-bind="text: hideCharacterNames"></span></span>
+                    <span>
+                        <span data-bind="visible: noFirstDayFortuneTelling">初日占いなし</span>
+                        <span data-bind="visible: !noFirstDayFortuneTelling">初日占いあり</span>
+                    </span>
+                    <span>
+                        <span data-bind="visible: noPrivateMessage">ささやきなし</span>
+                        <span data-bind="visible: !noPrivateMessage">ささやきあり</span>
+                    </span>
+                    <span>
+                        <span data-bind="visible: strongShaman">強霊媒師</span>
+                        <span data-bind="visible: !strongShaman">弱霊媒師</span>
+                    </span>
+                    <span>
+                        <span data-bind="visible: characterNameSet==0">西洋名</span>
+                        <span data-bind="visible: characterNameSet==1">和名</span>
+                    </span>
+                    <span>
+                        <span data-bind="visible: hideCharacterNames">名前非表示</span>
+                        <span data-bind="visible: !hideCharacterNames">名前表示</span>
+                    </span>
                 </div>
             </div>
 
