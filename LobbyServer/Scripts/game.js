@@ -407,6 +407,7 @@ $(function () {
 
             // ----- Lobby Scene -----
             s.lobbyMessages = ko.observableArray([]);
+            s.characterItems = ko.observable();
             s.hub.client.gotLobbyMessages = function (messages, clear) {
                 if (clear)
                     s.lobbyMessages([]);
@@ -416,9 +417,20 @@ $(function () {
                 while (s.lobbyMessages().length > 50)
                     s.lobbyMessages.pop();
             }
+            s.hub.client.gotCharacterItems = function (data) {
+                console.info(data);
+                s.characterItems(data);
+                $('#CharacterModal').modal('show');
+                //s.lastError({ body : data});
+                //$('#ErrorModal').modal('show');
+            }
             s.GetRooms = function () {
                 s.hub.server.getRooms();
                 $('#GetRooms').disableFor(5000);
+            }
+            s.GetCharacterItems = function () {
+                s.hub.server.getCharacterItems();
+                $('#GetCharacterItems').disableFor(5000);
             }
             s.LobbySend = function () {
                 var str = $('#LobbyChat').val();
@@ -705,6 +717,11 @@ $(function () {
                 var name = s.roomCharacterNameToKick();
                 if(confirm(name + 'の追放を試みます。本当によろしいですか？'))
                     s.hub.server.roomKick({CharacterName: name});
+            }
+            s.RoomBan = function () {
+                var name = s.roomCharacterNameToKick();
+                if (confirm(name + 'の永久追放を試みます。本当によろしいですか？'))
+                    s.hub.server.roomKick({ CharacterName: name, Ban: true });
             }
             s.RoomKill = function () {
                 console.info('room kill');
